@@ -1,5 +1,6 @@
 package uz.jahonov.ktormonitor.presentation.detail
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,7 @@ import uz.jahonov.ktormonitor.presentation.SharedFile
  * place. Bodies are analysed off the main thread, and only when they change: a view picked or an
  * update of the other body reuses the analysis already made.
  */
+@InternalKtorMonitorApi
 public class KtorMonitorDetailViewModel internal constructor(
     callId: String,
     repository: KtorMonitorRepository,

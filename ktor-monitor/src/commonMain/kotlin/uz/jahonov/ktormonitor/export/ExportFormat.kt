@@ -1,6 +1,9 @@
 package uz.jahonov.ktormonitor.export
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
+
 /** What calls can be shared as, with the file extension and MIME type of the shared file. */
+@InternalKtorMonitorApi
 public enum class ExportFormat(public val label: String, public val extension: String, public val mimeType: String) {
     JSON("JSON", "json", "application/json"),
     TEXT("Text", "txt", "text/plain"),

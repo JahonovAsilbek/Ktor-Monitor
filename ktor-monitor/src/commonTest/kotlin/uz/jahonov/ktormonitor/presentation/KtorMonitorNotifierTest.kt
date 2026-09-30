@@ -1,5 +1,7 @@
 package uz.jahonov.ktormonitor.presentation
 
+import uz.jahonov.ktormonitor.data.testCall
+import kotlinx.coroutines.flow.first
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -38,5 +40,17 @@ class KtorMonitorNotifierTest {
 
         assertTrue(lines.isEmpty())
         assertEquals("file is not a database", errors.single().message)
+    }
+
+    @Test
+    fun `the lines are the latest five calls marked by state without queries`() = runTest {
+        val repository = fakeRepository()
+        (1..4).forEach { repository.insert(testCall("c$it", url = "https://api.test/c$it?token=secret", requestTime = it.toLong())) }
+        repository.insert(testCall("pending", requestTime = 5, responseCode = null))
+        repository.insert(testCall("failed", requestTime = 6, responseCode = null, error = "IOException"))
+
+        val lines = KtorMonitorNotifier(repository, KtorMonitorConfig()).lines.first()
+
+        assertEquals(listOf("❌ GET /failed", "⏳ GET /pending", "200 GET /c4", "200 GET /c3", "200 GET /c2"), lines)
     }
 }

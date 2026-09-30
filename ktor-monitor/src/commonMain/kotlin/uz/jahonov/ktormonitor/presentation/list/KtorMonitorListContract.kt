@@ -1,10 +1,12 @@
 package uz.jahonov.ktormonitor.presentation.list
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import uz.jahonov.ktormonitor.presentation.Loadable
 import uz.jahonov.ktormonitor.export.ExportFormat
 import uz.jahonov.ktormonitor.model.CallSummary
 import uz.jahonov.ktormonitor.presentation.SharedFile
 
+@InternalKtorMonitorApi
 public data class KtorMonitorListUiState(
     /** The calls to show: searched, filtered and sorted. */
     val calls: Loadable<List<CallSummary>> = Loadable.Loading,
@@ -26,6 +28,7 @@ public data class KtorMonitorListUiState(
     val isNarrowed: Boolean get() = query.isNotBlank() || onlyErrors || !filters.isEmpty
 }
 
+@InternalKtorMonitorApi
 public sealed interface KtorMonitorListUiEvent {
     public data object ToggleSearch : KtorMonitorListUiEvent
     public data class Search(val query: String) : KtorMonitorListUiEvent
@@ -52,6 +55,7 @@ public sealed interface KtorMonitorListUiEvent {
     public data object ClearAll : KtorMonitorListUiEvent
 }
 
+@InternalKtorMonitorApi
 public sealed interface KtorMonitorListUiEffect {
     public data class OpenCall(val id: String) : KtorMonitorListUiEffect
     public data class Share(val file: SharedFile) : KtorMonitorListUiEffect

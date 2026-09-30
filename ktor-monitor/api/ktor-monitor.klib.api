@@ -1,0 +1,1258 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <ktor-monitor:ktor-monitor>
+open annotation class uz.jahonov.ktormonitor/InternalKtorMonitorApi : kotlin/Annotation { // uz.jahonov.ktormonitor/InternalKtorMonitorApi|null[0]
+    constructor <init>() // uz.jahonov.ktormonitor/InternalKtorMonitorApi.<init>|<init>(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.body/BodyMode : kotlin/Enum<uz.jahonov.ktormonitor.body/BodyMode> { // uz.jahonov.ktormonitor.body/BodyMode|null[0]
+    enum entry CODE // uz.jahonov.ktormonitor.body/BodyMode.CODE|null[0]
+    enum entry HEX // uz.jahonov.ktormonitor.body/BodyMode.HEX|null[0]
+    enum entry PREVIEW // uz.jahonov.ktormonitor.body/BodyMode.PREVIEW|null[0]
+    enum entry STREAM // uz.jahonov.ktormonitor.body/BodyMode.STREAM|null[0]
+    enum entry TEXT // uz.jahonov.ktormonitor.body/BodyMode.TEXT|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.body/BodyMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.body/BodyMode> // uz.jahonov.ktormonitor.body/BodyMode.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val label // uz.jahonov.ktormonitor.body/BodyMode.label|{}label[0]
+        final fun <get-label>(): kotlin/String // uz.jahonov.ktormonitor.body/BodyMode.label.<get-label>|<get-label>(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.body/BodyMode // uz.jahonov.ktormonitor.body/BodyMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.body/BodyMode> // uz.jahonov.ktormonitor.body/BodyMode.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.body/CodeLanguage : kotlin/Enum<uz.jahonov.ktormonitor.body/CodeLanguage> { // uz.jahonov.ktormonitor.body/CodeLanguage|null[0]
+    enum entry CSS // uz.jahonov.ktormonitor.body/CodeLanguage.CSS|null[0]
+    enum entry FORM // uz.jahonov.ktormonitor.body/CodeLanguage.FORM|null[0]
+    enum entry HTML // uz.jahonov.ktormonitor.body/CodeLanguage.HTML|null[0]
+    enum entry JAVASCRIPT // uz.jahonov.ktormonitor.body/CodeLanguage.JAVASCRIPT|null[0]
+    enum entry JSON // uz.jahonov.ktormonitor.body/CodeLanguage.JSON|null[0]
+    enum entry MARKDOWN // uz.jahonov.ktormonitor.body/CodeLanguage.MARKDOWN|null[0]
+    enum entry MULTIPART // uz.jahonov.ktormonitor.body/CodeLanguage.MULTIPART|null[0]
+    enum entry XML // uz.jahonov.ktormonitor.body/CodeLanguage.XML|null[0]
+    enum entry YAML // uz.jahonov.ktormonitor.body/CodeLanguage.YAML|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.body/CodeLanguage.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.body/CodeLanguage> // uz.jahonov.ktormonitor.body/CodeLanguage.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.body/CodeLanguage // uz.jahonov.ktormonitor.body/CodeLanguage.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.body/CodeLanguage> // uz.jahonov.ktormonitor.body/CodeLanguage.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.body/ImageFormat : kotlin/Enum<uz.jahonov.ktormonitor.body/ImageFormat> { // uz.jahonov.ktormonitor.body/ImageFormat|null[0]
+    enum entry GIF // uz.jahonov.ktormonitor.body/ImageFormat.GIF|null[0]
+    enum entry JPEG // uz.jahonov.ktormonitor.body/ImageFormat.JPEG|null[0]
+    enum entry PNG // uz.jahonov.ktormonitor.body/ImageFormat.PNG|null[0]
+    enum entry SVG // uz.jahonov.ktormonitor.body/ImageFormat.SVG|null[0]
+    enum entry WEBP // uz.jahonov.ktormonitor.body/ImageFormat.WEBP|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.body/ImageFormat.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.body/ImageFormat> // uz.jahonov.ktormonitor.body/ImageFormat.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.body/ImageFormat // uz.jahonov.ktormonitor.body/ImageFormat.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.body/ImageFormat> // uz.jahonov.ktormonitor.body/ImageFormat.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.body/TokenKind : kotlin/Enum<uz.jahonov.ktormonitor.body/TokenKind> { // uz.jahonov.ktormonitor.body/TokenKind|null[0]
+    enum entry ATTRIBUTE // uz.jahonov.ktormonitor.body/TokenKind.ATTRIBUTE|null[0]
+    enum entry COMMENT // uz.jahonov.ktormonitor.body/TokenKind.COMMENT|null[0]
+    enum entry EMPHASIS // uz.jahonov.ktormonitor.body/TokenKind.EMPHASIS|null[0]
+    enum entry HEADING // uz.jahonov.ktormonitor.body/TokenKind.HEADING|null[0]
+    enum entry KEY // uz.jahonov.ktormonitor.body/TokenKind.KEY|null[0]
+    enum entry KEYWORD // uz.jahonov.ktormonitor.body/TokenKind.KEYWORD|null[0]
+    enum entry LINK // uz.jahonov.ktormonitor.body/TokenKind.LINK|null[0]
+    enum entry NUMBER // uz.jahonov.ktormonitor.body/TokenKind.NUMBER|null[0]
+    enum entry PLAIN // uz.jahonov.ktormonitor.body/TokenKind.PLAIN|null[0]
+    enum entry PUNCTUATION // uz.jahonov.ktormonitor.body/TokenKind.PUNCTUATION|null[0]
+    enum entry STRING // uz.jahonov.ktormonitor.body/TokenKind.STRING|null[0]
+    enum entry TAG // uz.jahonov.ktormonitor.body/TokenKind.TAG|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.body/TokenKind.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.body/TokenKind> // uz.jahonov.ktormonitor.body/TokenKind.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.body/TokenKind // uz.jahonov.ktormonitor.body/TokenKind.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.body/TokenKind> // uz.jahonov.ktormonitor.body/TokenKind.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.capture/Retention : kotlin/Enum<uz.jahonov.ktormonitor.capture/Retention> { // uz.jahonov.ktormonitor.capture/Retention|null[0]
+    enum entry Forever // uz.jahonov.ktormonitor.capture/Retention.Forever|null[0]
+    enum entry OneDay // uz.jahonov.ktormonitor.capture/Retention.OneDay|null[0]
+    enum entry OneHour // uz.jahonov.ktormonitor.capture/Retention.OneHour|null[0]
+    enum entry OneWeek // uz.jahonov.ktormonitor.capture/Retention.OneWeek|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.capture/Retention.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.capture/Retention> // uz.jahonov.ktormonitor.capture/Retention.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val period // uz.jahonov.ktormonitor.capture/Retention.period|{}period[0]
+        final fun <get-period>(): kotlin.time/Duration // uz.jahonov.ktormonitor.capture/Retention.period.<get-period>|<get-period>(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.capture/Retention // uz.jahonov.ktormonitor.capture/Retention.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.capture/Retention> // uz.jahonov.ktormonitor.capture/Retention.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.export/ExportFormat : kotlin/Enum<uz.jahonov.ktormonitor.export/ExportFormat> { // uz.jahonov.ktormonitor.export/ExportFormat|null[0]
+    enum entry CURL // uz.jahonov.ktormonitor.export/ExportFormat.CURL|null[0]
+    enum entry HAR // uz.jahonov.ktormonitor.export/ExportFormat.HAR|null[0]
+    enum entry JSON // uz.jahonov.ktormonitor.export/ExportFormat.JSON|null[0]
+    enum entry MARKDOWN // uz.jahonov.ktormonitor.export/ExportFormat.MARKDOWN|null[0]
+    enum entry TEXT // uz.jahonov.ktormonitor.export/ExportFormat.TEXT|null[0]
+    enum entry URLS // uz.jahonov.ktormonitor.export/ExportFormat.URLS|null[0]
+    enum entry WGET // uz.jahonov.ktormonitor.export/ExportFormat.WGET|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.export/ExportFormat.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.export/ExportFormat> // uz.jahonov.ktormonitor.export/ExportFormat.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val extension // uz.jahonov.ktormonitor.export/ExportFormat.extension|{}extension[0]
+        final fun <get-extension>(): kotlin/String // uz.jahonov.ktormonitor.export/ExportFormat.extension.<get-extension>|<get-extension>(){}[0]
+    final val label // uz.jahonov.ktormonitor.export/ExportFormat.label|{}label[0]
+        final fun <get-label>(): kotlin/String // uz.jahonov.ktormonitor.export/ExportFormat.label.<get-label>|<get-label>(){}[0]
+    final val mimeType // uz.jahonov.ktormonitor.export/ExportFormat.mimeType|{}mimeType[0]
+        final fun <get-mimeType>(): kotlin/String // uz.jahonov.ktormonitor.export/ExportFormat.mimeType.<get-mimeType>|<get-mimeType>(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.export/ExportFormat // uz.jahonov.ktormonitor.export/ExportFormat.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.export/ExportFormat> // uz.jahonov.ktormonitor.export/ExportFormat.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.model/ContentKind : kotlin/Enum<uz.jahonov.ktormonitor.model/ContentKind> { // uz.jahonov.ktormonitor.model/ContentKind|null[0]
+    enum entry AUDIO // uz.jahonov.ktormonitor.model/ContentKind.AUDIO|null[0]
+    enum entry BINARY // uz.jahonov.ktormonitor.model/ContentKind.BINARY|null[0]
+    enum entry CSS // uz.jahonov.ktormonitor.model/ContentKind.CSS|null[0]
+    enum entry EVENT_STREAM // uz.jahonov.ktormonitor.model/ContentKind.EVENT_STREAM|null[0]
+    enum entry FONT // uz.jahonov.ktormonitor.model/ContentKind.FONT|null[0]
+    enum entry FORM // uz.jahonov.ktormonitor.model/ContentKind.FORM|null[0]
+    enum entry HTML // uz.jahonov.ktormonitor.model/ContentKind.HTML|null[0]
+    enum entry IMAGE // uz.jahonov.ktormonitor.model/ContentKind.IMAGE|null[0]
+    enum entry JAVASCRIPT // uz.jahonov.ktormonitor.model/ContentKind.JAVASCRIPT|null[0]
+    enum entry JSON // uz.jahonov.ktormonitor.model/ContentKind.JSON|null[0]
+    enum entry MARKDOWN // uz.jahonov.ktormonitor.model/ContentKind.MARKDOWN|null[0]
+    enum entry MULTIPART // uz.jahonov.ktormonitor.model/ContentKind.MULTIPART|null[0]
+    enum entry NONE // uz.jahonov.ktormonitor.model/ContentKind.NONE|null[0]
+    enum entry PDF // uz.jahonov.ktormonitor.model/ContentKind.PDF|null[0]
+    enum entry TEXT // uz.jahonov.ktormonitor.model/ContentKind.TEXT|null[0]
+    enum entry VIDEO // uz.jahonov.ktormonitor.model/ContentKind.VIDEO|null[0]
+    enum entry WEBSOCKET // uz.jahonov.ktormonitor.model/ContentKind.WEBSOCKET|null[0]
+    enum entry XML // uz.jahonov.ktormonitor.model/ContentKind.XML|null[0]
+    enum entry YAML // uz.jahonov.ktormonitor.model/ContentKind.YAML|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.model/ContentKind.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.model/ContentKind> // uz.jahonov.ktormonitor.model/ContentKind.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val label // uz.jahonov.ktormonitor.model/ContentKind.label|{}label[0]
+        final fun <get-label>(): kotlin/String // uz.jahonov.ktormonitor.model/ContentKind.label.<get-label>|<get-label>(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.model/ContentKind // uz.jahonov.ktormonitor.model/ContentKind.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.model/ContentKind> // uz.jahonov.ktormonitor.model/ContentKind.values|values#static(){}[0]
+
+    final object Companion { // uz.jahonov.ktormonitor.model/ContentKind.Companion|null[0]
+        final fun of(kotlin/String?, kotlin/String): uz.jahonov.ktormonitor.model/ContentKind // uz.jahonov.ktormonitor.model/ContentKind.Companion.of|of(kotlin.String?;kotlin.String){}[0]
+    }
+}
+
+final enum class uz.jahonov.ktormonitor.presentation.detail/BodySide : kotlin/Enum<uz.jahonov.ktormonitor.presentation.detail/BodySide> { // uz.jahonov.ktormonitor.presentation.detail/BodySide|null[0]
+    enum entry REQUEST // uz.jahonov.ktormonitor.presentation.detail/BodySide.REQUEST|null[0]
+    enum entry RESPONSE // uz.jahonov.ktormonitor.presentation.detail/BodySide.RESPONSE|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.presentation.detail/BodySide.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.presentation.detail/BodySide> // uz.jahonov.ktormonitor.presentation.detail/BodySide.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.presentation.detail/BodySide // uz.jahonov.ktormonitor.presentation.detail/BodySide.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.presentation.detail/BodySide> // uz.jahonov.ktormonitor.presentation.detail/BodySide.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.presentation.detail/CopyFormat : kotlin/Enum<uz.jahonov.ktormonitor.presentation.detail/CopyFormat> { // uz.jahonov.ktormonitor.presentation.detail/CopyFormat|null[0]
+    enum entry CURL // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.CURL|null[0]
+    enum entry TEXT // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.TEXT|null[0]
+    enum entry URL // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.URL|null[0]
+    enum entry WGET // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.WGET|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.presentation.detail/CopyFormat> // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.presentation.detail/CopyFormat // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.presentation.detail/CopyFormat> // uz.jahonov.ktormonitor.presentation.detail/CopyFormat.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.presentation.list/CallSort : kotlin/Enum<uz.jahonov.ktormonitor.presentation.list/CallSort> { // uz.jahonov.ktormonitor.presentation.list/CallSort|null[0]
+    enum entry DURATION_ASCENDING // uz.jahonov.ktormonitor.presentation.list/CallSort.DURATION_ASCENDING|null[0]
+    enum entry DURATION_DESCENDING // uz.jahonov.ktormonitor.presentation.list/CallSort.DURATION_DESCENDING|null[0]
+    enum entry NEWEST // uz.jahonov.ktormonitor.presentation.list/CallSort.NEWEST|null[0]
+    enum entry SIZE_ASCENDING // uz.jahonov.ktormonitor.presentation.list/CallSort.SIZE_ASCENDING|null[0]
+    enum entry SIZE_DESCENDING // uz.jahonov.ktormonitor.presentation.list/CallSort.SIZE_DESCENDING|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.presentation.list/CallSort.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.presentation.list/CallSort> // uz.jahonov.ktormonitor.presentation.list/CallSort.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val label // uz.jahonov.ktormonitor.presentation.list/CallSort.label|{}label[0]
+        final fun <get-label>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/CallSort.label.<get-label>|<get-label>(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.presentation.list/CallSort // uz.jahonov.ktormonitor.presentation.list/CallSort.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.presentation.list/CallSort> // uz.jahonov.ktormonitor.presentation.list/CallSort.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.presentation.list/DurationRange : kotlin/Enum<uz.jahonov.ktormonitor.presentation.list/DurationRange> { // uz.jahonov.ktormonitor.presentation.list/DurationRange|null[0]
+    enum entry OVER_5_S // uz.jahonov.ktormonitor.presentation.list/DurationRange.OVER_5_S|null[0]
+    enum entry UNDER_1_S // uz.jahonov.ktormonitor.presentation.list/DurationRange.UNDER_1_S|null[0]
+    enum entry UNDER_200_MS // uz.jahonov.ktormonitor.presentation.list/DurationRange.UNDER_200_MS|null[0]
+    enum entry UNDER_5_S // uz.jahonov.ktormonitor.presentation.list/DurationRange.UNDER_5_S|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.presentation.list/DurationRange.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.presentation.list/DurationRange> // uz.jahonov.ktormonitor.presentation.list/DurationRange.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val label // uz.jahonov.ktormonitor.presentation.list/DurationRange.label|{}label[0]
+        final fun <get-label>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/DurationRange.label.<get-label>|<get-label>(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.presentation.list/DurationRange // uz.jahonov.ktormonitor.presentation.list/DurationRange.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.presentation.list/DurationRange> // uz.jahonov.ktormonitor.presentation.list/DurationRange.values|values#static(){}[0]
+}
+
+final enum class uz.jahonov.ktormonitor.presentation.list/StatusClass : kotlin/Enum<uz.jahonov.ktormonitor.presentation.list/StatusClass> { // uz.jahonov.ktormonitor.presentation.list/StatusClass|null[0]
+    enum entry CLIENT_ERROR // uz.jahonov.ktormonitor.presentation.list/StatusClass.CLIENT_ERROR|null[0]
+    enum entry FAILED // uz.jahonov.ktormonitor.presentation.list/StatusClass.FAILED|null[0]
+    enum entry INFORMATIONAL // uz.jahonov.ktormonitor.presentation.list/StatusClass.INFORMATIONAL|null[0]
+    enum entry REDIRECT // uz.jahonov.ktormonitor.presentation.list/StatusClass.REDIRECT|null[0]
+    enum entry SERVER_ERROR // uz.jahonov.ktormonitor.presentation.list/StatusClass.SERVER_ERROR|null[0]
+    enum entry SUCCESS // uz.jahonov.ktormonitor.presentation.list/StatusClass.SUCCESS|null[0]
+
+    final val entries // uz.jahonov.ktormonitor.presentation.list/StatusClass.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<uz.jahonov.ktormonitor.presentation.list/StatusClass> // uz.jahonov.ktormonitor.presentation.list/StatusClass.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val label // uz.jahonov.ktormonitor.presentation.list/StatusClass.label|{}label[0]
+        final fun <get-label>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/StatusClass.label.<get-label>|<get-label>(){}[0]
+
+    final fun valueOf(kotlin/String): uz.jahonov.ktormonitor.presentation.list/StatusClass // uz.jahonov.ktormonitor.presentation.list/StatusClass.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<uz.jahonov.ktormonitor.presentation.list/StatusClass> // uz.jahonov.ktormonitor.presentation.list/StatusClass.values|values#static(){}[0]
+}
+
+sealed interface <#A: out kotlin/Any?> uz.jahonov.ktormonitor.presentation/Loadable { // uz.jahonov.ktormonitor.presentation/Loadable|null[0]
+    final class <#A1: out kotlin/Any?> Ready : uz.jahonov.ktormonitor.presentation/Loadable<#A1> { // uz.jahonov.ktormonitor.presentation/Loadable.Ready|null[0]
+        constructor <init>(#A1) // uz.jahonov.ktormonitor.presentation/Loadable.Ready.<init>|<init>(1:0){}[0]
+
+        final val value // uz.jahonov.ktormonitor.presentation/Loadable.Ready.value|{}value[0]
+            final fun <get-value>(): #A1 // uz.jahonov.ktormonitor.presentation/Loadable.Ready.value.<get-value>|<get-value>(){}[0]
+
+        final fun component1(): #A1 // uz.jahonov.ktormonitor.presentation/Loadable.Ready.component1|component1(){}[0]
+        final fun copy(#A1 = ...): uz.jahonov.ktormonitor.presentation/Loadable.Ready<#A1> // uz.jahonov.ktormonitor.presentation/Loadable.Ready.copy|copy(1:0){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation/Loadable.Ready.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation/Loadable.Ready.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation/Loadable.Ready.toString|toString(){}[0]
+    }
+
+    final object Loading : uz.jahonov.ktormonitor.presentation/Loadable<kotlin/Nothing> { // uz.jahonov.ktormonitor.presentation/Loadable.Loading|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation/Loadable.Loading.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation/Loadable.Loading.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation/Loadable.Loading.toString|toString(){}[0]
+    }
+}
+
+sealed interface uz.jahonov.ktormonitor.body/BodyPreview { // uz.jahonov.ktormonitor.body/BodyPreview|null[0]
+    final class Image : uz.jahonov.ktormonitor.body/BodyPreview { // uz.jahonov.ktormonitor.body/BodyPreview.Image|null[0]
+        constructor <init>(kotlinx.io.bytestring/ByteString, uz.jahonov.ktormonitor.body/ImageFormat) // uz.jahonov.ktormonitor.body/BodyPreview.Image.<init>|<init>(kotlinx.io.bytestring.ByteString;uz.jahonov.ktormonitor.body.ImageFormat){}[0]
+
+        final val bytes // uz.jahonov.ktormonitor.body/BodyPreview.Image.bytes|{}bytes[0]
+            final fun <get-bytes>(): kotlinx.io.bytestring/ByteString // uz.jahonov.ktormonitor.body/BodyPreview.Image.bytes.<get-bytes>|<get-bytes>(){}[0]
+        final val format // uz.jahonov.ktormonitor.body/BodyPreview.Image.format|{}format[0]
+            final fun <get-format>(): uz.jahonov.ktormonitor.body/ImageFormat // uz.jahonov.ktormonitor.body/BodyPreview.Image.format.<get-format>|<get-format>(){}[0]
+
+        final fun component1(): kotlinx.io.bytestring/ByteString // uz.jahonov.ktormonitor.body/BodyPreview.Image.component1|component1(){}[0]
+        final fun component2(): uz.jahonov.ktormonitor.body/ImageFormat // uz.jahonov.ktormonitor.body/BodyPreview.Image.component2|component2(){}[0]
+        final fun copy(kotlinx.io.bytestring/ByteString = ..., uz.jahonov.ktormonitor.body/ImageFormat = ...): uz.jahonov.ktormonitor.body/BodyPreview.Image // uz.jahonov.ktormonitor.body/BodyPreview.Image.copy|copy(kotlinx.io.bytestring.ByteString;uz.jahonov.ktormonitor.body.ImageFormat){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/BodyPreview.Image.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/BodyPreview.Image.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/BodyPreview.Image.toString|toString(){}[0]
+    }
+
+    final class Markdown : uz.jahonov.ktormonitor.body/BodyPreview { // uz.jahonov.ktormonitor.body/BodyPreview.Markdown|null[0]
+        constructor <init>(kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownBlock>) // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.<init>|<init>(kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownBlock>){}[0]
+
+        final val blocks // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.blocks|{}blocks[0]
+            final fun <get-blocks>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownBlock> // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.blocks.<get-blocks>|<get-blocks>(){}[0]
+
+        final fun component1(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownBlock> // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.component1|component1(){}[0]
+        final fun copy(kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownBlock> = ...): uz.jahonov.ktormonitor.body/BodyPreview.Markdown // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.copy|copy(kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownBlock>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/BodyPreview.Markdown.toString|toString(){}[0]
+    }
+}
+
+sealed interface uz.jahonov.ktormonitor.body/MarkdownBlock { // uz.jahonov.ktormonitor.body/MarkdownBlock|null[0]
+    final class CodeBlock : uz.jahonov.ktormonitor.body/MarkdownBlock { // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock|null[0]
+        constructor <init>(kotlin/String?, kotlin/String) // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.<init>|<init>(kotlin.String?;kotlin.String){}[0]
+
+        final val language // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.language|{}language[0]
+            final fun <get-language>(): kotlin/String? // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.language.<get-language>|<get-language>(){}[0]
+        final val text // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.text|{}text[0]
+            final fun <get-text>(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.text.<get-text>|<get-text>(){}[0]
+
+        final fun component1(): kotlin/String? // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.component1|component1(){}[0]
+        final fun component2(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.component2|component2(){}[0]
+        final fun copy(kotlin/String? = ..., kotlin/String = ...): uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.copy|copy(kotlin.String?;kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.CodeBlock.toString|toString(){}[0]
+    }
+
+    final class Heading : uz.jahonov.ktormonitor.body/MarkdownBlock { // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading|null[0]
+        constructor <init>(kotlin/Int, kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan>) // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.<init>|<init>(kotlin.Int;kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+
+        final val level // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.level|{}level[0]
+            final fun <get-level>(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.level.<get-level>|<get-level>(){}[0]
+        final val spans // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.spans|{}spans[0]
+            final fun <get-spans>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.spans.<get-spans>|<get-spans>(){}[0]
+
+        final fun component1(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.component1|component1(){}[0]
+        final fun component2(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.component2|component2(){}[0]
+        final fun copy(kotlin/Int = ..., kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> = ...): uz.jahonov.ktormonitor.body/MarkdownBlock.Heading // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.copy|copy(kotlin.Int;kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.Heading.toString|toString(){}[0]
+    }
+
+    final class ListItem : uz.jahonov.ktormonitor.body/MarkdownBlock { // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem|null[0]
+        constructor <init>(kotlin/Int, kotlin/Int?, kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan>) // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.<init>|<init>(kotlin.Int;kotlin.Int?;kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+
+        final val depth // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.depth|{}depth[0]
+            final fun <get-depth>(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.depth.<get-depth>|<get-depth>(){}[0]
+        final val number // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.number|{}number[0]
+            final fun <get-number>(): kotlin/Int? // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.number.<get-number>|<get-number>(){}[0]
+        final val spans // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.spans|{}spans[0]
+            final fun <get-spans>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.spans.<get-spans>|<get-spans>(){}[0]
+
+        final fun component1(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.component1|component1(){}[0]
+        final fun component2(): kotlin/Int? // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.component2|component2(){}[0]
+        final fun component3(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.component3|component3(){}[0]
+        final fun copy(kotlin/Int = ..., kotlin/Int? = ..., kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> = ...): uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.copy|copy(kotlin.Int;kotlin.Int?;kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.ListItem.toString|toString(){}[0]
+    }
+
+    final class Paragraph : uz.jahonov.ktormonitor.body/MarkdownBlock { // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph|null[0]
+        constructor <init>(kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan>) // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.<init>|<init>(kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+
+        final val spans // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.spans|{}spans[0]
+            final fun <get-spans>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.spans.<get-spans>|<get-spans>(){}[0]
+
+        final fun component1(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.component1|component1(){}[0]
+        final fun copy(kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> = ...): uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.copy|copy(kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.Paragraph.toString|toString(){}[0]
+    }
+
+    final class Quote : uz.jahonov.ktormonitor.body/MarkdownBlock { // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote|null[0]
+        constructor <init>(kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan>) // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.<init>|<init>(kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+
+        final val spans // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.spans|{}spans[0]
+            final fun <get-spans>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.spans.<get-spans>|<get-spans>(){}[0]
+
+        final fun component1(): kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.component1|component1(){}[0]
+        final fun copy(kotlin.collections/List<uz.jahonov.ktormonitor.body/MarkdownSpan> = ...): uz.jahonov.ktormonitor.body/MarkdownBlock.Quote // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.copy|copy(kotlin.collections.List<uz.jahonov.ktormonitor.body.MarkdownSpan>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.Quote.toString|toString(){}[0]
+    }
+
+    final object Rule : uz.jahonov.ktormonitor.body/MarkdownBlock { // uz.jahonov.ktormonitor.body/MarkdownBlock.Rule|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownBlock.Rule.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownBlock.Rule.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownBlock.Rule.toString|toString(){}[0]
+    }
+}
+
+sealed interface uz.jahonov.ktormonitor.presentation.detail/BodyContent { // uz.jahonov.ktormonitor.presentation.detail/BodyContent|null[0]
+    final class Code : uz.jahonov.ktormonitor.presentation.detail/BodyContent { // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.body/CodeDocument) // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.<init>|<init>(uz.jahonov.ktormonitor.body.CodeDocument){}[0]
+
+        final val document // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.document|{}document[0]
+            final fun <get-document>(): uz.jahonov.ktormonitor.body/CodeDocument // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.document.<get-document>|<get-document>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.body/CodeDocument // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.body/CodeDocument = ...): uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.copy|copy(uz.jahonov.ktormonitor.body.CodeDocument){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Code.toString|toString(){}[0]
+    }
+
+    final class Hex : uz.jahonov.ktormonitor.presentation.detail/BodyContent { // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex|null[0]
+        constructor <init>(kotlin.collections/List<uz.jahonov.ktormonitor.body/HexRow>) // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.<init>|<init>(kotlin.collections.List<uz.jahonov.ktormonitor.body.HexRow>){}[0]
+
+        final val rows // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.rows|{}rows[0]
+            final fun <get-rows>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/HexRow> // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.rows.<get-rows>|<get-rows>(){}[0]
+
+        final fun component1(): kotlin.collections/List<uz.jahonov.ktormonitor.body/HexRow> // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.component1|component1(){}[0]
+        final fun copy(kotlin.collections/List<uz.jahonov.ktormonitor.body/HexRow> = ...): uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.copy|copy(kotlin.collections.List<uz.jahonov.ktormonitor.body.HexRow>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Hex.toString|toString(){}[0]
+    }
+
+    final class Lines : uz.jahonov.ktormonitor.presentation.detail/BodyContent { // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines|null[0]
+        constructor <init>(kotlin.collections/List<kotlin/String>) // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.<init>|<init>(kotlin.collections.List<kotlin.String>){}[0]
+
+        final val lines // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.lines|{}lines[0]
+            final fun <get-lines>(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.lines.<get-lines>|<get-lines>(){}[0]
+
+        final fun component1(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.component1|component1(){}[0]
+        final fun copy(kotlin.collections/List<kotlin/String> = ...): uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.copy|copy(kotlin.collections.List<kotlin.String>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Lines.toString|toString(){}[0]
+    }
+
+    final class Preview : uz.jahonov.ktormonitor.presentation.detail/BodyContent { // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.body/BodyPreview) // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.<init>|<init>(uz.jahonov.ktormonitor.body.BodyPreview){}[0]
+
+        final val preview // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.preview|{}preview[0]
+            final fun <get-preview>(): uz.jahonov.ktormonitor.body/BodyPreview // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.preview.<get-preview>|<get-preview>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.body/BodyPreview // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.body/BodyPreview = ...): uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.copy|copy(uz.jahonov.ktormonitor.body.BodyPreview){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/BodyContent.Preview.toString|toString(){}[0]
+    }
+}
+
+sealed interface uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect|null[0]
+    final class CopyText : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.<init>|<init>(kotlin.String){}[0]
+
+        final val text // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.text|{}text[0]
+            final fun <get-text>(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.text.<get-text>|<get-text>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.CopyText.toString|toString(){}[0]
+    }
+
+    final class Share : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation/SharedFile) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.<init>|<init>(uz.jahonov.ktormonitor.presentation.SharedFile){}[0]
+
+        final val file // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.file|{}file[0]
+            final fun <get-file>(): uz.jahonov.ktormonitor.presentation/SharedFile // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.file.<get-file>|<get-file>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation/SharedFile // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation/SharedFile = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.copy|copy(uz.jahonov.ktormonitor.presentation.SharedFile){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Share.toString|toString(){}[0]
+    }
+
+    final object Close : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Close|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Close.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Close.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect.Close.toString|toString(){}[0]
+    }
+}
+
+sealed interface uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent|null[0]
+    final class Copy : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation.detail/CopyFormat) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.<init>|<init>(uz.jahonov.ktormonitor.presentation.detail.CopyFormat){}[0]
+
+        final val format // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.format|{}format[0]
+            final fun <get-format>(): uz.jahonov.ktormonitor.presentation.detail/CopyFormat // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.format.<get-format>|<get-format>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation.detail/CopyFormat // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation.detail/CopyFormat = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.copy|copy(uz.jahonov.ktormonitor.presentation.detail.CopyFormat){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Copy.toString|toString(){}[0]
+    }
+
+    final class CopyBody : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation.detail/BodySide) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.<init>|<init>(uz.jahonov.ktormonitor.presentation.detail.BodySide){}[0]
+
+        final val side // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.side|{}side[0]
+            final fun <get-side>(): uz.jahonov.ktormonitor.presentation.detail/BodySide // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.side.<get-side>|<get-side>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation.detail/BodySide // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation.detail/BodySide = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.copy|copy(uz.jahonov.ktormonitor.presentation.detail.BodySide){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyBody.toString|toString(){}[0]
+    }
+
+    final class CopyHeaders : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation.detail/BodySide) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.<init>|<init>(uz.jahonov.ktormonitor.presentation.detail.BodySide){}[0]
+
+        final val side // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.side|{}side[0]
+            final fun <get-side>(): uz.jahonov.ktormonitor.presentation.detail/BodySide // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.side.<get-side>|<get-side>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation.detail/BodySide // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation.detail/BodySide = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.copy|copy(uz.jahonov.ktormonitor.presentation.detail.BodySide){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.CopyHeaders.toString|toString(){}[0]
+    }
+
+    final class SelectMode : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation.detail/BodySide, uz.jahonov.ktormonitor.body/BodyMode) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.<init>|<init>(uz.jahonov.ktormonitor.presentation.detail.BodySide;uz.jahonov.ktormonitor.body.BodyMode){}[0]
+
+        final val mode // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.mode|{}mode[0]
+            final fun <get-mode>(): uz.jahonov.ktormonitor.body/BodyMode // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.mode.<get-mode>|<get-mode>(){}[0]
+        final val side // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.side|{}side[0]
+            final fun <get-side>(): uz.jahonov.ktormonitor.presentation.detail/BodySide // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.side.<get-side>|<get-side>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation.detail/BodySide // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.component1|component1(){}[0]
+        final fun component2(): uz.jahonov.ktormonitor.body/BodyMode // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.component2|component2(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation.detail/BodySide = ..., uz.jahonov.ktormonitor.body/BodyMode = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.copy|copy(uz.jahonov.ktormonitor.presentation.detail.BodySide;uz.jahonov.ktormonitor.body.BodyMode){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.SelectMode.toString|toString(){}[0]
+    }
+
+    final class Share : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.export/ExportFormat) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.<init>|<init>(uz.jahonov.ktormonitor.export.ExportFormat){}[0]
+
+        final val format // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.format|{}format[0]
+            final fun <get-format>(): uz.jahonov.ktormonitor.export/ExportFormat // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.format.<get-format>|<get-format>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.export/ExportFormat // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.export/ExportFormat = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.copy|copy(uz.jahonov.ktormonitor.export.ExportFormat){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.toString|toString(){}[0]
+    }
+}
+
+sealed interface uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect|null[0]
+    final class OpenCall : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.<init>|<init>(kotlin.String){}[0]
+
+        final val id // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.id|{}id[0]
+            final fun <get-id>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.id.<get-id>|<get-id>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.OpenCall.toString|toString(){}[0]
+    }
+
+    final class Share : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation/SharedFile) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.<init>|<init>(uz.jahonov.ktormonitor.presentation.SharedFile){}[0]
+
+        final val file // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.file|{}file[0]
+            final fun <get-file>(): uz.jahonov.ktormonitor.presentation/SharedFile // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.file.<get-file>|<get-file>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation/SharedFile // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation/SharedFile = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.copy|copy(uz.jahonov.ktormonitor.presentation.SharedFile){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect.Share.toString|toString(){}[0]
+    }
+}
+
+sealed interface uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent|null[0]
+    final class Click : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.<init>|<init>(kotlin.String){}[0]
+
+        final val id // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.id|{}id[0]
+            final fun <get-id>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.id.<get-id>|<get-id>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Click.toString|toString(){}[0]
+    }
+
+    final class LongClick : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.<init>|<init>(kotlin.String){}[0]
+
+        final val id // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.id|{}id[0]
+            final fun <get-id>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.id.<get-id>|<get-id>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.LongClick.toString|toString(){}[0]
+    }
+
+    final class Search : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.<init>|<init>(kotlin.String){}[0]
+
+        final val query // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.query|{}query[0]
+            final fun <get-query>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.query.<get-query>|<get-query>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Search.toString|toString(){}[0]
+    }
+
+    final class ShareSelected : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.export/ExportFormat) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.<init>|<init>(uz.jahonov.ktormonitor.export.ExportFormat){}[0]
+
+        final val format // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.format|{}format[0]
+            final fun <get-format>(): uz.jahonov.ktormonitor.export/ExportFormat // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.format.<get-format>|<get-format>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.export/ExportFormat // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.export/ExportFormat = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.copy|copy(uz.jahonov.ktormonitor.export.ExportFormat){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ShareSelected.toString|toString(){}[0]
+    }
+
+    final class Sort : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation.list/CallSort) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.<init>|<init>(uz.jahonov.ktormonitor.presentation.list.CallSort){}[0]
+
+        final val sort // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.sort|{}sort[0]
+            final fun <get-sort>(): uz.jahonov.ktormonitor.presentation.list/CallSort // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.sort.<get-sort>|<get-sort>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation.list/CallSort // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation.list/CallSort = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.copy|copy(uz.jahonov.ktormonitor.presentation.list.CallSort){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.Sort.toString|toString(){}[0]
+    }
+
+    final class ToggleContentType : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.<init>|<init>(kotlin.String){}[0]
+
+        final val contentType // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.contentType|{}contentType[0]
+            final fun <get-contentType>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.contentType.<get-contentType>|<get-contentType>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleContentType.toString|toString(){}[0]
+    }
+
+    final class ToggleDuration : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation.list/DurationRange) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.<init>|<init>(uz.jahonov.ktormonitor.presentation.list.DurationRange){}[0]
+
+        final val duration // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.duration|{}duration[0]
+            final fun <get-duration>(): uz.jahonov.ktormonitor.presentation.list/DurationRange // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.duration.<get-duration>|<get-duration>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation.list/DurationRange // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation.list/DurationRange = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.copy|copy(uz.jahonov.ktormonitor.presentation.list.DurationRange){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleDuration.toString|toString(){}[0]
+    }
+
+    final class ToggleHost : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.<init>|<init>(kotlin.String){}[0]
+
+        final val host // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.host|{}host[0]
+            final fun <get-host>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.host.<get-host>|<get-host>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleHost.toString|toString(){}[0]
+    }
+
+    final class ToggleMethod : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod|null[0]
+        constructor <init>(kotlin/String) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.<init>|<init>(kotlin.String){}[0]
+
+        final val method // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.method|{}method[0]
+            final fun <get-method>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.method.<get-method>|<get-method>(){}[0]
+
+        final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleMethod.toString|toString(){}[0]
+    }
+
+    final class ToggleStatus : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus|null[0]
+        constructor <init>(uz.jahonov.ktormonitor.presentation.list/StatusClass) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.<init>|<init>(uz.jahonov.ktormonitor.presentation.list.StatusClass){}[0]
+
+        final val status // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.status|{}status[0]
+            final fun <get-status>(): uz.jahonov.ktormonitor.presentation.list/StatusClass // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.status.<get-status>|<get-status>(){}[0]
+
+        final fun component1(): uz.jahonov.ktormonitor.presentation.list/StatusClass // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.component1|component1(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.presentation.list/StatusClass = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.copy|copy(uz.jahonov.ktormonitor.presentation.list.StatusClass){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleStatus.toString|toString(){}[0]
+    }
+
+    final object ClearAll : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearAll|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearAll.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearAll.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearAll.toString|toString(){}[0]
+    }
+
+    final object ClearFilters : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearFilters|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearFilters.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearFilters.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearFilters.toString|toString(){}[0]
+    }
+
+    final object ClearSelection : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearSelection|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearSelection.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearSelection.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ClearSelection.toString|toString(){}[0]
+    }
+
+    final object DeleteSelected : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.DeleteSelected|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.DeleteSelected.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.DeleteSelected.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.DeleteSelected.toString|toString(){}[0]
+    }
+
+    final object ExitSelection : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ExitSelection|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ExitSelection.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ExitSelection.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ExitSelection.toString|toString(){}[0]
+    }
+
+    final object SelectAll : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.SelectAll|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.SelectAll.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.SelectAll.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.SelectAll.toString|toString(){}[0]
+    }
+
+    final object StartSelection : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.StartSelection|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.StartSelection.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.StartSelection.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.StartSelection.toString|toString(){}[0]
+    }
+
+    final object ToggleOnlyErrors : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleOnlyErrors|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleOnlyErrors.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleOnlyErrors.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleOnlyErrors.toString|toString(){}[0]
+    }
+
+    final object ToggleSearch : uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleSearch|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleSearch.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleSearch.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent.ToggleSearch.toString|toString(){}[0]
+    }
+}
+
+abstract class <#A: kotlin/Any, #B: kotlin/Any, #C: kotlin/Any> uz.jahonov.ktormonitor.presentation/MviViewModel : androidx.lifecycle/ViewModel { // uz.jahonov.ktormonitor.presentation/MviViewModel|null[0]
+    final val effects // uz.jahonov.ktormonitor.presentation/MviViewModel.effects|{}effects[0]
+        final fun <get-effects>(): kotlinx.coroutines.flow/Flow<#C> // uz.jahonov.ktormonitor.presentation/MviViewModel.effects.<get-effects>|<get-effects>(){}[0]
+    final val state // uz.jahonov.ktormonitor.presentation/MviViewModel.state|{}state[0]
+        final fun <get-state>(): kotlinx.coroutines.flow/StateFlow<#A> // uz.jahonov.ktormonitor.presentation/MviViewModel.state.<get-state>|<get-state>(){}[0]
+
+    abstract fun onEvent(#B) // uz.jahonov.ktormonitor.presentation/MviViewModel.onEvent|onEvent(1:1){}[0]
+    final fun <#A1: kotlin/Any?> (kotlinx.coroutines.flow/Flow<#A1>).collectSafely(): kotlinx.coroutines/Job // uz.jahonov.ktormonitor.presentation/MviViewModel.collectSafely|collectSafely@kotlinx.coroutines.flow.Flow<0:0>(){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> (kotlinx.coroutines.flow/Flow<#A1>).shareSafely(): kotlinx.coroutines.flow/SharedFlow<#A1> // uz.jahonov.ktormonitor.presentation/MviViewModel.shareSafely|shareSafely@kotlinx.coroutines.flow.Flow<0:0>(){0§<kotlin.Any?>}[0]
+    final fun emit(#C) // uz.jahonov.ktormonitor.presentation/MviViewModel.emit|emit(1:2){}[0]
+    final fun launch(kotlin.coroutines/SuspendFunction1<kotlinx.coroutines/CoroutineScope, kotlin/Unit>): kotlinx.coroutines/Job // uz.jahonov.ktormonitor.presentation/MviViewModel.launch|launch(kotlin.coroutines.SuspendFunction1<kotlinx.coroutines.CoroutineScope,kotlin.Unit>){}[0]
+    final fun setState(kotlin/Function1<#A, #A>) // uz.jahonov.ktormonitor.presentation/MviViewModel.setState|setState(kotlin.Function1<1:0,1:0>){}[0]
+}
+
+final class uz.jahonov.ktormonitor.body/CodeDocument { // uz.jahonov.ktormonitor.body/CodeDocument|null[0]
+    constructor <init>(uz.jahonov.ktormonitor.body/CodeLanguage, kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeLine>, kotlin.collections/List<uz.jahonov.ktormonitor.body/FoldRegion>) // uz.jahonov.ktormonitor.body/CodeDocument.<init>|<init>(uz.jahonov.ktormonitor.body.CodeLanguage;kotlin.collections.List<uz.jahonov.ktormonitor.body.CodeLine>;kotlin.collections.List<uz.jahonov.ktormonitor.body.FoldRegion>){}[0]
+
+    final val folds // uz.jahonov.ktormonitor.body/CodeDocument.folds|{}folds[0]
+        final fun <get-folds>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/FoldRegion> // uz.jahonov.ktormonitor.body/CodeDocument.folds.<get-folds>|<get-folds>(){}[0]
+    final val language // uz.jahonov.ktormonitor.body/CodeDocument.language|{}language[0]
+        final fun <get-language>(): uz.jahonov.ktormonitor.body/CodeLanguage // uz.jahonov.ktormonitor.body/CodeDocument.language.<get-language>|<get-language>(){}[0]
+    final val lines // uz.jahonov.ktormonitor.body/CodeDocument.lines|{}lines[0]
+        final fun <get-lines>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeLine> // uz.jahonov.ktormonitor.body/CodeDocument.lines.<get-lines>|<get-lines>(){}[0]
+
+    final fun component1(): uz.jahonov.ktormonitor.body/CodeLanguage // uz.jahonov.ktormonitor.body/CodeDocument.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeLine> // uz.jahonov.ktormonitor.body/CodeDocument.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/List<uz.jahonov.ktormonitor.body/FoldRegion> // uz.jahonov.ktormonitor.body/CodeDocument.component3|component3(){}[0]
+    final fun copy(uz.jahonov.ktormonitor.body/CodeLanguage = ..., kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeLine> = ..., kotlin.collections/List<uz.jahonov.ktormonitor.body/FoldRegion> = ...): uz.jahonov.ktormonitor.body/CodeDocument // uz.jahonov.ktormonitor.body/CodeDocument.copy|copy(uz.jahonov.ktormonitor.body.CodeLanguage;kotlin.collections.List<uz.jahonov.ktormonitor.body.CodeLine>;kotlin.collections.List<uz.jahonov.ktormonitor.body.FoldRegion>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/CodeDocument.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/CodeDocument.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/CodeDocument.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.body/CodeLine { // uz.jahonov.ktormonitor.body/CodeLine|null[0]
+    constructor <init>(kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeSpan>) // uz.jahonov.ktormonitor.body/CodeLine.<init>|<init>(kotlin.collections.List<uz.jahonov.ktormonitor.body.CodeSpan>){}[0]
+
+    final val spans // uz.jahonov.ktormonitor.body/CodeLine.spans|{}spans[0]
+        final fun <get-spans>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeSpan> // uz.jahonov.ktormonitor.body/CodeLine.spans.<get-spans>|<get-spans>(){}[0]
+    final val text // uz.jahonov.ktormonitor.body/CodeLine.text|{}text[0]
+        final fun <get-text>(): kotlin/String // uz.jahonov.ktormonitor.body/CodeLine.text.<get-text>|<get-text>(){}[0]
+
+    final fun component1(): kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeSpan> // uz.jahonov.ktormonitor.body/CodeLine.component1|component1(){}[0]
+    final fun copy(kotlin.collections/List<uz.jahonov.ktormonitor.body/CodeSpan> = ...): uz.jahonov.ktormonitor.body/CodeLine // uz.jahonov.ktormonitor.body/CodeLine.copy|copy(kotlin.collections.List<uz.jahonov.ktormonitor.body.CodeSpan>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/CodeLine.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/CodeLine.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/CodeLine.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.body/CodeSpan { // uz.jahonov.ktormonitor.body/CodeSpan|null[0]
+    constructor <init>(kotlin/String, uz.jahonov.ktormonitor.body/TokenKind) // uz.jahonov.ktormonitor.body/CodeSpan.<init>|<init>(kotlin.String;uz.jahonov.ktormonitor.body.TokenKind){}[0]
+
+    final val kind // uz.jahonov.ktormonitor.body/CodeSpan.kind|{}kind[0]
+        final fun <get-kind>(): uz.jahonov.ktormonitor.body/TokenKind // uz.jahonov.ktormonitor.body/CodeSpan.kind.<get-kind>|<get-kind>(){}[0]
+    final val text // uz.jahonov.ktormonitor.body/CodeSpan.text|{}text[0]
+        final fun <get-text>(): kotlin/String // uz.jahonov.ktormonitor.body/CodeSpan.text.<get-text>|<get-text>(){}[0]
+
+    final fun component1(): kotlin/String // uz.jahonov.ktormonitor.body/CodeSpan.component1|component1(){}[0]
+    final fun component2(): uz.jahonov.ktormonitor.body/TokenKind // uz.jahonov.ktormonitor.body/CodeSpan.component2|component2(){}[0]
+    final fun copy(kotlin/String = ..., uz.jahonov.ktormonitor.body/TokenKind = ...): uz.jahonov.ktormonitor.body/CodeSpan // uz.jahonov.ktormonitor.body/CodeSpan.copy|copy(kotlin.String;uz.jahonov.ktormonitor.body.TokenKind){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/CodeSpan.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/CodeSpan.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/CodeSpan.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.body/FoldRegion { // uz.jahonov.ktormonitor.body/FoldRegion|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int, kotlin/Boolean) // uz.jahonov.ktormonitor.body/FoldRegion.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Boolean){}[0]
+
+    final val endLine // uz.jahonov.ktormonitor.body/FoldRegion.endLine|{}endLine[0]
+        final fun <get-endLine>(): kotlin/Int // uz.jahonov.ktormonitor.body/FoldRegion.endLine.<get-endLine>|<get-endLine>(){}[0]
+    final val isCollapsedByDefault // uz.jahonov.ktormonitor.body/FoldRegion.isCollapsedByDefault|{}isCollapsedByDefault[0]
+        final fun <get-isCollapsedByDefault>(): kotlin/Boolean // uz.jahonov.ktormonitor.body/FoldRegion.isCollapsedByDefault.<get-isCollapsedByDefault>|<get-isCollapsedByDefault>(){}[0]
+    final val startLine // uz.jahonov.ktormonitor.body/FoldRegion.startLine|{}startLine[0]
+        final fun <get-startLine>(): kotlin/Int // uz.jahonov.ktormonitor.body/FoldRegion.startLine.<get-startLine>|<get-startLine>(){}[0]
+
+    final fun component1(): kotlin/Int // uz.jahonov.ktormonitor.body/FoldRegion.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // uz.jahonov.ktormonitor.body/FoldRegion.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // uz.jahonov.ktormonitor.body/FoldRegion.component3|component3(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin/Boolean = ...): uz.jahonov.ktormonitor.body/FoldRegion // uz.jahonov.ktormonitor.body/FoldRegion.copy|copy(kotlin.Int;kotlin.Int;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/FoldRegion.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/FoldRegion.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/FoldRegion.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.body/HexRow { // uz.jahonov.ktormonitor.body/HexRow|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String) // uz.jahonov.ktormonitor.body/HexRow.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val ascii // uz.jahonov.ktormonitor.body/HexRow.ascii|{}ascii[0]
+        final fun <get-ascii>(): kotlin/String // uz.jahonov.ktormonitor.body/HexRow.ascii.<get-ascii>|<get-ascii>(){}[0]
+    final val hex // uz.jahonov.ktormonitor.body/HexRow.hex|{}hex[0]
+        final fun <get-hex>(): kotlin/String // uz.jahonov.ktormonitor.body/HexRow.hex.<get-hex>|<get-hex>(){}[0]
+    final val offset // uz.jahonov.ktormonitor.body/HexRow.offset|{}offset[0]
+        final fun <get-offset>(): kotlin/String // uz.jahonov.ktormonitor.body/HexRow.offset.<get-offset>|<get-offset>(){}[0]
+
+    final fun component1(): kotlin/String // uz.jahonov.ktormonitor.body/HexRow.component1|component1(){}[0]
+    final fun component2(): kotlin/String // uz.jahonov.ktormonitor.body/HexRow.component2|component2(){}[0]
+    final fun component3(): kotlin/String // uz.jahonov.ktormonitor.body/HexRow.component3|component3(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): uz.jahonov.ktormonitor.body/HexRow // uz.jahonov.ktormonitor.body/HexRow.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/HexRow.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/HexRow.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/HexRow.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.body/MarkdownSpan { // uz.jahonov.ktormonitor.body/MarkdownSpan|null[0]
+    constructor <init>(kotlin/String, kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String? = ...) // uz.jahonov.ktormonitor.body/MarkdownSpan.<init>|<init>(kotlin.String;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.String?){}[0]
+
+    final val isBold // uz.jahonov.ktormonitor.body/MarkdownSpan.isBold|{}isBold[0]
+        final fun <get-isBold>(): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownSpan.isBold.<get-isBold>|<get-isBold>(){}[0]
+    final val isCode // uz.jahonov.ktormonitor.body/MarkdownSpan.isCode|{}isCode[0]
+        final fun <get-isCode>(): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownSpan.isCode.<get-isCode>|<get-isCode>(){}[0]
+    final val isItalic // uz.jahonov.ktormonitor.body/MarkdownSpan.isItalic|{}isItalic[0]
+        final fun <get-isItalic>(): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownSpan.isItalic.<get-isItalic>|<get-isItalic>(){}[0]
+    final val link // uz.jahonov.ktormonitor.body/MarkdownSpan.link|{}link[0]
+        final fun <get-link>(): kotlin/String? // uz.jahonov.ktormonitor.body/MarkdownSpan.link.<get-link>|<get-link>(){}[0]
+    final val text // uz.jahonov.ktormonitor.body/MarkdownSpan.text|{}text[0]
+        final fun <get-text>(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownSpan.text.<get-text>|<get-text>(){}[0]
+
+    final fun component1(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownSpan.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownSpan.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownSpan.component3|component3(){}[0]
+    final fun component4(): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownSpan.component4|component4(){}[0]
+    final fun component5(): kotlin/String? // uz.jahonov.ktormonitor.body/MarkdownSpan.component5|component5(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String? = ...): uz.jahonov.ktormonitor.body/MarkdownSpan // uz.jahonov.ktormonitor.body/MarkdownSpan.copy|copy(kotlin.String;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.body/MarkdownSpan.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.body/MarkdownSpan.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.body/MarkdownSpan.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.capture/KtorMonitorConfig { // uz.jahonov.ktormonitor.capture/KtorMonitorConfig|null[0]
+    final var appName // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.appName|{}appName[0]
+        final fun <get-appName>(): kotlin/String? // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.appName.<get-appName>|<get-appName>(){}[0]
+        final fun <set-appName>(kotlin/String?) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.appName.<set-appName>|<set-appName>(kotlin.String?){}[0]
+    final var appVersion // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.appVersion|{}appVersion[0]
+        final fun <get-appVersion>(): kotlin/String? // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.appVersion.<get-appVersion>|<get-appVersion>(){}[0]
+        final fun <set-appVersion>(kotlin/String?) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.appVersion.<set-appVersion>|<set-appVersion>(kotlin.String?){}[0]
+    final var isActive // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.isActive|{}isActive[0]
+        final fun <get-isActive>(): kotlin/Boolean // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.isActive.<get-isActive>|<get-isActive>(){}[0]
+        final fun <set-isActive>(kotlin/Boolean) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.isActive.<set-isActive>|<set-isActive>(kotlin.Boolean){}[0]
+    final var maxCalls // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.maxCalls|{}maxCalls[0]
+        final fun <get-maxCalls>(): kotlin/Int // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.maxCalls.<get-maxCalls>|<get-maxCalls>(){}[0]
+        final fun <set-maxCalls>(kotlin/Int) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.maxCalls.<set-maxCalls>|<set-maxCalls>(kotlin.Int){}[0]
+    final var maxContentLength // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.maxContentLength|{}maxContentLength[0]
+        final fun <get-maxContentLength>(): kotlin/Int // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.maxContentLength.<get-maxContentLength>|<get-maxContentLength>(){}[0]
+        final fun <set-maxContentLength>(kotlin/Int) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.maxContentLength.<set-maxContentLength>|<set-maxContentLength>(kotlin.Int){}[0]
+    final var onInternalError // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.onInternalError|{}onInternalError[0]
+        final fun <get-onInternalError>(): kotlin/Function1<kotlin/Throwable, kotlin/Unit> // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.onInternalError.<get-onInternalError>|<get-onInternalError>(){}[0]
+        final fun <set-onInternalError>(kotlin/Function1<kotlin/Throwable, kotlin/Unit>) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.onInternalError.<set-onInternalError>|<set-onInternalError>(kotlin.Function1<kotlin.Throwable,kotlin.Unit>){}[0]
+    final var retention // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.retention|{}retention[0]
+        final fun <get-retention>(): uz.jahonov.ktormonitor.capture/Retention // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.retention.<get-retention>|<get-retention>(){}[0]
+        final fun <set-retention>(uz.jahonov.ktormonitor.capture/Retention) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.retention.<set-retention>|<set-retention>(uz.jahonov.ktormonitor.capture.Retention){}[0]
+    final var showNotification // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.showNotification|{}showNotification[0]
+        final fun <get-showNotification>(): kotlin/Boolean // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.showNotification.<get-showNotification>|<get-showNotification>(){}[0]
+        final fun <set-showNotification>(kotlin/Boolean) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.showNotification.<set-showNotification>|<set-showNotification>(kotlin.Boolean){}[0]
+
+    final fun filter(kotlin/Function1<io.ktor.client.request/HttpRequestBuilder, kotlin/Boolean>) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.filter|filter(kotlin.Function1<io.ktor.client.request.HttpRequestBuilder,kotlin.Boolean>){}[0]
+    final fun redactBodyFields(kotlin/Array<out kotlin/String>...) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.redactBodyFields|redactBodyFields(kotlin.Array<out|kotlin.String>...){}[0]
+    final fun redactQueryParameters(kotlin/Array<out kotlin/String>...) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.redactQueryParameters|redactQueryParameters(kotlin.Array<out|kotlin.String>...){}[0]
+    final fun sanitizeHeader(kotlin/String = ..., kotlin/Function1<kotlin/String, kotlin/Boolean>) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.sanitizeHeader|sanitizeHeader(kotlin.String;kotlin.Function1<kotlin.String,kotlin.Boolean>){}[0]
+    final fun sanitizeHeaders(kotlin/Array<out kotlin/String>..., kotlin/String = ...) // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.sanitizeHeaders|sanitizeHeaders(kotlin.Array<out|kotlin.String>...;kotlin.String){}[0]
+
+    final object Companion { // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.Companion|null[0]
+        final const val DEFAULT_MAX_CALLS // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.Companion.DEFAULT_MAX_CALLS|{}DEFAULT_MAX_CALLS[0]
+            final fun <get-DEFAULT_MAX_CALLS>(): kotlin/Int // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.Companion.DEFAULT_MAX_CALLS.<get-DEFAULT_MAX_CALLS>|<get-DEFAULT_MAX_CALLS>(){}[0]
+        final const val DEFAULT_MAX_CONTENT_LENGTH // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.Companion.DEFAULT_MAX_CONTENT_LENGTH|{}DEFAULT_MAX_CONTENT_LENGTH[0]
+            final fun <get-DEFAULT_MAX_CONTENT_LENGTH>(): kotlin/Int // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.Companion.DEFAULT_MAX_CONTENT_LENGTH.<get-DEFAULT_MAX_CONTENT_LENGTH>|<get-DEFAULT_MAX_CONTENT_LENGTH>(){}[0]
+        final const val PLACEHOLDER // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.Companion.PLACEHOLDER|{}PLACEHOLDER[0]
+            final fun <get-PLACEHOLDER>(): kotlin/String // uz.jahonov.ktormonitor.capture/KtorMonitorConfig.Companion.PLACEHOLDER.<get-PLACEHOLDER>|<get-PLACEHOLDER>(){}[0]
+    }
+}
+
+final class uz.jahonov.ktormonitor.model/CallSummary { // uz.jahonov.ktormonitor.model/CallSummary|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/Int, kotlin/String, kotlin/String, kotlin/Long, kotlin/String?, kotlin/Long?, kotlin/String?, kotlin/Int?, kotlin/Long?, kotlin/String?, kotlin/Long?, kotlin/String?) // uz.jahonov.ktormonitor.model/CallSummary.<init>|<init>(kotlin.String;kotlin.String;kotlin.Int;kotlin.String;kotlin.String;kotlin.Long;kotlin.String?;kotlin.Long?;kotlin.String?;kotlin.Int?;kotlin.Long?;kotlin.String?;kotlin.Long?;kotlin.String?){}[0]
+
+    final val attempt // uz.jahonov.ktormonitor.model/CallSummary.attempt|{}attempt[0]
+        final fun <get-attempt>(): kotlin/Int // uz.jahonov.ktormonitor.model/CallSummary.attempt.<get-attempt>|<get-attempt>(){}[0]
+    final val durationMillis // uz.jahonov.ktormonitor.model/CallSummary.durationMillis|{}durationMillis[0]
+        final fun <get-durationMillis>(): kotlin/Long? // uz.jahonov.ktormonitor.model/CallSummary.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+    final val error // uz.jahonov.ktormonitor.model/CallSummary.error|{}error[0]
+        final fun <get-error>(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.error.<get-error>|<get-error>(){}[0]
+    final val groupId // uz.jahonov.ktormonitor.model/CallSummary.groupId|{}groupId[0]
+        final fun <get-groupId>(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.groupId.<get-groupId>|<get-groupId>(){}[0]
+    final val host // uz.jahonov.ktormonitor.model/CallSummary.host|{}host[0]
+        final fun <get-host>(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.host.<get-host>|<get-host>(){}[0]
+    final val id // uz.jahonov.ktormonitor.model/CallSummary.id|{}id[0]
+        final fun <get-id>(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.id.<get-id>|<get-id>(){}[0]
+    final val isError // uz.jahonov.ktormonitor.model/CallSummary.isError|{}isError[0]
+        final fun <get-isError>(): kotlin/Boolean // uz.jahonov.ktormonitor.model/CallSummary.isError.<get-isError>|<get-isError>(){}[0]
+    final val isInProgress // uz.jahonov.ktormonitor.model/CallSummary.isInProgress|{}isInProgress[0]
+        final fun <get-isInProgress>(): kotlin/Boolean // uz.jahonov.ktormonitor.model/CallSummary.isInProgress.<get-isInProgress>|<get-isInProgress>(){}[0]
+    final val isRedirect // uz.jahonov.ktormonitor.model/CallSummary.isRedirect|{}isRedirect[0]
+        final fun <get-isRedirect>(): kotlin/Boolean // uz.jahonov.ktormonitor.model/CallSummary.isRedirect.<get-isRedirect>|<get-isRedirect>(){}[0]
+    final val isSecure // uz.jahonov.ktormonitor.model/CallSummary.isSecure|{}isSecure[0]
+        final fun <get-isSecure>(): kotlin/Boolean // uz.jahonov.ktormonitor.model/CallSummary.isSecure.<get-isSecure>|<get-isSecure>(){}[0]
+    final val kind // uz.jahonov.ktormonitor.model/CallSummary.kind|{}kind[0]
+        final fun <get-kind>(): uz.jahonov.ktormonitor.model/ContentKind // uz.jahonov.ktormonitor.model/CallSummary.kind.<get-kind>|<get-kind>(){}[0]
+    final val method // uz.jahonov.ktormonitor.model/CallSummary.method|{}method[0]
+        final fun <get-method>(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.method.<get-method>|<get-method>(){}[0]
+    final val path // uz.jahonov.ktormonitor.model/CallSummary.path|{}path[0]
+        final fun <get-path>(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.path.<get-path>|<get-path>(){}[0]
+    final val protocol // uz.jahonov.ktormonitor.model/CallSummary.protocol|{}protocol[0]
+        final fun <get-protocol>(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.protocol.<get-protocol>|<get-protocol>(){}[0]
+    final val requestContentType // uz.jahonov.ktormonitor.model/CallSummary.requestContentType|{}requestContentType[0]
+        final fun <get-requestContentType>(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.requestContentType.<get-requestContentType>|<get-requestContentType>(){}[0]
+    final val requestSize // uz.jahonov.ktormonitor.model/CallSummary.requestSize|{}requestSize[0]
+        final fun <get-requestSize>(): kotlin/Long? // uz.jahonov.ktormonitor.model/CallSummary.requestSize.<get-requestSize>|<get-requestSize>(){}[0]
+    final val requestTime // uz.jahonov.ktormonitor.model/CallSummary.requestTime|{}requestTime[0]
+        final fun <get-requestTime>(): kotlin/Long // uz.jahonov.ktormonitor.model/CallSummary.requestTime.<get-requestTime>|<get-requestTime>(){}[0]
+    final val responseCode // uz.jahonov.ktormonitor.model/CallSummary.responseCode|{}responseCode[0]
+        final fun <get-responseCode>(): kotlin/Int? // uz.jahonov.ktormonitor.model/CallSummary.responseCode.<get-responseCode>|<get-responseCode>(){}[0]
+    final val responseContentType // uz.jahonov.ktormonitor.model/CallSummary.responseContentType|{}responseContentType[0]
+        final fun <get-responseContentType>(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.responseContentType.<get-responseContentType>|<get-responseContentType>(){}[0]
+    final val responseSize // uz.jahonov.ktormonitor.model/CallSummary.responseSize|{}responseSize[0]
+        final fun <get-responseSize>(): kotlin/Long? // uz.jahonov.ktormonitor.model/CallSummary.responseSize.<get-responseSize>|<get-responseSize>(){}[0]
+    final val responseTime // uz.jahonov.ktormonitor.model/CallSummary.responseTime|{}responseTime[0]
+        final fun <get-responseTime>(): kotlin/Long? // uz.jahonov.ktormonitor.model/CallSummary.responseTime.<get-responseTime>|<get-responseTime>(){}[0]
+    final val url // uz.jahonov.ktormonitor.model/CallSummary.url|{}url[0]
+        final fun <get-url>(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.url.<get-url>|<get-url>(){}[0]
+
+    final fun component1(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.component1|component1(){}[0]
+    final fun component10(): kotlin/Int? // uz.jahonov.ktormonitor.model/CallSummary.component10|component10(){}[0]
+    final fun component11(): kotlin/Long? // uz.jahonov.ktormonitor.model/CallSummary.component11|component11(){}[0]
+    final fun component12(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.component12|component12(){}[0]
+    final fun component13(): kotlin/Long? // uz.jahonov.ktormonitor.model/CallSummary.component13|component13(){}[0]
+    final fun component14(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.component14|component14(){}[0]
+    final fun component2(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // uz.jahonov.ktormonitor.model/CallSummary.component3|component3(){}[0]
+    final fun component4(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.component4|component4(){}[0]
+    final fun component5(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.component5|component5(){}[0]
+    final fun component6(): kotlin/Long // uz.jahonov.ktormonitor.model/CallSummary.component6|component6(){}[0]
+    final fun component7(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.component7|component7(){}[0]
+    final fun component8(): kotlin/Long? // uz.jahonov.ktormonitor.model/CallSummary.component8|component8(){}[0]
+    final fun component9(): kotlin/String? // uz.jahonov.ktormonitor.model/CallSummary.component9|component9(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/String = ..., kotlin/String = ..., kotlin/Long = ..., kotlin/String? = ..., kotlin/Long? = ..., kotlin/String? = ..., kotlin/Int? = ..., kotlin/Long? = ..., kotlin/String? = ..., kotlin/Long? = ..., kotlin/String? = ...): uz.jahonov.ktormonitor.model/CallSummary // uz.jahonov.ktormonitor.model/CallSummary.copy|copy(kotlin.String;kotlin.String;kotlin.Int;kotlin.String;kotlin.String;kotlin.Long;kotlin.String?;kotlin.Long?;kotlin.String?;kotlin.Int?;kotlin.Long?;kotlin.String?;kotlin.Long?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.model/CallSummary.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.model/CallSummary.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.model/CallSummary.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.model/CapturedBody { // uz.jahonov.ktormonitor.model/CapturedBody|null[0]
+    constructor <init>(kotlinx.io.bytestring/ByteString, kotlin/Long) // uz.jahonov.ktormonitor.model/CapturedBody.<init>|<init>(kotlinx.io.bytestring.ByteString;kotlin.Long){}[0]
+
+    final val bytes // uz.jahonov.ktormonitor.model/CapturedBody.bytes|{}bytes[0]
+        final fun <get-bytes>(): kotlinx.io.bytestring/ByteString // uz.jahonov.ktormonitor.model/CapturedBody.bytes.<get-bytes>|<get-bytes>(){}[0]
+    final val isTruncated // uz.jahonov.ktormonitor.model/CapturedBody.isTruncated|{}isTruncated[0]
+        final fun <get-isTruncated>(): kotlin/Boolean // uz.jahonov.ktormonitor.model/CapturedBody.isTruncated.<get-isTruncated>|<get-isTruncated>(){}[0]
+    final val size // uz.jahonov.ktormonitor.model/CapturedBody.size|{}size[0]
+        final fun <get-size>(): kotlin/Long // uz.jahonov.ktormonitor.model/CapturedBody.size.<get-size>|<get-size>(){}[0]
+
+    final fun component1(): kotlinx.io.bytestring/ByteString // uz.jahonov.ktormonitor.model/CapturedBody.component1|component1(){}[0]
+    final fun component2(): kotlin/Long // uz.jahonov.ktormonitor.model/CapturedBody.component2|component2(){}[0]
+    final fun copy(kotlinx.io.bytestring/ByteString = ..., kotlin/Long = ...): uz.jahonov.ktormonitor.model/CapturedBody // uz.jahonov.ktormonitor.model/CapturedBody.copy|copy(kotlinx.io.bytestring.ByteString;kotlin.Long){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.model/CapturedBody.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.model/CapturedBody.hashCode|hashCode(){}[0]
+    final fun text(kotlin/String?): kotlin/String? // uz.jahonov.ktormonitor.model/CapturedBody.text|text(kotlin.String?){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.model/CapturedBody.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.model/NetworkCall { // uz.jahonov.ktormonitor.model/NetworkCall|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/Int, kotlin/String, kotlin/String, kotlin/Long, kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>>, kotlin/String?, uz.jahonov.ktormonitor.model/CapturedBody?, kotlin/String? = ..., kotlin/Int? = ..., kotlin/Long? = ..., kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> = ..., kotlin/String? = ..., uz.jahonov.ktormonitor.model/CapturedBody? = ..., kotlin/String? = ...) // uz.jahonov.ktormonitor.model/NetworkCall.<init>|<init>(kotlin.String;kotlin.String;kotlin.Int;kotlin.String;kotlin.String;kotlin.Long;kotlin.collections.Map<kotlin.String,kotlin.collections.List<kotlin.String>>;kotlin.String?;uz.jahonov.ktormonitor.model.CapturedBody?;kotlin.String?;kotlin.Int?;kotlin.Long?;kotlin.collections.Map<kotlin.String,kotlin.collections.List<kotlin.String>>;kotlin.String?;uz.jahonov.ktormonitor.model.CapturedBody?;kotlin.String?){}[0]
+
+    final val attempt // uz.jahonov.ktormonitor.model/NetworkCall.attempt|{}attempt[0]
+        final fun <get-attempt>(): kotlin/Int // uz.jahonov.ktormonitor.model/NetworkCall.attempt.<get-attempt>|<get-attempt>(){}[0]
+    final val durationMillis // uz.jahonov.ktormonitor.model/NetworkCall.durationMillis|{}durationMillis[0]
+        final fun <get-durationMillis>(): kotlin/Long? // uz.jahonov.ktormonitor.model/NetworkCall.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+    final val error // uz.jahonov.ktormonitor.model/NetworkCall.error|{}error[0]
+        final fun <get-error>(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.error.<get-error>|<get-error>(){}[0]
+    final val groupId // uz.jahonov.ktormonitor.model/NetworkCall.groupId|{}groupId[0]
+        final fun <get-groupId>(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.groupId.<get-groupId>|<get-groupId>(){}[0]
+    final val id // uz.jahonov.ktormonitor.model/NetworkCall.id|{}id[0]
+        final fun <get-id>(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.id.<get-id>|<get-id>(){}[0]
+    final val isInProgress // uz.jahonov.ktormonitor.model/NetworkCall.isInProgress|{}isInProgress[0]
+        final fun <get-isInProgress>(): kotlin/Boolean // uz.jahonov.ktormonitor.model/NetworkCall.isInProgress.<get-isInProgress>|<get-isInProgress>(){}[0]
+    final val method // uz.jahonov.ktormonitor.model/NetworkCall.method|{}method[0]
+        final fun <get-method>(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.method.<get-method>|<get-method>(){}[0]
+    final val protocol // uz.jahonov.ktormonitor.model/NetworkCall.protocol|{}protocol[0]
+        final fun <get-protocol>(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.protocol.<get-protocol>|<get-protocol>(){}[0]
+    final val requestBody // uz.jahonov.ktormonitor.model/NetworkCall.requestBody|{}requestBody[0]
+        final fun <get-requestBody>(): uz.jahonov.ktormonitor.model/CapturedBody? // uz.jahonov.ktormonitor.model/NetworkCall.requestBody.<get-requestBody>|<get-requestBody>(){}[0]
+    final val requestContentType // uz.jahonov.ktormonitor.model/NetworkCall.requestContentType|{}requestContentType[0]
+        final fun <get-requestContentType>(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.requestContentType.<get-requestContentType>|<get-requestContentType>(){}[0]
+    final val requestHeaders // uz.jahonov.ktormonitor.model/NetworkCall.requestHeaders|{}requestHeaders[0]
+        final fun <get-requestHeaders>(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // uz.jahonov.ktormonitor.model/NetworkCall.requestHeaders.<get-requestHeaders>|<get-requestHeaders>(){}[0]
+    final val requestTime // uz.jahonov.ktormonitor.model/NetworkCall.requestTime|{}requestTime[0]
+        final fun <get-requestTime>(): kotlin/Long // uz.jahonov.ktormonitor.model/NetworkCall.requestTime.<get-requestTime>|<get-requestTime>(){}[0]
+    final val responseBody // uz.jahonov.ktormonitor.model/NetworkCall.responseBody|{}responseBody[0]
+        final fun <get-responseBody>(): uz.jahonov.ktormonitor.model/CapturedBody? // uz.jahonov.ktormonitor.model/NetworkCall.responseBody.<get-responseBody>|<get-responseBody>(){}[0]
+    final val responseCode // uz.jahonov.ktormonitor.model/NetworkCall.responseCode|{}responseCode[0]
+        final fun <get-responseCode>(): kotlin/Int? // uz.jahonov.ktormonitor.model/NetworkCall.responseCode.<get-responseCode>|<get-responseCode>(){}[0]
+    final val responseContentType // uz.jahonov.ktormonitor.model/NetworkCall.responseContentType|{}responseContentType[0]
+        final fun <get-responseContentType>(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.responseContentType.<get-responseContentType>|<get-responseContentType>(){}[0]
+    final val responseHeaders // uz.jahonov.ktormonitor.model/NetworkCall.responseHeaders|{}responseHeaders[0]
+        final fun <get-responseHeaders>(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // uz.jahonov.ktormonitor.model/NetworkCall.responseHeaders.<get-responseHeaders>|<get-responseHeaders>(){}[0]
+    final val responseTime // uz.jahonov.ktormonitor.model/NetworkCall.responseTime|{}responseTime[0]
+        final fun <get-responseTime>(): kotlin/Long? // uz.jahonov.ktormonitor.model/NetworkCall.responseTime.<get-responseTime>|<get-responseTime>(){}[0]
+    final val summary // uz.jahonov.ktormonitor.model/NetworkCall.summary|{}summary[0]
+        final fun <get-summary>(): uz.jahonov.ktormonitor.model/CallSummary // uz.jahonov.ktormonitor.model/NetworkCall.summary.<get-summary>|<get-summary>(){}[0]
+    final val url // uz.jahonov.ktormonitor.model/NetworkCall.url|{}url[0]
+        final fun <get-url>(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.url.<get-url>|<get-url>(){}[0]
+
+    final fun component1(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.component1|component1(){}[0]
+    final fun component10(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.component10|component10(){}[0]
+    final fun component11(): kotlin/Int? // uz.jahonov.ktormonitor.model/NetworkCall.component11|component11(){}[0]
+    final fun component12(): kotlin/Long? // uz.jahonov.ktormonitor.model/NetworkCall.component12|component12(){}[0]
+    final fun component13(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // uz.jahonov.ktormonitor.model/NetworkCall.component13|component13(){}[0]
+    final fun component14(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.component14|component14(){}[0]
+    final fun component15(): uz.jahonov.ktormonitor.model/CapturedBody? // uz.jahonov.ktormonitor.model/NetworkCall.component15|component15(){}[0]
+    final fun component16(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.component16|component16(){}[0]
+    final fun component2(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // uz.jahonov.ktormonitor.model/NetworkCall.component3|component3(){}[0]
+    final fun component4(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.component4|component4(){}[0]
+    final fun component5(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.component5|component5(){}[0]
+    final fun component6(): kotlin/Long // uz.jahonov.ktormonitor.model/NetworkCall.component6|component6(){}[0]
+    final fun component7(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> // uz.jahonov.ktormonitor.model/NetworkCall.component7|component7(){}[0]
+    final fun component8(): kotlin/String? // uz.jahonov.ktormonitor.model/NetworkCall.component8|component8(){}[0]
+    final fun component9(): uz.jahonov.ktormonitor.model/CapturedBody? // uz.jahonov.ktormonitor.model/NetworkCall.component9|component9(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/String = ..., kotlin/String = ..., kotlin/Long = ..., kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> = ..., kotlin/String? = ..., uz.jahonov.ktormonitor.model/CapturedBody? = ..., kotlin/String? = ..., kotlin/Int? = ..., kotlin/Long? = ..., kotlin.collections/Map<kotlin/String, kotlin.collections/List<kotlin/String>> = ..., kotlin/String? = ..., uz.jahonov.ktormonitor.model/CapturedBody? = ..., kotlin/String? = ...): uz.jahonov.ktormonitor.model/NetworkCall // uz.jahonov.ktormonitor.model/NetworkCall.copy|copy(kotlin.String;kotlin.String;kotlin.Int;kotlin.String;kotlin.String;kotlin.Long;kotlin.collections.Map<kotlin.String,kotlin.collections.List<kotlin.String>>;kotlin.String?;uz.jahonov.ktormonitor.model.CapturedBody?;kotlin.String?;kotlin.Int?;kotlin.Long?;kotlin.collections.Map<kotlin.String,kotlin.collections.List<kotlin.String>>;kotlin.String?;uz.jahonov.ktormonitor.model.CapturedBody?;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.model/NetworkCall.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.model/NetworkCall.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.model/NetworkCall.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation.detail/BodyState { // uz.jahonov.ktormonitor.presentation.detail/BodyState|null[0]
+    constructor <init>(kotlin.collections/List<uz.jahonov.ktormonitor.body/BodyMode>, uz.jahonov.ktormonitor.body/BodyMode, uz.jahonov.ktormonitor.presentation.detail/BodyContent, kotlin/Long, kotlin/Boolean) // uz.jahonov.ktormonitor.presentation.detail/BodyState.<init>|<init>(kotlin.collections.List<uz.jahonov.ktormonitor.body.BodyMode>;uz.jahonov.ktormonitor.body.BodyMode;uz.jahonov.ktormonitor.presentation.detail.BodyContent;kotlin.Long;kotlin.Boolean){}[0]
+
+    final val content // uz.jahonov.ktormonitor.presentation.detail/BodyState.content|{}content[0]
+        final fun <get-content>(): uz.jahonov.ktormonitor.presentation.detail/BodyContent // uz.jahonov.ktormonitor.presentation.detail/BodyState.content.<get-content>|<get-content>(){}[0]
+    final val isTruncated // uz.jahonov.ktormonitor.presentation.detail/BodyState.isTruncated|{}isTruncated[0]
+        final fun <get-isTruncated>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/BodyState.isTruncated.<get-isTruncated>|<get-isTruncated>(){}[0]
+    final val mode // uz.jahonov.ktormonitor.presentation.detail/BodyState.mode|{}mode[0]
+        final fun <get-mode>(): uz.jahonov.ktormonitor.body/BodyMode // uz.jahonov.ktormonitor.presentation.detail/BodyState.mode.<get-mode>|<get-mode>(){}[0]
+    final val modes // uz.jahonov.ktormonitor.presentation.detail/BodyState.modes|{}modes[0]
+        final fun <get-modes>(): kotlin.collections/List<uz.jahonov.ktormonitor.body/BodyMode> // uz.jahonov.ktormonitor.presentation.detail/BodyState.modes.<get-modes>|<get-modes>(){}[0]
+    final val size // uz.jahonov.ktormonitor.presentation.detail/BodyState.size|{}size[0]
+        final fun <get-size>(): kotlin/Long // uz.jahonov.ktormonitor.presentation.detail/BodyState.size.<get-size>|<get-size>(){}[0]
+
+    final fun component1(): kotlin.collections/List<uz.jahonov.ktormonitor.body/BodyMode> // uz.jahonov.ktormonitor.presentation.detail/BodyState.component1|component1(){}[0]
+    final fun component2(): uz.jahonov.ktormonitor.body/BodyMode // uz.jahonov.ktormonitor.presentation.detail/BodyState.component2|component2(){}[0]
+    final fun component3(): uz.jahonov.ktormonitor.presentation.detail/BodyContent // uz.jahonov.ktormonitor.presentation.detail/BodyState.component3|component3(){}[0]
+    final fun component4(): kotlin/Long // uz.jahonov.ktormonitor.presentation.detail/BodyState.component4|component4(){}[0]
+    final fun component5(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/BodyState.component5|component5(){}[0]
+    final fun copy(kotlin.collections/List<uz.jahonov.ktormonitor.body/BodyMode> = ..., uz.jahonov.ktormonitor.body/BodyMode = ..., uz.jahonov.ktormonitor.presentation.detail/BodyContent = ..., kotlin/Long = ..., kotlin/Boolean = ...): uz.jahonov.ktormonitor.presentation.detail/BodyState // uz.jahonov.ktormonitor.presentation.detail/BodyState.copy|copy(kotlin.collections.List<uz.jahonov.ktormonitor.body.BodyMode>;uz.jahonov.ktormonitor.body.BodyMode;uz.jahonov.ktormonitor.presentation.detail.BodyContent;kotlin.Long;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/BodyState.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/BodyState.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/BodyState.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState|null[0]
+    constructor <init>(uz.jahonov.ktormonitor.presentation/Loadable<uz.jahonov.ktormonitor.model/NetworkCall> = ..., uz.jahonov.ktormonitor.presentation.detail/BodyState? = ..., uz.jahonov.ktormonitor.presentation.detail/BodyState? = ...) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.<init>|<init>(uz.jahonov.ktormonitor.presentation.Loadable<uz.jahonov.ktormonitor.model.NetworkCall>;uz.jahonov.ktormonitor.presentation.detail.BodyState?;uz.jahonov.ktormonitor.presentation.detail.BodyState?){}[0]
+
+    final val call // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.call|{}call[0]
+        final fun <get-call>(): uz.jahonov.ktormonitor.presentation/Loadable<uz.jahonov.ktormonitor.model/NetworkCall> // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.call.<get-call>|<get-call>(){}[0]
+    final val request // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.request|{}request[0]
+        final fun <get-request>(): uz.jahonov.ktormonitor.presentation.detail/BodyState? // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.request.<get-request>|<get-request>(){}[0]
+    final val response // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.response|{}response[0]
+        final fun <get-response>(): uz.jahonov.ktormonitor.presentation.detail/BodyState? // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.response.<get-response>|<get-response>(){}[0]
+
+    final fun component1(): uz.jahonov.ktormonitor.presentation/Loadable<uz.jahonov.ktormonitor.model/NetworkCall> // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.component1|component1(){}[0]
+    final fun component2(): uz.jahonov.ktormonitor.presentation.detail/BodyState? // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.component2|component2(){}[0]
+    final fun component3(): uz.jahonov.ktormonitor.presentation.detail/BodyState? // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.component3|component3(){}[0]
+    final fun copy(uz.jahonov.ktormonitor.presentation/Loadable<uz.jahonov.ktormonitor.model/NetworkCall> = ..., uz.jahonov.ktormonitor.presentation.detail/BodyState? = ..., uz.jahonov.ktormonitor.presentation.detail/BodyState? = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.copy|copy(uz.jahonov.ktormonitor.presentation.Loadable<uz.jahonov.ktormonitor.model.NetworkCall>;uz.jahonov.ktormonitor.presentation.detail.BodyState?;uz.jahonov.ktormonitor.presentation.detail.BodyState?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailViewModel : uz.jahonov.ktormonitor.presentation/MviViewModel<uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiState, uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent, uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEffect> { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailViewModel|null[0]
+    final fun onEvent(uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailViewModel.onEvent|onEvent(uz.jahonov.ktormonitor.presentation.detail.KtorMonitorDetailUiEvent){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation.list/CallFilters { // uz.jahonov.ktormonitor.presentation.list/CallFilters|null[0]
+    constructor <init>(kotlin.collections/Set<kotlin/String> = ..., kotlin.collections/Set<kotlin/String> = ..., kotlin.collections/Set<kotlin/String> = ..., kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/StatusClass> = ..., kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/DurationRange> = ...) // uz.jahonov.ktormonitor.presentation.list/CallFilters.<init>|<init>(kotlin.collections.Set<kotlin.String>;kotlin.collections.Set<kotlin.String>;kotlin.collections.Set<kotlin.String>;kotlin.collections.Set<uz.jahonov.ktormonitor.presentation.list.StatusClass>;kotlin.collections.Set<uz.jahonov.ktormonitor.presentation.list.DurationRange>){}[0]
+
+    final val contentTypes // uz.jahonov.ktormonitor.presentation.list/CallFilters.contentTypes|{}contentTypes[0]
+        final fun <get-contentTypes>(): kotlin.collections/Set<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/CallFilters.contentTypes.<get-contentTypes>|<get-contentTypes>(){}[0]
+    final val count // uz.jahonov.ktormonitor.presentation.list/CallFilters.count|{}count[0]
+        final fun <get-count>(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/CallFilters.count.<get-count>|<get-count>(){}[0]
+    final val durations // uz.jahonov.ktormonitor.presentation.list/CallFilters.durations|{}durations[0]
+        final fun <get-durations>(): kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/DurationRange> // uz.jahonov.ktormonitor.presentation.list/CallFilters.durations.<get-durations>|<get-durations>(){}[0]
+    final val hosts // uz.jahonov.ktormonitor.presentation.list/CallFilters.hosts|{}hosts[0]
+        final fun <get-hosts>(): kotlin.collections/Set<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/CallFilters.hosts.<get-hosts>|<get-hosts>(){}[0]
+    final val isEmpty // uz.jahonov.ktormonitor.presentation.list/CallFilters.isEmpty|{}isEmpty[0]
+        final fun <get-isEmpty>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/CallFilters.isEmpty.<get-isEmpty>|<get-isEmpty>(){}[0]
+    final val methods // uz.jahonov.ktormonitor.presentation.list/CallFilters.methods|{}methods[0]
+        final fun <get-methods>(): kotlin.collections/Set<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/CallFilters.methods.<get-methods>|<get-methods>(){}[0]
+    final val statuses // uz.jahonov.ktormonitor.presentation.list/CallFilters.statuses|{}statuses[0]
+        final fun <get-statuses>(): kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/StatusClass> // uz.jahonov.ktormonitor.presentation.list/CallFilters.statuses.<get-statuses>|<get-statuses>(){}[0]
+
+    final fun component1(): kotlin.collections/Set<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/CallFilters.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/Set<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/CallFilters.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/Set<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/CallFilters.component3|component3(){}[0]
+    final fun component4(): kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/StatusClass> // uz.jahonov.ktormonitor.presentation.list/CallFilters.component4|component4(){}[0]
+    final fun component5(): kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/DurationRange> // uz.jahonov.ktormonitor.presentation.list/CallFilters.component5|component5(){}[0]
+    final fun copy(kotlin.collections/Set<kotlin/String> = ..., kotlin.collections/Set<kotlin/String> = ..., kotlin.collections/Set<kotlin/String> = ..., kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/StatusClass> = ..., kotlin.collections/Set<uz.jahonov.ktormonitor.presentation.list/DurationRange> = ...): uz.jahonov.ktormonitor.presentation.list/CallFilters // uz.jahonov.ktormonitor.presentation.list/CallFilters.copy|copy(kotlin.collections.Set<kotlin.String>;kotlin.collections.Set<kotlin.String>;kotlin.collections.Set<kotlin.String>;kotlin.collections.Set<uz.jahonov.ktormonitor.presentation.list.StatusClass>;kotlin.collections.Set<uz.jahonov.ktormonitor.presentation.list.DurationRange>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/CallFilters.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/CallFilters.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/CallFilters.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation.list/FilterOptions { // uz.jahonov.ktormonitor.presentation.list/FilterOptions|null[0]
+    constructor <init>(kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/StatusClass> = ..., kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/DurationRange> = ...) // uz.jahonov.ktormonitor.presentation.list/FilterOptions.<init>|<init>(kotlin.collections.List<kotlin.String>;kotlin.collections.List<kotlin.String>;kotlin.collections.List<kotlin.String>;kotlin.collections.List<uz.jahonov.ktormonitor.presentation.list.StatusClass>;kotlin.collections.List<uz.jahonov.ktormonitor.presentation.list.DurationRange>){}[0]
+
+    final val contentTypes // uz.jahonov.ktormonitor.presentation.list/FilterOptions.contentTypes|{}contentTypes[0]
+        final fun <get-contentTypes>(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.contentTypes.<get-contentTypes>|<get-contentTypes>(){}[0]
+    final val durations // uz.jahonov.ktormonitor.presentation.list/FilterOptions.durations|{}durations[0]
+        final fun <get-durations>(): kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/DurationRange> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.durations.<get-durations>|<get-durations>(){}[0]
+    final val hosts // uz.jahonov.ktormonitor.presentation.list/FilterOptions.hosts|{}hosts[0]
+        final fun <get-hosts>(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.hosts.<get-hosts>|<get-hosts>(){}[0]
+    final val methods // uz.jahonov.ktormonitor.presentation.list/FilterOptions.methods|{}methods[0]
+        final fun <get-methods>(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.methods.<get-methods>|<get-methods>(){}[0]
+    final val statuses // uz.jahonov.ktormonitor.presentation.list/FilterOptions.statuses|{}statuses[0]
+        final fun <get-statuses>(): kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/StatusClass> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.statuses.<get-statuses>|<get-statuses>(){}[0]
+
+    final fun component1(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.component2|component2(){}[0]
+    final fun component3(): kotlin.collections/List<kotlin/String> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.component3|component3(){}[0]
+    final fun component4(): kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/StatusClass> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.component4|component4(){}[0]
+    final fun component5(): kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/DurationRange> // uz.jahonov.ktormonitor.presentation.list/FilterOptions.component5|component5(){}[0]
+    final fun copy(kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<kotlin/String> = ..., kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/StatusClass> = ..., kotlin.collections/List<uz.jahonov.ktormonitor.presentation.list/DurationRange> = ...): uz.jahonov.ktormonitor.presentation.list/FilterOptions // uz.jahonov.ktormonitor.presentation.list/FilterOptions.copy|copy(kotlin.collections.List<kotlin.String>;kotlin.collections.List<kotlin.String>;kotlin.collections.List<kotlin.String>;kotlin.collections.List<uz.jahonov.ktormonitor.presentation.list.StatusClass>;kotlin.collections.List<uz.jahonov.ktormonitor.presentation.list.DurationRange>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/FilterOptions.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/FilterOptions.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/FilterOptions.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState|null[0]
+    constructor <init>(uz.jahonov.ktormonitor.presentation/Loadable<kotlin.collections/List<uz.jahonov.ktormonitor.model/CallSummary>> = ..., kotlin/Int = ..., kotlin/Boolean = ..., kotlin/String = ..., kotlin/Boolean = ..., uz.jahonov.ktormonitor.presentation.list/CallFilters = ..., uz.jahonov.ktormonitor.presentation.list/FilterOptions = ..., uz.jahonov.ktormonitor.presentation.list/CallSort = ..., kotlin.collections/Set<kotlin/String>? = ...) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.<init>|<init>(uz.jahonov.ktormonitor.presentation.Loadable<kotlin.collections.List<uz.jahonov.ktormonitor.model.CallSummary>>;kotlin.Int;kotlin.Boolean;kotlin.String;kotlin.Boolean;uz.jahonov.ktormonitor.presentation.list.CallFilters;uz.jahonov.ktormonitor.presentation.list.FilterOptions;uz.jahonov.ktormonitor.presentation.list.CallSort;kotlin.collections.Set<kotlin.String>?){}[0]
+
+    final val calls // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.calls|{}calls[0]
+        final fun <get-calls>(): uz.jahonov.ktormonitor.presentation/Loadable<kotlin.collections/List<uz.jahonov.ktormonitor.model/CallSummary>> // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.calls.<get-calls>|<get-calls>(){}[0]
+    final val filters // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.filters|{}filters[0]
+        final fun <get-filters>(): uz.jahonov.ktormonitor.presentation.list/CallFilters // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.filters.<get-filters>|<get-filters>(){}[0]
+    final val isNarrowed // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.isNarrowed|{}isNarrowed[0]
+        final fun <get-isNarrowed>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.isNarrowed.<get-isNarrowed>|<get-isNarrowed>(){}[0]
+    final val isSearchVisible // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.isSearchVisible|{}isSearchVisible[0]
+        final fun <get-isSearchVisible>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.isSearchVisible.<get-isSearchVisible>|<get-isSearchVisible>(){}[0]
+    final val isSelecting // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.isSelecting|{}isSelecting[0]
+        final fun <get-isSelecting>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.isSelecting.<get-isSelecting>|<get-isSelecting>(){}[0]
+    final val onlyErrors // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.onlyErrors|{}onlyErrors[0]
+        final fun <get-onlyErrors>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.onlyErrors.<get-onlyErrors>|<get-onlyErrors>(){}[0]
+    final val options // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.options|{}options[0]
+        final fun <get-options>(): uz.jahonov.ktormonitor.presentation.list/FilterOptions // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.options.<get-options>|<get-options>(){}[0]
+    final val query // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.query|{}query[0]
+        final fun <get-query>(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.query.<get-query>|<get-query>(){}[0]
+    final val selection // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.selection|{}selection[0]
+        final fun <get-selection>(): kotlin.collections/Set<kotlin/String>? // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.selection.<get-selection>|<get-selection>(){}[0]
+    final val sort // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.sort|{}sort[0]
+        final fun <get-sort>(): uz.jahonov.ktormonitor.presentation.list/CallSort // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.sort.<get-sort>|<get-sort>(){}[0]
+    final val totalCount // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.totalCount|{}totalCount[0]
+        final fun <get-totalCount>(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.totalCount.<get-totalCount>|<get-totalCount>(){}[0]
+
+    final fun component1(): uz.jahonov.ktormonitor.presentation/Loadable<kotlin.collections/List<uz.jahonov.ktormonitor.model/CallSummary>> // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component3|component3(){}[0]
+    final fun component4(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component4|component4(){}[0]
+    final fun component5(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component5|component5(){}[0]
+    final fun component6(): uz.jahonov.ktormonitor.presentation.list/CallFilters // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component6|component6(){}[0]
+    final fun component7(): uz.jahonov.ktormonitor.presentation.list/FilterOptions // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component7|component7(){}[0]
+    final fun component8(): uz.jahonov.ktormonitor.presentation.list/CallSort // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component8|component8(){}[0]
+    final fun component9(): kotlin.collections/Set<kotlin/String>? // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.component9|component9(){}[0]
+    final fun copy(uz.jahonov.ktormonitor.presentation/Loadable<kotlin.collections/List<uz.jahonov.ktormonitor.model/CallSummary>> = ..., kotlin/Int = ..., kotlin/Boolean = ..., kotlin/String = ..., kotlin/Boolean = ..., uz.jahonov.ktormonitor.presentation.list/CallFilters = ..., uz.jahonov.ktormonitor.presentation.list/FilterOptions = ..., uz.jahonov.ktormonitor.presentation.list/CallSort = ..., kotlin.collections/Set<kotlin/String>? = ...): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.copy|copy(uz.jahonov.ktormonitor.presentation.Loadable<kotlin.collections.List<uz.jahonov.ktormonitor.model.CallSummary>>;kotlin.Int;kotlin.Boolean;kotlin.String;kotlin.Boolean;uz.jahonov.ktormonitor.presentation.list.CallFilters;uz.jahonov.ktormonitor.presentation.list.FilterOptions;uz.jahonov.ktormonitor.presentation.list.CallSort;kotlin.collections.Set<kotlin.String>?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation.list/KtorMonitorListViewModel : uz.jahonov.ktormonitor.presentation/MviViewModel<uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiState, uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent, uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEffect> { // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListViewModel|null[0]
+    final fun onEvent(uz.jahonov.ktormonitor.presentation.list/KtorMonitorListUiEvent) // uz.jahonov.ktormonitor.presentation.list/KtorMonitorListViewModel.onEvent|onEvent(uz.jahonov.ktormonitor.presentation.list.KtorMonitorListUiEvent){}[0]
+}
+
+final class uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier { // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier|null[0]
+    final val isEnabled // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.isEnabled|{}isEnabled[0]
+        final fun <get-isEnabled>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.isEnabled.<get-isEnabled>|<get-isEnabled>(){}[0]
+    final val lines // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.lines|{}lines[0]
+        final fun <get-lines>(): kotlinx.coroutines.flow/Flow<kotlin.collections/List<kotlin/String>> // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.lines.<get-lines>|<get-lines>(){}[0]
+
+    final object Companion { // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.Companion|null[0]
+        final const val LATEST // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.Companion.LATEST|{}LATEST[0]
+            final fun <get-LATEST>(): kotlin/Int // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.Companion.LATEST.<get-LATEST>|<get-LATEST>(){}[0]
+        final const val TITLE // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.Companion.TITLE|{}TITLE[0]
+            final fun <get-TITLE>(): kotlin/String // uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier.Companion.TITLE.<get-TITLE>|<get-TITLE>(){}[0]
+    }
+}
+
+final class uz.jahonov.ktormonitor.presentation/SharedFile { // uz.jahonov.ktormonitor.presentation/SharedFile|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String) // uz.jahonov.ktormonitor.presentation/SharedFile.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+    final val content // uz.jahonov.ktormonitor.presentation/SharedFile.content|{}content[0]
+        final fun <get-content>(): kotlin/String // uz.jahonov.ktormonitor.presentation/SharedFile.content.<get-content>|<get-content>(){}[0]
+    final val mimeType // uz.jahonov.ktormonitor.presentation/SharedFile.mimeType|{}mimeType[0]
+        final fun <get-mimeType>(): kotlin/String // uz.jahonov.ktormonitor.presentation/SharedFile.mimeType.<get-mimeType>|<get-mimeType>(){}[0]
+    final val name // uz.jahonov.ktormonitor.presentation/SharedFile.name|{}name[0]
+        final fun <get-name>(): kotlin/String // uz.jahonov.ktormonitor.presentation/SharedFile.name.<get-name>|<get-name>(){}[0]
+
+    final fun component1(): kotlin/String // uz.jahonov.ktormonitor.presentation/SharedFile.component1|component1(){}[0]
+    final fun component2(): kotlin/String // uz.jahonov.ktormonitor.presentation/SharedFile.component2|component2(){}[0]
+    final fun component3(): kotlin/String // uz.jahonov.ktormonitor.presentation/SharedFile.component3|component3(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): uz.jahonov.ktormonitor.presentation/SharedFile // uz.jahonov.ktormonitor.presentation/SharedFile.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation/SharedFile.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation/SharedFile.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation/SharedFile.toString|toString(){}[0]
+}
+
+final class uz.jahonov.ktormonitor/KtorMonitor { // uz.jahonov.ktormonitor/KtorMonitor|null[0]
+    final val notifier // uz.jahonov.ktormonitor/KtorMonitor.notifier|{}notifier[0]
+        final fun <get-notifier>(): uz.jahonov.ktormonitor.presentation/KtorMonitorNotifier // uz.jahonov.ktormonitor/KtorMonitor.notifier.<get-notifier>|<get-notifier>(){}[0]
+
+    final fun attach(io.ktor.client/HttpClient) // uz.jahonov.ktormonitor/KtorMonitor.attach|attach(io.ktor.client.HttpClient){}[0]
+    final fun detailViewModel(kotlin/String): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailViewModel // uz.jahonov.ktormonitor/KtorMonitor.detailViewModel|detailViewModel(kotlin.String){}[0]
+    final fun listViewModel(): uz.jahonov.ktormonitor.presentation.list/KtorMonitorListViewModel // uz.jahonov.ktormonitor/KtorMonitor.listViewModel|listViewModel(){}[0]
+    final suspend fun clear() // uz.jahonov.ktormonitor/KtorMonitor.clear|clear(){}[0]
+}
+
+final class uz.jahonov.ktormonitor/KtorMonitorBridge { // uz.jahonov.ktormonitor/KtorMonitorBridge|null[0]
+    constructor <init>(uz.jahonov.ktormonitor/KtorMonitor) // uz.jahonov.ktormonitor/KtorMonitorBridge.<init>|<init>(uz.jahonov.ktormonitor.KtorMonitor){}[0]
+
+    final val isNotificationEnabled // uz.jahonov.ktormonitor/KtorMonitorBridge.isNotificationEnabled|{}isNotificationEnabled[0]
+        final fun <get-isNotificationEnabled>(): kotlin/Boolean // uz.jahonov.ktormonitor/KtorMonitorBridge.isNotificationEnabled.<get-isNotificationEnabled>|<get-isNotificationEnabled>(){}[0]
+
+    final fun clear() // uz.jahonov.ktormonitor/KtorMonitorBridge.clear|clear(){}[0]
+    final fun close(kotlin/String) // uz.jahonov.ktormonitor/KtorMonitorBridge.close|close(kotlin.String){}[0]
+    final fun observeNotification(kotlin/Function1<kotlin/String, kotlin/Unit>): kotlin/String // uz.jahonov.ktormonitor/KtorMonitorBridge.observeNotification|observeNotification(kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+    final fun openCall(kotlin/String, kotlin/Function1<kotlin/String, kotlin/Unit>, kotlin/Function1<kotlin/String, kotlin/Unit>): kotlin/String // uz.jahonov.ktormonitor/KtorMonitorBridge.openCall|openCall(kotlin.String;kotlin.Function1<kotlin.String,kotlin.Unit>;kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+    final fun openList(kotlin/Function1<kotlin/String, kotlin/Unit>, kotlin/Function1<kotlin/String, kotlin/Unit>): kotlin/String // uz.jahonov.ktormonitor/KtorMonitorBridge.openList|openList(kotlin.Function1<kotlin.String,kotlin.Unit>;kotlin.Function1<kotlin.String,kotlin.Unit>){}[0]
+    final fun send(kotlin/String, kotlin/String) // uz.jahonov.ktormonitor/KtorMonitorBridge.send|send(kotlin.String;kotlin.String){}[0]
+}
+
+final fun uz.jahonov.ktormonitor/KtorMonitor(kotlin/Function1<uz.jahonov.ktormonitor.capture/KtorMonitorConfig, kotlin/Unit> = ...): uz.jahonov.ktormonitor/KtorMonitor // uz.jahonov.ktormonitor/KtorMonitor|KtorMonitor(kotlin.Function1<uz.jahonov.ktormonitor.capture.KtorMonitorConfig,kotlin.Unit>){}[0]

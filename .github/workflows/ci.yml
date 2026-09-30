@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # One macOS job: the iOS targets, the Swift package and the Kotlin–Swift JSON contract all need it.
+  build:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Kotlin tests, API check, lint, samples
+        run: >
+          ./gradlew
+          :ktor-monitor:testAndroidHostTest
+          :ktor-monitor:iosSimulatorArm64Test
+          checkKotlinAbi
+          :ktor-monitor-ui:lintDebug
+          :sample:assembleDebug
+
+      # The fixtures the Kotlin tests wrote must be the committed ones: the Swift tests read those.
+      - name: Fixtures up to date
+        run: git diff --exit-code -- ios/KtorMonitorUI/Tests/KtorMonitorUITests/Fixtures
+
+      - name: Swift package tests
+        run: >
+          xcodebuild test
+          -scheme KtorMonitorUI
+          -destination 'platform=iOS Simulator,name=iPhone 16'
+          CODE_SIGNING_ALLOWED=NO
+
+      - name: iOS sample
+        working-directory: ios/Sample
+        run: >
+          xcodebuild build
+          -scheme Sample
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO

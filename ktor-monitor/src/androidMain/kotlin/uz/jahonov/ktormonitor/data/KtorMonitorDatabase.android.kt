@@ -2,6 +2,8 @@ package uz.jahonov.ktormonitor.data
 
 import android.content.Context
 import androidx.room.Room
+import androidx.sqlite.SQLiteDriver
+import androidx.sqlite.driver.AndroidSQLiteDriver
 
 private var database: KtorMonitorDatabase? = null
 private val lock = Any()
@@ -16,3 +18,5 @@ internal fun ktorMonitorDatabase(context: Context): KtorMonitorDatabase = synchr
         name = context.cacheDir.resolve(KTOR_MONITOR_DB).absolutePath,
     ).buildKtorMonitorDatabase().also { database = it }
 }
+
+internal actual fun sqliteDriver(): SQLiteDriver = AndroidSQLiteDriver()

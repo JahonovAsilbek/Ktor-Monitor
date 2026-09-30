@@ -1,5 +1,8 @@
 package uz.jahonov.ktormonitor.bridge
 
+import uz.jahonov.ktormonitor.model.ContentKind
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.builtins.MapSerializer
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -132,7 +135,7 @@ class BridgeFixturesTest {
     )
 
     @Test
-    fun `detail with markdown, in flight`() = check(
+    fun `detail with markdown in flight`() = check(
         "detail-markdown.json",
         DetailStateWire.serializer(),
         KtorMonitorDetailUiState(
@@ -179,6 +182,26 @@ class BridgeFixturesTest {
         "notification.json",
         NotificationWire.serializer(),
         NotificationWire(KtorMonitorNotifier.TITLE, listOf("❌ POST /login", "200 GET /v1/items?page=2")),
+    )
+
+    /** The enum values Swift matches by name; a new one fails the Swift tests until Swift knows it. */
+    @Test
+    fun `enum names`() = check(
+        "enum-names.json",
+        MapSerializer(String.serializer(), ListSerializer(String.serializer())),
+        mapOf(
+            "BodyMode" to BodyMode.entries.map { it.name },
+            "BodySide" to BodySide.entries.map { it.name },
+            "CallSort" to CallSort.entries.map { it.name },
+            "CodeLanguage" to CodeLanguage.entries.map { it.name },
+            "ContentKind" to ContentKind.entries.map { it.name },
+            "CopyFormat" to CopyFormat.entries.map { it.name },
+            "DurationRange" to DurationRange.entries.map { it.name },
+            "ExportFormat" to ExportFormat.entries.map { it.name },
+            "ImageFormat" to ImageFormat.entries.map { it.name },
+            "StatusClass" to StatusClass.entries.map { it.name },
+            "TokenKind" to TokenKind.entries.map { it.name },
+        ),
     )
 
     @Test

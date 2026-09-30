@@ -20,7 +20,7 @@ import uz.jahonov.ktormonitor.ui.ui.MonitorIcons
 import uz.jahonov.ktormonitor.ui.ui.MonitorTheme
 import uz.jahonov.ktormonitor.ui.ui.SheetItem
 
-private class MenuEntry(val title: String, @DrawableRes val icon: Int, val event: KtorMonitorDetailUiEvent)
+private class MenuEntry(val title: String, @param:DrawableRes val icon: Int, val event: KtorMonitorDetailUiEvent)
 
 private val CopyEntries = listOf(
     MenuEntry("Copy URL", MonitorIcons.Copy, KtorMonitorDetailUiEvent.Copy(CopyFormat.URL)),

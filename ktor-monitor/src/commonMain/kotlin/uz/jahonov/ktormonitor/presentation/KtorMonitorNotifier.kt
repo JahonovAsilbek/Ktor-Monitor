@@ -1,5 +1,6 @@
 package uz.jahonov.ktormonitor.presentation
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -12,6 +13,7 @@ import uz.jahonov.ktormonitor.model.CallSummary
  * What the monitor's notification says, the same on both platforms. Each platform posts it under
  * one fixed id, so an update replaces the one shown, and a tap opens the monitor.
  */
+@InternalKtorMonitorApi
 public class KtorMonitorNotifier internal constructor(repository: KtorMonitorRepository, config: KtorMonitorConfig) {
     public val isEnabled: Boolean = config.isActive && config.showNotification
 

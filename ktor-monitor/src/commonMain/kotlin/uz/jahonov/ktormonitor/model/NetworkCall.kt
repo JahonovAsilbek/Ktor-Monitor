@@ -1,5 +1,6 @@
 package uz.jahonov.ktormonitor.model
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import kotlinx.io.bytestring.ByteString
 
 /**
@@ -8,6 +9,7 @@ import kotlinx.io.bytestring.ByteString
  *
  * Times are epoch milliseconds. A record with neither [responseCode] nor [error] is still in flight.
  */
+@InternalKtorMonitorApi
 public data class NetworkCall(
     val id: String,
     val groupId: String,
@@ -52,6 +54,7 @@ public data class NetworkCall(
  * A body as far as it was kept: at most the configured number of bytes, with the full [size] it had.
  * [isTruncated] is exact even when the size was not known up front.
  */
+@InternalKtorMonitorApi
 public data class CapturedBody(
     val bytes: ByteString,
     val size: Long,

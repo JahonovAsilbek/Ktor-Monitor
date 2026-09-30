@@ -1,5 +1,6 @@
 package uz.jahonov.ktormonitor.presentation
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
  * Work runs through [launch], [collectSafely] and [shareSafely]: a failure (a database error, a bug in a parser)
  * goes to [onError] and never reaches the app, which would otherwise crash.
  */
+@InternalKtorMonitorApi
 public abstract class MviViewModel<S : Any, E : Any, F : Any> internal constructor(
     initial: S,
     private val onError: (Throwable) -> Unit,

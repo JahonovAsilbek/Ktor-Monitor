@@ -31,6 +31,9 @@ import uz.jahonov.ktormonitor.presentation.list.StatusClass
 internal data class Option(val id: String, val label: String)
 
 @Serializable
+internal data class FormatWire(val id: String, val label: String, val extension: String)
+
+@Serializable
 internal data class ListStateWire(
     /** Null while the first result is loading. */
     val calls: List<CallRowWire>?,
@@ -45,7 +48,7 @@ internal data class ListStateWire(
     val options: FiltersWire,
     val sort: Option,
     val sorts: List<Option>,
-    val exportFormats: List<Option>,
+    val exportFormats: List<FormatWire>,
     /** Null outside selection mode. */
     val selection: List<String>?,
 )
@@ -228,7 +231,7 @@ internal fun KtorMonitorListUiState.toWire() = ListStateWire(
     ),
     sort = sort.toOption(),
     sorts = CallSort.entries.map { it.toOption() },
-    exportFormats = ExportFormat.entries.map { it.toOption() },
+    exportFormats = ExportFormat.entries.map { FormatWire(it.name, it.label, it.extension) },
     selection = selection?.toList(),
 )
 
@@ -327,4 +330,3 @@ private fun DurationRange.toOption() = Option(name, label)
 
 private fun CallSort.toOption() = Option(name, label)
 
-private fun ExportFormat.toOption() = Option(name, label)

@@ -1,5 +1,6 @@
 package uz.jahonov.ktormonitor.presentation.list
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,6 +32,7 @@ import uz.jahonov.ktormonitor.presentation.throttleLatest
  * most [UPDATE_MILLIS] apart, and works it out off the main thread.
  */
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+@InternalKtorMonitorApi
 public class KtorMonitorListViewModel internal constructor(
     private val repository: KtorMonitorRepository,
     private val appName: String,

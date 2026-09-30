@@ -1,6 +1,8 @@
 package uz.jahonov.ktormonitor.data
 
 import androidx.room.Room
+import androidx.sqlite.SQLiteDriver
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSFileManager
@@ -27,3 +29,5 @@ private fun cachesDirectory(): String =
             error = null,
         )?.path,
     )
+
+internal actual fun sqliteDriver(): SQLiteDriver = BundledSQLiteDriver()

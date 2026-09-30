@@ -13,7 +13,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import androidx.room.Update
 import androidx.room.Upsert
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import androidx.sqlite.SQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +41,7 @@ internal expect object KtorMonitorDatabaseConstructor : RoomDatabaseConstructor<
  * schemas in `ktor-monitor/schemas` show one that was forgotten.
  */
 internal fun RoomDatabase.Builder<KtorMonitorDatabase>.buildKtorMonitorDatabase(): KtorMonitorDatabase =
-    setDriver(BundledSQLiteDriver())
+    setDriver(sqliteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         // Covers a downgrade too. Adding fallbackToDestructiveMigrationOnDowngrade would undo this:
         // it makes a migration required again for an upgrade.
@@ -49,6 +49,9 @@ internal fun RoomDatabase.Builder<KtorMonitorDatabase>.buildKtorMonitorDatabase(
         .build()
 
 internal const val KTOR_MONITOR_DB = "ktormonitor.db"
+
+/** The platform's SQLite on Android, a bundled one on iOS. */
+internal expect fun sqliteDriver(): SQLiteDriver
 
 /**
  * Bodies hold the bytes kept; the sizes are what the bodies really had. The bodies are the last

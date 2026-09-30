@@ -41,7 +41,8 @@ class ServerSentEventsTest {
                 listOf("first", "second", "third").forEach { data ->
                     out.write("event: tick\ndata: $data\n\n".toByteArray())
                     out.flush()
-                    Thread.sleep(50)
+                    // Apart enough that each event reaches the client as a chunk of its own.
+                    Thread.sleep(100)
                 }
             }
         }

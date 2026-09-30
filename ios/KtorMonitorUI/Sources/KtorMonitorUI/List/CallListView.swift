@@ -200,7 +200,7 @@ struct CallListView: View {
             Menu {
                 Section("Share as") {
                     ForEach(state.exportFormats) { format in
-                        Button(format.label) { session.send(.shareSelected(format: format.id)) }
+                        Button("\(format.label) (.\(format.extension))") { session.send(.shareSelected(format: format.id)) }
                     }
                 }
             } label: {

@@ -1,5 +1,6 @@
 package uz.jahonov.ktormonitor.presentation.detail
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import uz.jahonov.ktormonitor.presentation.Loadable
 import uz.jahonov.ktormonitor.body.BodyMode
 import uz.jahonov.ktormonitor.body.BodyPreview
@@ -9,15 +10,18 @@ import uz.jahonov.ktormonitor.export.ExportFormat
 import uz.jahonov.ktormonitor.model.NetworkCall
 import uz.jahonov.ktormonitor.presentation.SharedFile
 
+@InternalKtorMonitorApi
 public data class KtorMonitorDetailUiState(
     val call: Loadable<NetworkCall> = Loadable.Loading,
     val request: BodyState? = null,
     val response: BodyState? = null,
 )
 
+@InternalKtorMonitorApi
 public enum class BodySide { REQUEST, RESPONSE }
 
 /** One body with the views it offers and the one shown. */
+@InternalKtorMonitorApi
 public data class BodyState(
     val modes: List<BodyMode>,
     val mode: BodyMode,
@@ -26,6 +30,7 @@ public data class BodyState(
     val isTruncated: Boolean,
 )
 
+@InternalKtorMonitorApi
 public sealed interface BodyContent {
     public data class Code(val document: CodeDocument) : BodyContent
     /** TEXT and STREAM. */
@@ -34,8 +39,10 @@ public sealed interface BodyContent {
     public data class Preview(val preview: BodyPreview) : BodyContent
 }
 
+@InternalKtorMonitorApi
 public enum class CopyFormat { URL, CURL, WGET, TEXT }
 
+@InternalKtorMonitorApi
 public sealed interface KtorMonitorDetailUiEvent {
     public data class SelectMode(val side: BodySide, val mode: BodyMode) : KtorMonitorDetailUiEvent
     public data class Copy(val format: CopyFormat) : KtorMonitorDetailUiEvent
@@ -48,6 +55,7 @@ public sealed interface KtorMonitorDetailUiEvent {
     public data class Share(val format: ExportFormat) : KtorMonitorDetailUiEvent
 }
 
+@InternalKtorMonitorApi
 public sealed interface KtorMonitorDetailUiEffect {
     public data class CopyText(val text: String) : KtorMonitorDetailUiEffect
     public data class Share(val file: SharedFile) : KtorMonitorDetailUiEffect

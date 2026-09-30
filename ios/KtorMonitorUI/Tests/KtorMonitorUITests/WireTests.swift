@@ -28,7 +28,7 @@ final class WireTests: XCTestCase {
         XCTAssertNil(state.calls)
         XCTAssertNil(state.selection)
         XCTAssertEqual(state.options.statuses.map(\.id), ["INFORMATIONAL", "SUCCESS", "REDIRECT", "CLIENT_ERROR", "SERVER_ERROR", "FAILED"])
-        XCTAssertEqual(state.exportFormats.last, Option(id: "HAR", label: "HAR"))
+        XCTAssertEqual(state.exportFormats.last, ExportFormat(id: "HAR", label: "HAR", extension: "har"))
     }
 
     func testDetailWithCodeAndLines() throws {
@@ -138,6 +138,32 @@ final class WireTests: XCTestCase {
 
         XCTAssertEqual(content, .unsupported("video"))
         XCTAssertEqual(block, .unsupported)
+    }
+
+    /// The Kotlin enum values this package matches by name (colours, icons, events). A new value on
+    /// the Kotlin side fails this until the package handles it and the list below is updated.
+    func testEnumNamesTheSwiftSideKnows() throws {
+        let names = try fixture([String: [String]].self, "enum-names.json")
+
+        XCTAssertEqual(names, [
+            "BodyMode": ["STREAM", "PREVIEW", "CODE", "TEXT", "HEX"],
+            "BodySide": ["REQUEST", "RESPONSE"],
+            "CallSort": ["NEWEST", "SIZE_ASCENDING", "SIZE_DESCENDING", "DURATION_ASCENDING", "DURATION_DESCENDING"],
+            "CodeLanguage": ["JSON", "XML", "HTML", "CSS", "JAVASCRIPT", "YAML", "MARKDOWN", "FORM", "MULTIPART"],
+            "ContentKind": [
+                "JSON", "XML", "HTML", "TEXT", "CSS", "JAVASCRIPT", "YAML", "MARKDOWN", "FORM", "MULTIPART",
+                "IMAGE", "FONT", "AUDIO", "VIDEO", "PDF", "EVENT_STREAM", "WEBSOCKET", "BINARY", "NONE",
+            ],
+            "CopyFormat": ["URL", "CURL", "WGET", "TEXT"],
+            "DurationRange": ["UNDER_200_MS", "UNDER_1_S", "UNDER_5_S", "OVER_5_S"],
+            "ExportFormat": ["JSON", "TEXT", "MARKDOWN", "CURL", "WGET", "URLS", "HAR"],
+            "ImageFormat": ["PNG", "JPEG", "WEBP", "GIF", "SVG"],
+            "StatusClass": ["INFORMATIONAL", "SUCCESS", "REDIRECT", "CLIENT_ERROR", "SERVER_ERROR", "FAILED"],
+            "TokenKind": [
+                "PLAIN", "KEY", "STRING", "NUMBER", "KEYWORD", "PUNCTUATION", "TAG", "ATTRIBUTE", "COMMENT",
+                "HEADING", "EMPHASIS", "LINK",
+            ],
+        ])
     }
 
     private func fixture<T: Decodable>(_ type: T.Type, _ name: String) throws -> T {

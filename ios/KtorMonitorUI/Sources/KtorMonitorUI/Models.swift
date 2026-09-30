@@ -7,6 +7,13 @@ struct Option: Decodable, Hashable, Identifiable {
     let label: String
 }
 
+/// An export format: what the share menu offers, with the extension of the file it writes.
+struct ExportFormat: Decodable, Hashable, Identifiable {
+    let id: String
+    let label: String
+    let `extension`: String
+}
+
 struct ListState: Decodable, Equatable {
     /// Nil while the first result is loading.
     let calls: [CallRow]?
@@ -21,7 +28,7 @@ struct ListState: Decodable, Equatable {
     let options: Filters
     let sort: Option
     let sorts: [Option]
-    let exportFormats: [Option]
+    let exportFormats: [ExportFormat]
     /// Nil outside selection mode.
     let selection: [String]?
 

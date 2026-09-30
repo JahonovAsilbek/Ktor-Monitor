@@ -1,8 +1,10 @@
 package uz.jahonov.ktormonitor.model
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import io.ktor.http.ContentType
 
 /** The badge a list row shows for a call's response; each UI gives every kind its own colour. */
+@InternalKtorMonitorApi
 public enum class ContentKind(public val label: String) {
     JSON("JSON"),
     XML("XML"),

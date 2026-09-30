@@ -91,31 +91,38 @@
     "exportFormats": [
         {
             "id": "JSON",
-            "label": "JSON"
+            "label": "JSON",
+            "extension": "json"
         },
         {
             "id": "TEXT",
-            "label": "Text"
+            "label": "Text",
+            "extension": "txt"
         },
         {
             "id": "MARKDOWN",
-            "label": "Markdown"
+            "label": "Markdown",
+            "extension": "md"
         },
         {
             "id": "CURL",
-            "label": "cURL"
+            "label": "cURL",
+            "extension": "sh"
         },
         {
             "id": "WGET",
-            "label": "wget"
+            "label": "wget",
+            "extension": "sh"
         },
         {
             "id": "URLS",
-            "label": "URL list"
+            "label": "URL list",
+            "extension": "txt"
         },
         {
             "id": "HAR",
-            "label": "HAR"
+            "label": "HAR",
+            "extension": "har"
         }
     ],
     "selection": null

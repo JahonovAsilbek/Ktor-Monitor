@@ -37,6 +37,7 @@ public class KtorMonitor internal constructor(
     }
 
     /** What the monitor's notification says. */
+    @InternalKtorMonitorApi
     public val notifier: KtorMonitorNotifier = KtorMonitorNotifier(repository, config)
 
     /**
@@ -47,9 +48,13 @@ public class KtorMonitor internal constructor(
         capture.install(client)
     }
 
+    /** The call list's view model, for the monitor's screens. */
+    @InternalKtorMonitorApi
     public fun listViewModel(): KtorMonitorListViewModel =
         KtorMonitorListViewModel(repository, appName, appVersion, ::currentTimeMillis, config.onInternalError)
 
+    /** One call's view model, for the monitor's screens. */
+    @InternalKtorMonitorApi
     public fun detailViewModel(callId: String): KtorMonitorDetailViewModel =
         KtorMonitorDetailViewModel(callId, repository, appName, appVersion, ::currentTimeMillis, config.onInternalError)
 

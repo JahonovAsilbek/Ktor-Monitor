@@ -10,12 +10,13 @@ no Material) on Android and SwiftUI on iOS.
   for the app. JSON, XML, HTML, forms, multipart, CSS, JavaScript, YAML and Markdown are
   highlighted and fold; images and Markdown render; anything else shows as text or hex.
 - **History** that survives restarts (Room KMP), with retention and a maximum count.
-- **Search** in URLs, methods, status codes and bodies; filters by host, method, content type,
-  status class and duration; sorting.
+- **Search** in URLs, methods, status codes and bodies (ignoring letter case for Latin letters
+  only); filters by host, method, content type, status class or failure, and duration; sorting.
 - **Export** as cURL, wget, text, Markdown, JSON, a URL list or **HAR** (opens in Chrome DevTools,
   Charles, Proxyman).
 - **Ways in**: a notification with the latest calls and a shake of the device.
-- **Redaction** of headers and JSON body fields, when you want it. Nothing is redacted by default.
+- **Redaction** of headers, query parameters, and JSON or form fields, when you want it. Nothing is
+  redacted by default.
 - A failure inside the monitor never fails, delays or changes the app's call.
 
 The Maven group is `uz.jahonov`. Another library with a similar name exists
@@ -23,8 +24,10 @@ The Maven group is `uz.jahonov`. Another library with a similar name exists
 
 ## Setup
 
-> Not on Maven Central yet. Until the first release, build it from this repository
-> (`includeBuild` or `./gradlew publishToMavenLocal`).
+> Not on Maven Central yet. Until the first release, either publish it to your local Maven
+> repository with `./gradlew publishToMavenLocal` (and add `mavenLocal()` to your repositories),
+> or add this repository to your build with `includeBuild("path/to/Ktor-Monitor")` in
+> `settings.gradle.kts`. For the Swift package, use the `master` branch until a version is tagged.
 
 ### Android
 
@@ -176,13 +179,20 @@ the Swift tests read.
 ## Samples
 
 - Android: `./gradlew :sample:installDebug`
-- iOS: open `ios/Sample/Sample.xcodeproj` and run the `Sample` scheme.
+- iOS: open `ios/Sample/Sample.xcodeproj` and run the `Sample` scheme. On a device, pick your team
+  and change the bundle identifier first. Its build phase runs Gradle, which needs a JDK that Xcode
+  can find (`JAVA_HOME`, or `/usr/libexec/java_home`).
 
 Both make calls against [httpbin.org](https://httpbin.org) that show each kind of body and failure.
 
 ## Requirements
 
-Kotlin 2.4, Ktor 3.6, Android minSdk 24, iOS 16.
+- Kotlin 2.3 or later, and Ktor 3.6 or later (which itself needs Kotlin 2.3).
+- Android: minSdk 24; the UI needs Compose foundation 1.8, activity-compose 1.10, core 1.13 and
+  lifecycle 2.8 or later.
+- iOS: 16 or later, on devices and Apple silicon simulators (`iosArm64`, `iosSimulatorArm64`); Intel
+  simulators are not supported.
+- Building the library itself: JDK 17.
 
 ## License
 

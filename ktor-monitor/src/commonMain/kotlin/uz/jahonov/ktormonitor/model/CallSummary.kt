@@ -1,9 +1,11 @@
 package uz.jahonov.ktormonitor.model
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import io.ktor.http.Url
 import io.ktor.http.isSecure
 
 /** A call as the list shows it: no headers, no bodies. */
+@InternalKtorMonitorApi
 public data class CallSummary(
     val id: String,
     val groupId: String,

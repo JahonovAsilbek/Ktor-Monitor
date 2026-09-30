@@ -1,9 +1,11 @@
 package uz.jahonov.ktormonitor.presentation.list
 
+import uz.jahonov.ktormonitor.InternalKtorMonitorApi
 import io.ktor.http.ContentType
 import uz.jahonov.ktormonitor.model.CallSummary
 
 /** A status class, or FAILED: a call that ended with no status at all (a timeout, no connection). */
+@InternalKtorMonitorApi
 public enum class StatusClass(public val label: String, private val codes: IntRange?) {
     INFORMATIONAL("1xx", 100..199),
     SUCCESS("2xx", 200..299),
@@ -17,6 +19,7 @@ public enum class StatusClass(public val label: String, private val codes: IntRa
         codes?.let { call.responseCode in it } ?: (call.error != null && call.responseCode == null)
 }
 
+@InternalKtorMonitorApi
 public enum class DurationRange(public val label: String, internal val millis: LongRange) {
     UNDER_200_MS("< 200 ms", 0L until 200),
     UNDER_1_S("200 ms – 1 s", 200L until 1_000),
@@ -24,6 +27,7 @@ public enum class DurationRange(public val label: String, internal val millis: L
     OVER_5_S("> 5 s", 5_000L..Long.MAX_VALUE),
 }
 
+@InternalKtorMonitorApi
 public enum class CallSort(public val label: String) {
     NEWEST("Newest first"),
     SIZE_ASCENDING("Size, smallest first"),
@@ -33,6 +37,7 @@ public enum class CallSort(public val label: String) {
 }
 
 /** Values chosen in each filter. A call passes when it matches one value of every non-empty filter. */
+@InternalKtorMonitorApi
 public data class CallFilters(
     val hosts: Set<String> = emptySet(),
     val methods: Set<String> = emptySet(),
@@ -55,6 +60,7 @@ public data class CallFilters(
             (durations.isEmpty() || durations.any { range -> call.durationMillis?.let { it in range.millis } == true })
 }
 
+@InternalKtorMonitorApi
 public data class FilterOptions(
     val hosts: List<String> = emptyList(),
     val methods: List<String> = emptyList(),

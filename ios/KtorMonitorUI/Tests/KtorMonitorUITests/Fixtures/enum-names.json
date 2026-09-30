@@ -1,0 +1,102 @@
+{
+    "BodyMode": [
+        "STREAM",
+        "PREVIEW",
+        "CODE",
+        "TEXT",
+        "HEX"
+    ],
+    "BodySide": [
+        "REQUEST",
+        "RESPONSE"
+    ],
+    "CallSort": [
+        "NEWEST",
+        "SIZE_ASCENDING",
+        "SIZE_DESCENDING",
+        "DURATION_ASCENDING",
+        "DURATION_DESCENDING"
+    ],
+    "CodeLanguage": [
+        "JSON",
+        "XML",
+        "HTML",
+        "CSS",
+        "JAVASCRIPT",
+        "YAML",
+        "MARKDOWN",
+        "FORM",
+        "MULTIPART"
+    ],
+    "ContentKind": [
+        "JSON",
+        "XML",
+        "HTML",
+        "TEXT",
+        "CSS",
+        "JAVASCRIPT",
+        "YAML",
+        "MARKDOWN",
+        "FORM",
+        "MULTIPART",
+        "IMAGE",
+        "FONT",
+        "AUDIO",
+        "VIDEO",
+        "PDF",
+        "EVENT_STREAM",
+        "WEBSOCKET",
+        "BINARY",
+        "NONE"
+    ],
+    "CopyFormat": [
+        "URL",
+        "CURL",
+        "WGET",
+        "TEXT"
+    ],
+    "DurationRange": [
+        "UNDER_200_MS",
+        "UNDER_1_S",
+        "UNDER_5_S",
+        "OVER_5_S"
+    ],
+    "ExportFormat": [
+        "JSON",
+        "TEXT",
+        "MARKDOWN",
+        "CURL",
+        "WGET",
+        "URLS",
+        "HAR"
+    ],
+    "ImageFormat": [
+        "PNG",
+        "JPEG",
+        "WEBP",
+        "GIF",
+        "SVG"
+    ],
+    "StatusClass": [
+        "INFORMATIONAL",
+        "SUCCESS",
+        "REDIRECT",
+        "CLIENT_ERROR",
+        "SERVER_ERROR",
+        "FAILED"
+    ],
+    "TokenKind": [
+        "PLAIN",
+        "KEY",
+        "STRING",
+        "NUMBER",
+        "KEYWORD",
+        "PUNCTUATION",
+        "TAG",
+        "ATTRIBUTE",
+        "COMMENT",
+        "HEADING",
+        "EMPHASIS",
+        "LINK"
+    ]
+}

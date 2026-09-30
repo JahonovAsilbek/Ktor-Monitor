@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -6,10 +8,13 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.mavenPublish)
 }
 
 kotlin {
     explicitApi()
+    // The stdlib apps get from here: the one Ktor 3.6 needs, not the newer one this is built with.
+    coreLibrariesVersion = "2.3.21"
 
     android {
         namespace = "uz.jahonov.ktormonitor"
@@ -21,8 +26,18 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
-    // Room generates an actual for the database constructor on each target.
-    compilerOptions { freeCompilerArgs.add("-Xexpect-actual-classes") }
+    // The public API is checked against api/ (checkKotlinAbi; updateKotlinAbi records a change).
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation {}
+
+    compilerOptions {
+        optIn.add("uz.jahonov.ktormonitor.InternalKtorMonitorApi")
+        // Room generates an actual for the database constructor on each target.
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+        // Readable by apps on Kotlin 2.3, the oldest Ktor 3.6 itself works with.
+        apiVersion.set(KotlinVersion.KOTLIN_2_3)
+        languageVersion.set(KotlinVersion.KOTLIN_2_3)
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -31,6 +46,12 @@ kotlin {
             api(libs.jetbrains.lifecycle.viewmodel)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.androidx.room.runtime)
+        }
+        // Android has SQLite; bundling one would add a native library for every ABI to the app.
+        androidMain.dependencies {
+            implementation(libs.androidx.sqlite.framework)
+        }
+        iosMain.dependencies {
             implementation(libs.androidx.sqlite.bundled)
         }
         commonTest.dependencies {
@@ -62,4 +83,10 @@ tasks.withType<Test>().configureEach {
 
 dependencies {
     listOf("kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach { add(it, libs.androidx.room.compiler) }
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    // Maven Central needs signed artifacts; the key comes from CI. A local publish goes unsigned.
+    if (providers.gradleProperty("signingInMemoryKey").isPresent) signAllPublications()
 }
