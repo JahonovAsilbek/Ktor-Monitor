@@ -162,7 +162,7 @@ Each phase ends with a build and the tests, and waits for approval before the ne
 1. **Gradle skeleton.** Wrapper, version catalog, the three modules empty, builds on Android and iOS
    targets. ✅
 2. **Core.** Copy `shared/debug/netmonitor`, rename packages, cut core/Koin/Kermit, settle the public
-   API, all tests green.
+   API, all tests green. ✅
 3. **Android UI.** Copy `android/debug/netmonitor`, rename, replace MKBUICore with foundation
    composables, clean the previews.
 4. **iOS bridge.** `KtorMonitorBridge` in `iosMain`, the JSON state and event models, tests.
