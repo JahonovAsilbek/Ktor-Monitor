@@ -3,6 +3,11 @@ package uz.jahonov.ktormonitor.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -34,7 +39,13 @@ import uz.jahonov.ktormonitor.ui.ui.MonitorTheme
 internal fun KtorMonitorApp(onClose: () -> Unit) {
     var openCallId by rememberSaveable { mutableStateOf<String?>(null) }
 
-    BoxWithConstraints(Modifier.fillMaxSize().background(MonitorTheme.colors.background)) {
+    // Side insets (a cutout, a navigation bar in landscape) once, around both panes.
+    BoxWithConstraints(
+        Modifier
+            .fillMaxSize()
+            .background(MonitorTheme.colors.background)
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)),
+    ) {
         if (maxWidth >= TWO_PANE_MIN_WIDTH) {
             Row(Modifier.fillMaxSize()) {
                 KtorMonitorListScreen(

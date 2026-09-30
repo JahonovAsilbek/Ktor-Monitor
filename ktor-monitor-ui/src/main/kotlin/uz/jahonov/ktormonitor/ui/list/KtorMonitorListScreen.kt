@@ -15,15 +15,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,6 +49,7 @@ import uz.jahonov.ktormonitor.presentation.list.KtorMonitorListUiEffect
 import uz.jahonov.ktormonitor.presentation.list.KtorMonitorListUiEvent
 import uz.jahonov.ktormonitor.presentation.list.KtorMonitorListUiState
 import uz.jahonov.ktormonitor.ui.KtorMonitorNotifications
+import uz.jahonov.ktormonitor.ui.KtorMonitorUi
 import uz.jahonov.ktormonitor.ui.LocalKtorMonitor
 import uz.jahonov.ktormonitor.ui.monitorViewModel
 import uz.jahonov.ktormonitor.ui.share
@@ -107,8 +105,7 @@ private fun KtorMonitorListContent(
     Column(
         modifier
             .fillMaxSize()
-            .background(MonitorTheme.colors.background)
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)),
+            .background(MonitorTheme.colors.background),
     ) {
         Spacer(Modifier.windowInsetsPadding(WindowInsets.statusBars))
         if (selection != null) {
@@ -212,12 +209,17 @@ private fun NotificationPermissionBanner() {
     val activity = LocalActivity.current
     var allowed by remember { mutableStateOf(KtorMonitorNotifications.canPost(context)) }
     var deniedForGood by rememberSaveable { mutableStateOf(false) }
+    // Once allowed, the notification shows the calls made so far, not only the next one.
+    fun update(canPost: Boolean) {
+        if (canPost && !allowed) KtorMonitorUi.notifications?.repost()
+        allowed = canPost
+    }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        allowed = granted
+        update(granted)
         deniedForGood = !granted && activity?.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) == false
     }
     LifecycleResumeEffect(Unit) {
-        allowed = KtorMonitorNotifications.canPost(context)
+        update(KtorMonitorNotifications.canPost(context))
         onPauseOrDispose { }
     }
     if (allowed) return

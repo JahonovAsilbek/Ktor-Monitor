@@ -12,6 +12,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -43,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
@@ -83,7 +87,7 @@ internal fun MonitorIcon(@DrawableRes icon: Int, tint: Color, description: Strin
     )
 }
 
-/** A 40dp icon target; [tint] defaults to the main text colour. */
+/** A 48dp icon target; [tint] defaults to the main text colour. */
 @Composable
 internal fun MonitorIconButton(
     @DrawableRes icon: Int,
@@ -94,8 +98,8 @@ internal fun MonitorIconButton(
 ) {
     Box(
         modifier = modifier
-            .size(40.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .size(48.dp)
+            .clip(RoundedCornerShape(24.dp))
             .clickable(onClickLabel = description, role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
@@ -111,27 +115,35 @@ internal fun TextAction(text: String, onClick: () -> Unit, modifier: Modifier = 
         text = text,
         style = MonitorTheme.typography.bodyMedium.copy(color = color),
         modifier = modifier
+            .heightIn(min = 48.dp)
             .clip(RoundedCornerShape(8.dp))
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+            .wrapContentHeight()
+            .padding(horizontal = 8.dp),
     )
 }
 
-/** A toggle chip for filters and view modes. */
+/** A toggle chip for filters and view modes: drawn small, with a 48dp target around it. */
 @Composable
 internal fun Chip(text: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(16.dp)
     val colors = MonitorTheme.colors
-    BasicText(
-        text = text,
-        style = MonitorTheme.typography.captionMedium.copy(color = if (selected) colors.onAccent else colors.text),
-        modifier = modifier
-            .clip(shape)
-            .background(if (selected) colors.accent else colors.surface)
-            .border(1.dp, if (selected) colors.accent else colors.border, shape)
-            .clickable(role = Role.Checkbox, onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-    )
+    Box(
+        modifier
+            .heightIn(min = 48.dp)
+            .toggleable(value = selected, role = Role.Checkbox, onValueChange = { onClick() }),
+        contentAlignment = Alignment.Center,
+    ) {
+        BasicText(
+            text = text,
+            style = MonitorTheme.typography.captionMedium.copy(color = if (selected) colors.onAccent else colors.text),
+            modifier = Modifier
+                .clip(shape)
+                .background(if (selected) colors.accent else colors.surface)
+                .border(1.dp, if (selected) colors.accent else colors.border, shape)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+        )
+    }
 }
 
 /** A screen's top bar: optional back button, a title with a subtitle, one optional action. */
@@ -266,10 +278,11 @@ internal fun BottomSheet(
 ) {
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         val colors = MonitorTheme.colors
+        // Plain taps, not clickable: those would put an unnamed button over the whole screen for TalkBack.
         Box(
             Modifier
                 .fillMaxSize()
-                .clickable(interactionSource = null, indication = null, onClick = onDismiss),
+                .pointerInput(onDismiss) { detectTapGestures { onDismiss() } },
             contentAlignment = Alignment.BottomCenter,
         ) {
             Column(
@@ -278,7 +291,7 @@ internal fun BottomSheet(
                     .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                     .background(colors.background)
                     // Taps inside the sheet must not reach the scrim behind it.
-                    .clickable(interactionSource = null, indication = null, onClick = {})
+                    .pointerInput(Unit) { detectTapGestures {} }
                     .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 8.dp)
                     .verticalScroll(rememberScrollState()),
             ) {

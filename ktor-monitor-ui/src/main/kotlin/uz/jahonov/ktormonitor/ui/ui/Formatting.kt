@@ -6,8 +6,8 @@ import java.util.Locale
 
 // java.time needs API 26; the app starts at 24.
 
-/** 14:25:01.3 in the device's time zone. */
-internal fun formatClock(epochMillis: Long): String = SimpleDateFormat("HH:mm:ss.S", Locale.US).format(Date(epochMillis))
+/** 14:25:01.005 in the device's time zone. */
+internal fun formatClock(epochMillis: Long): String = SimpleDateFormat("HH:mm:ss.SSS", Locale.US).format(Date(epochMillis))
 
 /** Mon, 2026 Sep 30 14:25:01.345 */
 internal fun formatDateTime(epochMillis: Long): String =

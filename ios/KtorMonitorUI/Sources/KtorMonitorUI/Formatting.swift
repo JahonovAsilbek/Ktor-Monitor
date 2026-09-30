@@ -1,7 +1,7 @@
 import Foundation
 
 enum Format {
-    /// 14:25:01.3 in the device's time zone.
+    /// 14:25:01.005 in the device's time zone.
     static func clock(_ epochMillis: Int64) -> String { clockFormatter.string(from: date(epochMillis)) }
 
     /// Mon, 2026 Sep 30 14:25:01.345
@@ -23,7 +23,7 @@ enum Format {
 
     private static func date(_ epochMillis: Int64) -> Date { Date(timeIntervalSince1970: Double(epochMillis) / 1_000) }
 
-    private static let clockFormatter = formatter("HH:mm:ss.S")
+    private static let clockFormatter = formatter("HH:mm:ss.SSS")
     private static let dateTimeFormatter = formatter("EEE, yyyy MMM dd HH:mm:ss.SSS")
 
     private static func formatter(_ pattern: String) -> DateFormatter {

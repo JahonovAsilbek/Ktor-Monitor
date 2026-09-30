@@ -8,6 +8,7 @@
         <activity
             android:name=".KtorMonitorActivity"
             android:exported="false"
+            android:theme="@style/ktormonitor_Theme"
             android:label="Network monitor"
             android:launchMode="singleTask"
             android:taskAffinity="${applicationId}.ktormonitor" />

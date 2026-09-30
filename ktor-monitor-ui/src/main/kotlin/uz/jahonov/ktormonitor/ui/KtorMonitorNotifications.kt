@@ -31,6 +31,9 @@ internal class KtorMonitorNotifications(private val application: Application, mo
     private val notifier = monitor.notifier
     private val manager = NotificationManagerCompat.from(application)
 
+    /** What the notification says now: posted again once the permission is granted. */
+    private var lines: List<String> = emptyList()
+
     fun start() {
         if (!notifier.isEnabled) {
             manager.cancel(NOTIFICATION_ID)
@@ -42,13 +45,16 @@ internal class KtorMonitorNotifications(private val application: Application, mo
             .launchIn(CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate))
     }
 
+    fun repost() = post(lines)
+
     private fun post(lines: List<String>) {
+        this.lines = lines
         if (lines.isEmpty()) return manager.cancel(NOTIFICATION_ID)
         if (!canPost(application)) return
 
         val style = NotificationCompat.InboxStyle().also { style -> lines.forEach(style::addLine) }
         val notification = NotificationCompat.Builder(application, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setSmallIcon(R.drawable.ktormonitor_ic_notification)
             .setContentTitle(KtorMonitorNotifier.TITLE)
             .setContentText(lines.first())
             .setStyle(style)
@@ -57,7 +63,7 @@ internal class KtorMonitorNotifications(private val application: Application, mo
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setPublicVersion(
                 NotificationCompat.Builder(application, CHANNEL_ID)
-                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                    .setSmallIcon(R.drawable.ktormonitor_ic_notification)
                     .setContentTitle(KtorMonitorNotifier.TITLE)
                     .build(),
             )

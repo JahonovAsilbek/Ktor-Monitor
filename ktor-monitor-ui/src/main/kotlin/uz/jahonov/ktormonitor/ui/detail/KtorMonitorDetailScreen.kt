@@ -105,7 +105,8 @@ private fun Pages(call: NetworkCall, state: KtorMonitorDetailUiState, onEvent: (
         onSelect = { scope.launch { pager.animateScrollToPage(it) } },
         modifier = Modifier.padding(horizontal = 16.dp),
     )
-    HorizontalPager(pager, Modifier.fillMaxSize()) { page ->
+    // All three pages stay composed, so folds and the sideways pan survive a look at another tab.
+    HorizontalPager(pager, Modifier.fillMaxSize(), beyondViewportPageCount = PAGE_TITLES.size - 1) { page ->
         when (page) {
             SUMMARY -> SummaryPage(call, contentPadding)
             REQUEST -> MessagePage(call, BodySide.REQUEST, state.request, onEvent, contentPadding)

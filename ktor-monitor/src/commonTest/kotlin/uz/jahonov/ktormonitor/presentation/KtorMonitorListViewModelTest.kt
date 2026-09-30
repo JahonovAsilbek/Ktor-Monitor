@@ -113,6 +113,28 @@ class KtorMonitorListViewModelTest {
     }
 
     @Test
+    fun `hiding the search bar drops its query`() = runTest {
+        val vm = viewModel(seeded())
+        vm.onEvent(KtorMonitorListUiEvent.ToggleSearch)
+        vm.onEvent(KtorMonitorListUiEvent.Search("login"))
+        // The query shows at once; the calls it finds follow the debounce.
+        assertEquals(listOf("login"), vm.shownIds { (it.calls as? Loadable.Ready)?.value?.size == 1 })
+
+        vm.onEvent(KtorMonitorListUiEvent.ToggleSearch)
+
+        assertEquals(5, vm.shownIds { !it.isSearchVisible && it.query.isEmpty() }.size)
+    }
+
+    @Test
+    fun `the failed filter keeps calls that ended with no status`() = runTest {
+        val vm = viewModel(seeded())
+
+        vm.onEvent(KtorMonitorListUiEvent.ToggleStatus(StatusClass.FAILED))
+
+        assertEquals(listOf("offline"), vm.shownIds { it.filters.statuses.isNotEmpty() })
+    }
+
+    @Test
     fun `sorting by size puts calls without a size last`() = runTest {
         val vm = viewModel(seeded())
 

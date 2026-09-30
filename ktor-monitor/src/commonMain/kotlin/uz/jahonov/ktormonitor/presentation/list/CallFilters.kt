@@ -3,11 +3,18 @@ package uz.jahonov.ktormonitor.presentation.list
 import io.ktor.http.ContentType
 import uz.jahonov.ktormonitor.model.CallSummary
 
-public enum class StatusClass(public val label: String, internal val codes: IntRange) {
+/** A status class, or FAILED: a call that ended with no status at all (a timeout, no connection). */
+public enum class StatusClass(public val label: String, private val codes: IntRange?) {
+    INFORMATIONAL("1xx", 100..199),
     SUCCESS("2xx", 200..299),
     REDIRECT("3xx", 300..399),
     CLIENT_ERROR("4xx", 400..499),
     SERVER_ERROR("5xx", 500..599),
+    FAILED("Failed", null),
+    ;
+
+    internal fun matches(call: CallSummary): Boolean =
+        codes?.let { call.responseCode in it } ?: (call.error != null && call.responseCode == null)
 }
 
 public enum class DurationRange(public val label: String, internal val millis: LongRange) {
@@ -44,7 +51,7 @@ public data class CallFilters(
         (hosts.isEmpty() || call.host in hosts) &&
             (methods.isEmpty() || call.method in methods) &&
             (contentTypes.isEmpty() || call.mediaType in contentTypes) &&
-            (statuses.isEmpty() || statuses.any { call.responseCode in it.codes }) &&
+            (statuses.isEmpty() || statuses.any { it.matches(call) }) &&
             (durations.isEmpty() || durations.any { range -> call.durationMillis?.let { it in range.millis } == true })
 }
 

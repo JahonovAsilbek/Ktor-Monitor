@@ -9,12 +9,18 @@ import uz.jahonov.ktormonitor.KtorMonitor
 public object KtorMonitorUi {
     internal var monitor: KtorMonitor? = null
         private set
+    internal var notifications: KtorMonitorNotifications? = null
+        private set
 
-    /** Call once, in `Application.onCreate`, with the app's monitor. */
+    /**
+     * Call once, in `Application.onCreate`, with the app's monitor. Only there: after the process is
+     * killed, the monitor screen or the notification can come back before any activity of the app,
+     * and without the monitor installed by then, they have nothing to show.
+     */
     public fun install(application: Application, monitor: KtorMonitor, shakeToOpen: Boolean = true) {
         if (this.monitor != null) return
         this.monitor = monitor
-        KtorMonitorNotifications(application, monitor).start()
+        notifications = KtorMonitorNotifications(application, monitor).also { it.start() }
         if (shakeToOpen) ShakeToOpen(application).start()
     }
 

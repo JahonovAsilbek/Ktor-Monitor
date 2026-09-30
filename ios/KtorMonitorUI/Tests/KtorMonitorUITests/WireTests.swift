@@ -27,7 +27,7 @@ final class WireTests: XCTestCase {
 
         XCTAssertNil(state.calls)
         XCTAssertNil(state.selection)
-        XCTAssertEqual(state.options.statuses.count, 4)
+        XCTAssertEqual(state.options.statuses.map(\.id), ["INFORMATIONAL", "SUCCESS", "REDIRECT", "CLIENT_ERROR", "SERVER_ERROR", "FAILED"])
         XCTAssertEqual(state.exportFormats.last, Option(id: "HAR", label: "HAR"))
     }
 

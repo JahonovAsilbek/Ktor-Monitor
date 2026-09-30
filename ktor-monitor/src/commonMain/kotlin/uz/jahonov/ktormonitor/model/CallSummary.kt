@@ -31,7 +31,8 @@ public data class CallSummary(
     val isSecure: Boolean get() = parsed?.protocol?.isSecure() == true
 
     val isInProgress: Boolean get() = responseCode == null && error == null
-    val isRedirect: Boolean get() = responseCode in 300..399
+    /** 3xx but 304: Not Modified answers from the cache, it sends nowhere. */
+    val isRedirect: Boolean get() = responseCode in 300..399 && responseCode != 304
 
     /** An exception, or a status outside 1xx–3xx. */
     val isError: Boolean get() = error != null || (responseCode != null && responseCode !in 100..399)

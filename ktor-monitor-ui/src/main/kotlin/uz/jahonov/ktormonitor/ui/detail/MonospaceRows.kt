@@ -37,7 +37,10 @@ internal class HorizontalPan {
     private var offset by mutableFloatStateOf(0f)
 
     /** How far the widest row measured so far overflows; grows as rows scroll into view. */
-    private var maxOffset = 0f
+    private var maxOffset by mutableFloatStateOf(0f)
+
+    /** Only a body wider than the screen takes sideways drags; others leave them to the pager. */
+    val canPan: Boolean get() = maxOffset > 0f
 
     val state = ScrollableState { delta ->
         val target = (offset - delta).coerceIn(0f, maxOffset)
@@ -54,7 +57,7 @@ internal class HorizontalPan {
     }
 }
 
-internal fun Modifier.panGesture(pan: HorizontalPan): Modifier = scrollable(pan.state, Orientation.Horizontal)
+internal fun Modifier.panGesture(pan: HorizontalPan): Modifier = scrollable(pan.state, Orientation.Horizontal, enabled = pan.canPan)
 
 /**
  * One row on screen: characters [start] until [end] of line [line]. A line longer than [LONG_LINE] is

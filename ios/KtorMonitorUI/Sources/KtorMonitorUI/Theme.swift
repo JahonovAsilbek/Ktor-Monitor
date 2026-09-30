@@ -14,10 +14,10 @@ enum MonitorColor {
     static let accentContainer = dynamic(0xE4EDFD, 0x1F2B45)
     static let error = dynamic(0xD93A3A, 0xFF6B6B)
     static let errorContainer = dynamic(0xFDECEC, 0x3A1E20)
-    static let warning = dynamic(0xC77A00, 0xF2B24C)
+    static let warning = dynamic(0x9A5B00, 0xF2B24C)
     static let warningContainer = dynamic(0xFFF4DE, 0x3A2E17)
-    static let info = dynamic(0x1A8CB0, 0x56C1E0)
-    static let success = dynamic(0x2E9D57, 0x5CCB84)
+    static let info = dynamic(0x11708E, 0x56C1E0)
+    static let success = dynamic(0x1F7A42, 0x5CCB84)
     static let media = dynamic(0x8A4FD8, 0xB58CFF)
 
     private static func dynamic(_ light: UInt32, _ dark: UInt32) -> Color {

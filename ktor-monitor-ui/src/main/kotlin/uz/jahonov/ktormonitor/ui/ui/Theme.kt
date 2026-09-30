@@ -69,10 +69,10 @@ private val LightPalette = MonitorPalette(
     accentContainer = Color(0xFFE4EDFD),
     error = Color(0xFFD93A3A),
     errorContainer = Color(0xFFFDECEC),
-    warning = Color(0xFFC77A00),
+    warning = Color(0xFF9A5B00),
     warningContainer = Color(0xFFFFF4DE),
-    info = Color(0xFF1A8CB0),
-    success = Color(0xFF2E9D57),
+    info = Color(0xFF11708E),
+    success = Color(0xFF1F7A42),
     media = Color(0xFF8A4FD8),
 )
 

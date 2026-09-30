@@ -94,7 +94,8 @@ internal fun MessagePage(
             item(key = "headers-title") {
                 SectionTitle(
                     title = "Headers",
-                    detail = headers.size.takeIf { it > 0 }?.toString(),
+                    // One per line shown: three Set-Cookie headers count as three.
+                    detail = headers.values.sumOf { it.size }.takeIf { it > 0 }?.toString(),
                     expanded = headersExpanded,
                     onToggle = { headersExpanded = !headersExpanded },
                     onCopy = { onEvent(KtorMonitorDetailUiEvent.CopyHeaders(side)) }.takeIf { headers.isNotEmpty() },

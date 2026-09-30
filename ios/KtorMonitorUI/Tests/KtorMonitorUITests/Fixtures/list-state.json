@@ -87,6 +87,10 @@
         "contentTypes": [],
         "statuses": [
             {
+                "id": "INFORMATIONAL",
+                "label": "1xx"
+            },
+            {
                 "id": "SUCCESS",
                 "label": "2xx"
             },
@@ -101,6 +105,10 @@
             {
                 "id": "SERVER_ERROR",
                 "label": "5xx"
+            },
+            {
+                "id": "FAILED",
+                "label": "Failed"
             }
         ],
         "durations": [

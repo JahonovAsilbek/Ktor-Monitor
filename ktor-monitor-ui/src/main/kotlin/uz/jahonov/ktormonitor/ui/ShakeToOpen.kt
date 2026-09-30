@@ -17,14 +17,22 @@ internal class ShakeToOpen(private val application: Application) : SensorEventLi
     private val accelerometer = sensors.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     private var lastShake = 0L
 
+    /** The app's screens in front: more than one in split screen or on a foldable. */
+    private var resumed = 0
+
     fun start() {
         accelerometer ?: return
         application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityResumed(activity: Activity) {
-                if (activity !is KtorMonitorActivity) sensors.registerListener(this@ShakeToOpen, accelerometer, SensorManager.SENSOR_DELAY_UI)
+                if (activity is KtorMonitorActivity) return
+                if (resumed++ == 0) sensors.registerListener(this@ShakeToOpen, accelerometer, SensorManager.SENSOR_DELAY_UI)
             }
 
-            override fun onActivityPaused(activity: Activity) = sensors.unregisterListener(this@ShakeToOpen)
+            override fun onActivityPaused(activity: Activity) {
+                if (activity is KtorMonitorActivity) return
+                if (--resumed == 0) sensors.unregisterListener(this@ShakeToOpen)
+            }
+
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
             override fun onActivityStarted(activity: Activity) = Unit
             override fun onActivityStopped(activity: Activity) = Unit

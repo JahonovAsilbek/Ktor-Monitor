@@ -75,7 +75,8 @@ public class KtorMonitorListViewModel internal constructor(
 
     override fun onEvent(event: KtorMonitorListUiEvent) {
         when (event) {
-            KtorMonitorListUiEvent.ToggleSearch -> setControls { copy(isSearchVisible = !isSearchVisible) }
+            // Hidden, a search would still narrow the list with nothing on screen to say so.
+            KtorMonitorListUiEvent.ToggleSearch -> setControls { if (isSearchVisible) copy(isSearchVisible = false, query = "") else copy(isSearchVisible = true) }
             is KtorMonitorListUiEvent.Search -> setControls { copy(query = event.query) }
             KtorMonitorListUiEvent.ToggleOnlyErrors -> setControls { copy(onlyErrors = !onlyErrors) }
             is KtorMonitorListUiEvent.ToggleHost -> setFilters { copy(hosts = hosts.toggle(event.host)) }
