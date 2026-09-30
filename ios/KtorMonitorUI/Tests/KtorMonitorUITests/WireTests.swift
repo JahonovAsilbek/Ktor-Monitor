@@ -131,6 +131,15 @@ final class WireTests: XCTestCase {
         ])
     }
 
+    /// A newer Kotlin side may send kinds this version does not know: they must not break the screen.
+    func testUnknownKindsFromANewerVersionAreKeptApart() throws {
+        let content = try JSONDecoder().decode(BodyContent.self, from: Data(#"{"type":"video","url":"x"}"#.utf8))
+        let block = try JSONDecoder().decode(MarkdownBlock.self, from: Data(#"{"type":"table","rows":[]}"#.utf8))
+
+        XCTAssertEqual(content, .unsupported("video"))
+        XCTAssertEqual(block, .unsupported)
+    }
+
     private func fixture<T: Decodable>(_ type: T.Type, _ name: String) throws -> T {
         try JSONDecoder().decode(type, from: data(name))
     }

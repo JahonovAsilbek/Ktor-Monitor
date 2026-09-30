@@ -17,7 +17,9 @@ struct MessagePage: View {
     @State private var bodyExpanded = true
     /// Nil until the user folds or unfolds a region: the document's defaults apply.
     @State private var collapsed: Set<Int>?
-    @StateObject private var pan = HorizontalPan()
+    // Held, not observed: only the rows follow the pan (see HorizontalPan).
+    @State private var pan = HorizontalPan()
+    @State private var cache = RowCache()
 
     var body: some View {
         let isResponse = side == .response
@@ -75,19 +77,22 @@ struct MessagePage: View {
     private func content(_ content: BodyContent) -> some View {
         switch content {
         case let .code(_, lines, folds):
-            CodeRows(lines: lines, folds: folds, collapsed: collapsed ?? CodeRows.defaults(folds), pan: pan) { line in
-                var current = collapsed ?? CodeRows.defaults(folds)
-                if current.contains(line) { current.remove(line) } else { current.insert(line) }
-                collapsed = current
+            let current = collapsed ?? cache.defaultCollapsed(folds)
+            CodeRows(lines: lines, layout: cache.code(lines, folds: folds, collapsed: current), collapsed: current, pan: pan) { line in
+                var next = current
+                if next.contains(line) { next.remove(line) } else { next.insert(line) }
+                collapsed = next
             }
         case let .lines(lines):
-            LineRows(lines: lines, pan: pan)
+            LineRows(lines: lines, rows: cache.rows(lines), pan: pan)
         case let .hex(rows):
             HexRows(rows: rows, pan: pan)
         case let .image(format, data):
             ImagePreview(format: format, data: data)
         case let .markdown(blocks):
             MarkdownBlocks(blocks: blocks)
+        case .unsupported:
+            DetailNotice(text: "This body cannot be shown by this version of the monitor")
         }
     }
 }
@@ -105,7 +110,7 @@ private struct SectionTitle: View {
         HStack(spacing: 8) {
             if onToggle != nil {
                 Image(systemName: expanded ? "chevron.down" : "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundColor(MonitorColor.textSecondary)
                     .frame(width: 16)
             }

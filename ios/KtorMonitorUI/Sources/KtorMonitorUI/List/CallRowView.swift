@@ -3,14 +3,15 @@ import SwiftUI
 /// One call in the list. `selected` is nil outside selection mode.
 struct CallRowView: View {
     let call: CallRow
-    let highlighted: Bool
     let selected: Bool?
+    @ScaledMetric private var statusWidth: CGFloat = 56
+    @ScaledMetric private var statusHeight: CGFloat = 24
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             if let selected {
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 22))
+                    .font(.title2)
                     .foregroundColor(selected ? MonitorColor.accent : MonitorColor.border)
                     .padding(.top, 2)
                     .accessibilityLabel(selected ? "Selected" : "Not selected")
@@ -19,7 +20,7 @@ struct CallRowView: View {
                 status
                 kindBadge
             }
-            .frame(width: 56)
+            .frame(minWidth: statusWidth)
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(call.method) \(call.path)")
                     .font(MonitorFont.bodyBold)
@@ -27,7 +28,7 @@ struct CallRowView: View {
                     .lineLimit(2)
                 HStack(spacing: 4) {
                     Image(systemName: call.isSecure ? "lock.fill" : "lock.open.fill")
-                        .font(.system(size: 10))
+                        .font(.caption2)
                         .foregroundColor(call.isSecure ? MonitorColor.textSecondary : MonitorColor.error)
                         .accessibilityLabel(call.isSecure ? "Secure" : "Not secure")
                     Text(call.host).lineLimit(1)
@@ -66,7 +67,7 @@ struct CallRowView: View {
         if call.isInProgress {
             ProgressView()
                 .tint(MonitorColor.textSecondary)
-                .frame(height: 24)
+                .frame(minHeight: statusHeight)
         } else if let code = call.responseCode {
             HStack(spacing: 2) {
                 Text("\(code)")
@@ -74,17 +75,17 @@ struct CallRowView: View {
                     .foregroundColor(statusColor(call))
                 if call.isRedirect {
                     Image(systemName: "arrow.up.right")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.caption2.bold())
                         .foregroundColor(MonitorColor.warning)
                         .accessibilityLabel("Redirect")
                 }
             }
-            .frame(height: 24)
+            .frame(minHeight: statusHeight)
         } else {
             Image(systemName: "exclamationmark.circle.fill")
-                .font(.system(size: 20))
+                .font(.title3)
                 .foregroundColor(MonitorColor.error)
-                .frame(height: 24)
+                .frame(minHeight: statusHeight)
                 .accessibilityLabel("Failed")
         }
     }

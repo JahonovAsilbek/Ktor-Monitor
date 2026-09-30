@@ -86,15 +86,8 @@ private struct Status: View {
 
 /// The standard reason phrase, in English whatever the device language.
 private func reasonPhrase(_ code: Int) -> String {
-    if let phrase = reasonPhrases[code] { return phrase }
-    switch code {
-    case 100..<200: return "Informational"
-    case 200..<300: return "Success"
-    case 300..<400: return "Redirection"
-    case 400..<500: return "Client Error"
-    case 500..<600: return "Server Error"
-    default: return ""
-    }
+    // "Unknown Status Code" is what Android shows (Ktor's description) for a code it does not know.
+    reasonPhrases[code] ?? "Unknown Status Code"
 }
 
 private let reasonPhrases: [Int: String] = [

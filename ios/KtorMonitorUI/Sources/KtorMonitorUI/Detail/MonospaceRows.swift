@@ -4,32 +4,53 @@ import SwiftUI
  One sideways offset shared by every row of a body. Rows are not wrapped, and a horizontal ScrollView
  per row would scroll each on its own; one around the whole body would lose the lazy rows. So each
  row draws its text at full width and shifts it by `offset`, and a drag on any row moves them all.
+
+ Only the rows observe it: the page that holds it does not, so a drag moves the rows on screen
+ without laying out the body again.
  */
 final class HorizontalPan: ObservableObject {
     @Published private(set) var offset: CGFloat = 0
-
     /// How far the widest row seen so far overflows; grows as rows scroll into view.
-    private var maxOffset: CGFloat = 0
+    @Published private(set) var maxOffset: CGFloat = 0
+
+    private var viewport: CGFloat = 0
     private var dragStart: CGFloat?
+    /// Decided on the first movement of a drag: a mostly vertical one scrolls the page instead.
+    private var isVerticalDrag: Bool?
+
+    /// Only a body wider than the screen takes sideways drags; others leave them to the pages.
+    var canPan: Bool { maxOffset > 0 }
 
     func measured(textWidth: CGFloat, viewport: CGFloat) {
-        maxOffset = max(maxOffset, textWidth - viewport)
+        // A new width (a rotation, an iPad resize) starts the measuring over.
+        if viewport != self.viewport {
+            self.viewport = viewport
+            maxOffset = 0
+        }
+        let overflow = max(textWidth - viewport, 0)
+        if overflow > maxOffset { maxOffset = overflow }
+        if offset > maxOffset { offset = maxOffset }
     }
 
-    func drag(_ translation: CGFloat) {
+    func drag(_ translation: CGSize) {
+        if isVerticalDrag == nil { isVerticalDrag = abs(translation.height) > abs(translation.width) }
+        guard isVerticalDrag == false else { return }
         let start = dragStart ?? offset
         dragStart = start
-        offset = min(max(start - translation, 0), maxOffset)
+        offset = min(max(start - translation.width, 0), maxOffset)
     }
 
     func endDrag() {
         dragStart = nil
+        isVerticalDrag = nil
     }
 
     func reset() {
         offset = 0
         maxOffset = 0
+        viewport = 0
         dragStart = nil
+        isVerticalDrag = nil
     }
 }
 
@@ -76,6 +97,38 @@ enum Gutter {
     static func digits(_ lineCount: Int) -> Int { String(max(lineCount, 1)).count }
 }
 
+/**
+ The rows of a body, worked out once per body and fold state rather than on every render: for a
+ body of thousands of lines, counting every span again is what made the page slow.
+ */
+final class RowCache {
+    private var lines: (source: [String], rows: [TextRow])?
+    private var code: (lines: [[CodeSpan]], folds: [Fold], collapsed: Set<Int>, layout: CodeLayout)?
+    private var defaults: (folds: [Fold], collapsed: Set<Int>)?
+
+    func rows(_ source: [String]) -> [TextRow] {
+        if let lines, lines.source == source { return lines.rows }
+        let rows = Gutter.rows(source)
+        lines = (source, rows)
+        return rows
+    }
+
+    func code(_ lines: [[CodeSpan]], folds: [Fold], collapsed: Set<Int>) -> CodeLayout {
+        if let code, code.collapsed == collapsed, code.folds == folds, code.lines == lines { return code.layout }
+        let layout = CodeLayout(lines: lines, folds: folds, collapsed: collapsed)
+        code = (lines, folds, collapsed, layout)
+        return layout
+    }
+
+    /// The regions folded before the user touches any.
+    func defaultCollapsed(_ folds: [Fold]) -> Set<Int> {
+        if let defaults, defaults.folds == folds { return defaults.collapsed }
+        let collapsed = Set(CodeLayout.regions(folds).values.filter(\.isCollapsedByDefault).map(\.startLine))
+        defaults = (folds, collapsed)
+        return collapsed
+    }
+}
+
 extension String {
     /// Characters `start` until `end`.
     func characters(_ start: Int, _ end: Int) -> Substring {
@@ -90,6 +143,9 @@ struct MonoRow<Between: View>: View {
     let text: AttributedString
     @ObservedObject var pan: HorizontalPan
     @ViewBuilder var between: () -> Between
+
+    /// One line of the monospaced caption font, so rows grow with the reader's text size.
+    @ScaledMetric(relativeTo: .caption) private var rowHeight: CGFloat = 16
 
     var body: some View {
         HStack(spacing: 0) {
@@ -109,24 +165,28 @@ struct MonoRow<Between: View>: View {
                     .fixedSize()
                     .background(
                         GeometryReader { measured in
-                            Color.clear.onAppear { pan.measured(textWidth: measured.size.width, viewport: viewport.size.width) }
+                            Color.clear
+                                .onAppear { pan.measured(textWidth: measured.size.width, viewport: viewport.size.width) }
+                                .onChange(of: viewport.size.width) { width in pan.measured(textWidth: measured.size.width, viewport: width) }
                         }
                     )
                     .offset(x: -pan.offset)
             }
-            .frame(height: monoRowHeight)
+            .frame(height: rowHeight)
             .clipped()
         }
         .contentShape(Rectangle())
+        // Off while nothing overflows, so the pages still swipe from any row; a vertical drag
+        // scrolls the page, whatever the width.
         .gesture(
             DragGesture(minimumDistance: 8)
-                .onChanged { pan.drag($0.translation.width) }
-                .onEnded { _ in pan.endDrag() }
+                .onChanged { pan.drag($0.translation) }
+                .onEnded { _ in pan.endDrag() },
+            including: pan.canPan ? .all : .subviews
         )
+        .accessibilityElement(children: .combine)
     }
 }
-
-private let monoRowHeight: CGFloat = 16
 
 extension MonoRow where Between == EmptyView {
     init(gutter: String?, text: AttributedString, pan: HorizontalPan) {
@@ -137,10 +197,10 @@ extension MonoRow where Between == EmptyView {
 /// Numbered lines of TEXT and STREAM bodies.
 struct LineRows: View {
     let lines: [String]
+    let rows: [TextRow]
     let pan: HorizontalPan
 
     var body: some View {
-        let rows = Gutter.rows(lines)
         let digits = Gutter.digits(lines.count)
         ForEach(rows, id: \.self) { row in
             MonoRow(gutter: Gutter.label(row, digits: digits), text: AttributedString(lines[row.line].characters(row.start, row.end)), pan: pan)

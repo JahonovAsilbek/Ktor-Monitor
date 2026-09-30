@@ -94,6 +94,8 @@ enum BodyContent: Decodable, Equatable {
     case hex([HexRow])
     case image(format: String, data: Data)
     case markdown([MarkdownBlock])
+    /// A kind a newer Kotlin side sends that this version does not know.
+    case unsupported(String)
 
     private enum CodingKeys: String, CodingKey { case type, language, lines, folds, rows, format, base64, blocks }
 
@@ -115,8 +117,7 @@ enum BodyContent: Decodable, Equatable {
             }
             self = .image(format: try c.decode(String.self, forKey: .format), data: data)
         case "markdown": self = .markdown(try c.decode([MarkdownBlock].self, forKey: .blocks))
-        case let type:
-            throw DecodingError.dataCorruptedError(forKey: .type, in: c, debugDescription: "Unknown body content \(type)")
+        case let type: self = .unsupported(type)
         }
     }
 }
@@ -156,6 +157,8 @@ enum MarkdownBlock: Decodable, Equatable, Hashable {
     case quote([MarkdownSpan])
     case codeBlock(language: String?, text: String)
     case rule
+    /// A block a newer Kotlin side sends that this version does not know; it is left out.
+    case unsupported
 
     private enum CodingKeys: String, CodingKey { case type, level, spans, depth, number, language, text }
 
@@ -173,8 +176,7 @@ enum MarkdownBlock: Decodable, Equatable, Hashable {
         case "quote": self = .quote(try c.decode([MarkdownSpan].self, forKey: .spans))
         case "codeBlock": self = .codeBlock(language: try c.decodeIfPresent(String.self, forKey: .language), text: try c.decode(String.self, forKey: .text))
         case "rule": self = .rule
-        case let type:
-            throw DecodingError.dataCorruptedError(forKey: .type, in: c, debugDescription: "Unknown markdown block \(type)")
+        default: self = .unsupported
         }
     }
 }

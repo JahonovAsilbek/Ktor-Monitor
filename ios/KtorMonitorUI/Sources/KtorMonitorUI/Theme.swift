@@ -36,18 +36,19 @@ private extension UIColor {
     }
 }
 
-/// Text styles, the same sizes as on Android.
+/// Text styles close to Android's sizes, built on the system's text styles so they follow the
+/// reader's text size (Dynamic Type) as Android's follow its font scale.
 enum MonitorFont {
-    static let caption = Font.system(size: 12)
-    static let captionMedium = Font.system(size: 12, weight: .medium)
-    static let captionBold = Font.system(size: 12, weight: .bold)
-    static let body = Font.system(size: 14)
-    static let bodyMedium = Font.system(size: 14, weight: .medium)
-    static let bodyBold = Font.system(size: 14, weight: .bold)
-    static let subtitle = Font.system(size: 16, weight: .medium)
-    static let title = Font.system(size: 16, weight: .bold)
-    static let headline = Font.system(size: 18, weight: .bold)
-    static let mono = Font.system(size: 12, design: .monospaced)
+    static let caption = Font.caption
+    static let captionMedium = Font.caption.weight(.medium)
+    static let captionBold = Font.caption.bold()
+    static let body = Font.subheadline
+    static let bodyMedium = Font.subheadline.weight(.medium)
+    static let bodyBold = Font.subheadline.bold()
+    static let subtitle = Font.callout.weight(.medium)
+    static let title = Font.callout.bold()
+    static let headline = Font.title3.bold()
+    static let mono = Font.system(.caption, design: .monospaced)
 }
 
 /// Status text colour: red for an error, secondary while in flight.

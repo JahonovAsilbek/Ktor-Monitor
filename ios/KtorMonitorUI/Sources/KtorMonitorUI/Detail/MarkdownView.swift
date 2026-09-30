@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Rendered Markdown, one row per block.
 struct MarkdownBlocks: View {
@@ -52,6 +53,8 @@ private struct MarkdownBlockView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
         case .rule:
             Rectangle().fill(MonitorColor.border).frame(height: 1)
+        case .unsupported:
+            EmptyView()
         }
     }
 
@@ -74,7 +77,9 @@ private struct MarkdownBlockView: View {
         var result = AttributedString()
         for span in spans {
             var part = AttributedString(span.text)
-            var font = Font.system(size: size, weight: span.isBold ? .bold : weight, design: span.isCode ? .monospaced : .default)
+            // Android's sizes, scaled with the reader's text size.
+            let scaled = UIFontMetrics(forTextStyle: .body).scaledValue(for: size)
+            var font = Font.system(size: scaled, weight: span.isBold ? .bold : weight, design: span.isCode ? .monospaced : .default)
             if italic || span.isItalic { font = font.italic() }
             part.font = font
             if span.isCode { part.backgroundColor = MonitorColor.surface }

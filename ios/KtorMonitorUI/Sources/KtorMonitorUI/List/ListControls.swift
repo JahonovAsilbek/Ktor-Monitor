@@ -199,13 +199,15 @@ struct FilterFlow: Layout {
  */
 struct NotificationBanner: View {
     let isEnabled: Bool
-    @State private var allowed = true
+    /// Nil until checked, so the banner does not flash up for an app that has the permission.
+    @State private var allowed: Bool?
     @State private var deniedForGood = false
-    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        Group {
-            if isEnabled && !allowed {
+        // The hooks sit on a view that is always there: on an empty Group they would never run.
+        VStack(spacing: 0) {
+            Color.clear.frame(height: 0)
+            if isEnabled && allowed == false {
                 HStack(spacing: 12) {
                     Text("Allow notifications to see calls in Notification Center")
                         .font(MonitorFont.body)
@@ -221,12 +223,17 @@ struct NotificationBanner: View {
             }
         }
         .onAppear(perform: refresh)
-        .onChange(of: scenePhase) { if $0 == .active { refresh() } }
+        // Not scenePhase: inside a hosting controller presented from UIKit it does not always change.
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in refresh() }
     }
 
     private func refresh() {
         guard isEnabled else { return }
-        MonitorNotifications.canPost { allowed = $0 }
+        MonitorNotifications.canPost { canPost in
+            // Once allowed, the notification shows the calls made so far, not only the next one.
+            if canPost && allowed == false { KtorMonitorUI.repostNotification() }
+            allowed = canPost
+        }
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             let denied = settings.authorizationStatus == .denied
             DispatchQueue.main.async { deniedForGood = denied }

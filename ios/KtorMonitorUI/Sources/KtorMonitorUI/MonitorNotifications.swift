@@ -10,6 +10,8 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
     private let bridge: KtorMonitorUIBridge
     private let center = UNUserNotificationCenter.current()
     private var session: String?
+    /// What the notification says now: posted again once the permission is granted.
+    private var last: NotificationUpdate?
 
     init(bridge: KtorMonitorUIBridge) {
         self.bridge = bridge
@@ -18,12 +20,8 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
             center.removeDeliveredNotifications(withIdentifiers: [Self.id])
             return
         }
-        let clear = UNNotificationAction(identifier: Self.clearAction, title: "Clear")
-        center.getNotificationCategories { [center] categories in
-            let own = UNNotificationCategory(identifier: Self.category, actions: [clear], intentIdentifiers: [])
-            center.setNotificationCategories(categories.filter { $0.identifier != Self.category }.union([own]))
-        }
-        // An app with its own delegate forwards responses through KtorMonitorUI.handleNotificationResponse.
+        // An app with its own delegate forwards to KtorMonitorUI.handleNotificationResponse and
+        // KtorMonitorUI.presentationOptions.
         if center.delegate == nil { center.delegate = self }
         session = bridge.observeNotification { [weak self] json in
             guard let update = Wire.decode(NotificationUpdate.self, json) else { return }
@@ -36,24 +34,48 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
     }
 
     // The Kotlin side sends updates at most a few a second, the rate the system accepts.
+    func repost() {
+        last.map(post)
+    }
+
     private func post(_ update: NotificationUpdate) {
+        last = update
         guard !update.lines.isEmpty else {
             center.removeDeliveredNotifications(withIdentifiers: [Self.id])
             return
         }
         center.getNotificationSettings { [center] settings in
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else { return }
-            let content = UNMutableNotificationContent()
-            content.title = update.title
-            content.body = update.lines.joined(separator: "\n")
-            content.categoryIdentifier = Self.category
-            content.interruptionLevel = .passive
-            center.add(UNNotificationRequest(identifier: Self.id, content: content, trigger: nil))
+            Self.registerCategory(center) {
+                let content = UNMutableNotificationContent()
+                content.title = update.title
+                content.body = update.lines.joined(separator: "\n")
+                content.categoryIdentifier = Self.category
+                content.interruptionLevel = .passive
+                center.add(UNNotificationRequest(identifier: Self.id, content: content, trigger: nil))
+            }
         }
     }
 
+    /// The Clear action, added to the app's categories right before posting: registered once at
+    /// launch, it would be lost to an app that sets its own categories later.
+    private static func registerCategory(_ center: UNUserNotificationCenter, then post: @escaping () -> Void) {
+        center.getNotificationCategories { categories in
+            if !categories.contains(where: { $0.identifier == category }) {
+                let clear = UNNotificationAction(identifier: clearAction, title: "Clear")
+                center.setNotificationCategories(categories.union([UNNotificationCategory(identifier: category, actions: [clear], intentIdentifiers: [])]))
+            }
+            post()
+        }
+    }
+
+    static func isMonitors(_ notification: UNNotification) -> Bool {
+        notification.request.identifier == id
+    }
+
+    @MainActor
     func handle(_ response: UNNotificationResponse) -> Bool {
-        guard response.notification.request.identifier == Self.id else { return false }
+        guard Self.isMonitors(response.notification) else { return false }
         if response.actionIdentifier == Self.clearAction {
             bridge.clear()
         } else if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
@@ -68,7 +90,7 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         DispatchQueue.main.async {
-            _ = self.handle(response)
+            _ = MainActor.assumeIsolated { self.handle(response) }
             completionHandler()
         }
     }
@@ -78,7 +100,8 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler(notification.request.identifier == Self.id ? [.list] : [.banner, .list, .sound])
+        // Anything else is shown as it would be with no delegate at all: not while the app is open.
+        completionHandler(Self.isMonitors(notification) ? [.list] : [])
     }
 
     static func canPost(_ completion: @escaping (Bool) -> Void) {

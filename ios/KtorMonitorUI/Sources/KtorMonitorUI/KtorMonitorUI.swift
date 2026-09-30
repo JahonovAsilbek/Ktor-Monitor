@@ -7,6 +7,9 @@ import UserNotifications
 public enum KtorMonitorUI {
     private(set) static var bridge: KtorMonitorUIBridge?
     private static var notifications: MonitorNotifications?
+    /// Monitor views on screen, presented or embedded by the app.
+    static var visibleMonitors = 0
+    private static var pendingPresent: NSObjectProtocol?
 
     /// Call once at launch, with the app's bridge.
     public static func install(bridge: KtorMonitorUIBridge, shakeToOpen: Bool = true) {
@@ -16,18 +19,45 @@ public enum KtorMonitorUI {
         if shakeToOpen { ShakeToOpen.enable() }
     }
 
-    /// Opens the monitor over the app.
+    /// Opens the monitor over the app, unless it is on screen already (even under a sheet of its own).
+    @MainActor
     public static func present() {
-        guard let bridge, let top = Platform.topViewController(), !(top is MonitorHostingController) else { return }
+        guard let bridge, visibleMonitors == 0 else { return }
+        guard let top = Platform.topViewController() else {
+            // Launched by a tap on the notification, the app has no key window yet.
+            presentOnceActive()
+            return
+        }
         let host = MonitorHostingController(bridge: bridge)
         host.modalPresentationStyle = .fullScreen
         top.present(host, animated: true)
     }
 
+    @MainActor
+    private static func presentOnceActive() {
+        guard pendingPresent == nil else { return }
+        pendingPresent = NotificationCenter.default.addObserver(forName: UIScene.didActivateNotification, object: nil, queue: .main) { _ in
+            if let pendingPresent { NotificationCenter.default.removeObserver(pendingPresent) }
+            pendingPresent = nil
+            MainActor.assumeIsolated { present() }
+        }
+    }
+
+    static func repostNotification() {
+        notifications?.repost()
+    }
+
     /// For an app with its own `UNUserNotificationCenterDelegate`: pass every response here first.
     /// Returns true when it was the monitor's notification, which is then handled.
+    @MainActor
     public static func handleNotificationResponse(_ response: UNNotificationResponse) -> Bool {
         notifications?.handle(response) ?? false
+    }
+
+    /// For an app with its own `UNUserNotificationCenterDelegate`, in `willPresent`: the options for
+    /// the monitor's notification (the list only: no banner, no sound), or nil for any other.
+    public static func presentationOptions(for notification: UNNotification) -> UNNotificationPresentationOptions? {
+        MonitorNotifications.isMonitors(notification) ? [.list] : nil
     }
 }
 
@@ -38,10 +68,14 @@ public struct KtorMonitorView: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var path: [String] = []
     @State private var selected: String?
+    /// Here, not in the list: a change of size class (a rotation, an iPad split) rebuilds the list,
+    /// and its search, filters and selection must live through that.
+    @StateObject private var list: ListSession
 
     public init(bridge: KtorMonitorUIBridge, onClose: @escaping () -> Void) {
         self.bridge = bridge
         self.onClose = onClose
+        _list = StateObject(wrappedValue: ListSession(listOf: bridge))
     }
 
     public var body: some View {
@@ -50,7 +84,7 @@ public struct KtorMonitorView: View {
                 // List and detail side by side, as on a wide Android screen.
                 HStack(spacing: 0) {
                     NavigationStack {
-                        CallListView(bridge: bridge, selectedCallId: selected, onOpenCall: { selected = $0 }, onClose: onClose)
+                        CallListView(session: list, bridge: bridge, selectedCallId: selected, onOpenCall: { selected = $0 }, onClose: onClose)
                     }
                     .frame(maxWidth: 420)
                     Rectangle().fill(MonitorColor.border).frame(width: 1)
@@ -64,7 +98,7 @@ public struct KtorMonitorView: View {
                 }
             } else {
                 NavigationStack(path: $path) {
-                    CallListView(bridge: bridge, selectedCallId: nil, onOpenCall: { path = [$0] }, onClose: onClose)
+                    CallListView(session: list, bridge: bridge, selectedCallId: nil, onOpenCall: { path = [$0] }, onClose: onClose)
                         .navigationDestination(for: String.self) { id in
                             CallDetailView(callId: id, bridge: bridge, onGone: { path.removeAll() })
                         }
@@ -72,6 +106,8 @@ public struct KtorMonitorView: View {
             }
         }
         .tint(MonitorColor.accent)
+        .onAppear { KtorMonitorUI.visibleMonitors += 1 }
+        .onDisappear { KtorMonitorUI.visibleMonitors -= 1 }
     }
 }
 

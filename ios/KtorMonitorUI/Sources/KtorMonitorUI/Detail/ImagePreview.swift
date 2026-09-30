@@ -11,6 +11,7 @@ struct ImagePreview: View {
     let data: Data
 
     @State private var decoded: Decoded = .loading
+    @Environment(\.displayScale) private var displayScale
 
     var body: some View {
         if format == "SVG" {
@@ -24,10 +25,15 @@ struct ImagePreview: View {
                     DetailNotice(text: "The image could not be decoded")
                 case let .ready(image, width, height):
                     VStack(alignment: .leading, spacing: 8) {
+                        // At its own size (a favicon stays small), scaled down only to fit.
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFit()
-                            .frame(maxHeight: 480, alignment: .topLeading)
+                            .frame(
+                                maxWidth: image.size.width / displayScale,
+                                maxHeight: min(480, image.size.height / displayScale),
+                                alignment: .topLeading
+                            )
                             .background(MonitorColor.surface)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .accessibilityLabel("Body image")

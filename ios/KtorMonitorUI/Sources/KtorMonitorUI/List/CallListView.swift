@@ -1,28 +1,21 @@
 import SwiftUI
 
-/// The call list. `selectedCallId` marks the call the detail pane shows next to the list.
+/// The call list. `selectedCallId` marks the call the detail pane shows next to the list. The session
+/// belongs to `KtorMonitorView`, so it outlives this view when a size class change rebuilds it.
 struct CallListView: View {
+    @ObservedObject var session: ListSession
     let bridge: KtorMonitorUIBridge
     let selectedCallId: String?
     let onOpenCall: (String) -> Void
     let onClose: () -> Void
 
-    @StateObject private var session: ListSession
     @State private var isFiltersOpen = false
-
-    init(bridge: KtorMonitorUIBridge, selectedCallId: String?, onOpenCall: @escaping (String) -> Void, onClose: @escaping () -> Void) {
-        self.bridge = bridge
-        self.selectedCallId = selectedCallId
-        self.onOpenCall = onOpenCall
-        self.onClose = onClose
-        _session = StateObject(wrappedValue: ListSession(listOf: bridge))
-    }
 
     var body: some View {
         VStack(spacing: 0) {
             if let state = session.state {
                 if let selection = state.selection {
-                    SelectionControls(state: state, selection: selection, send: session.send)
+                    SelectionControls(state: state, selection: Set(selection), send: session.send)
                 } else {
                     Text(callCount(state.totalCount))
                         .font(MonitorFont.caption)
@@ -68,18 +61,20 @@ struct CallListView: View {
             if calls.isEmpty {
                 message(state.isNarrowed ? "Nothing matches" : "No calls yet")
             } else {
+                let selection = state.selection.map(Set.init)
                 List(calls) { call in
-                    CallRowView(
-                        call: call,
-                        highlighted: call.id == selectedCallId,
-                        selected: state.selection.map { $0.contains(call.id) }
-                    )
-                    .contentShape(Rectangle())
-                    .onTapGesture { session.send(.click(id: call.id)) }
-                    .onLongPressGesture { session.send(.longClick(id: call.id)) }
+                    let selected = selection?.contains(call.id)
+                    PressableRow(
+                        onTap: { session.send(.click(id: call.id)) },
+                        onLongPress: { session.send(.longClick(id: call.id)) }
+                    ) {
+                        CallRowView(call: call, selected: selected)
+                    }
                     .listRowInsets(EdgeInsets())
                     .listRowSeparatorTint(MonitorColor.border)
-                    .listRowBackground(rowBackground(call, state))
+                    .listRowBackground(rowBackground(call, selected: selected == true))
+                    .accessibilityElement(children: .combine)
+                    .accessibilityAddTraits(selected == true ? [.isButton, .isSelected] : .isButton)
                     .accessibilityAction(named: "Select") { session.send(.longClick(id: call.id)) }
                 }
                 .listStyle(.plain)
@@ -90,8 +85,8 @@ struct CallListView: View {
         }
     }
 
-    private func rowBackground(_ call: CallRow, _ state: ListState) -> Color {
-        if state.selection?.contains(call.id) == true { return MonitorColor.accentContainer }
+    private func rowBackground(_ call: CallRow, selected: Bool) -> Color {
+        if selected { return MonitorColor.accentContainer }
         if call.id == selectedCallId { return MonitorColor.surface }
         return MonitorColor.background
     }
@@ -221,7 +216,7 @@ struct CallListView: View {
 /// Select all and Clear, under the top bar while selecting.
 private struct SelectionControls: View {
     let state: ListState
-    let selection: [String]
+    let selection: Set<String>
     let send: (ListEvent) -> Void
 
     var body: some View {
@@ -236,6 +231,49 @@ private struct SelectionControls: View {
         .font(MonitorFont.bodyMedium)
         .padding(.horizontal, 16)
         .padding(.vertical, 6)
+    }
+}
+
+/**
+ A row that shows it is pressed. A tap opens the call (or toggles it while selecting); a long press
+ starts selecting. The button still fires when a long press is let go: that tap is swallowed, or it
+ would toggle the call straight back off. Letting go anywhere clears that, so a long press dragged off
+ the row does not swallow the next tap.
+ */
+private struct PressableRow<Content: View>: View {
+    let onTap: () -> Void
+    let onLongPress: () -> Void
+    @ViewBuilder let content: Content
+    @State private var longPressed = false
+
+    var body: some View {
+        Button {
+            if longPressed {
+                longPressed = false
+            } else {
+                onTap()
+            }
+        } label: {
+            content.contentShape(Rectangle())
+        }
+        .buttonStyle(RowPressStyle { longPressed = false })
+        .simultaneousGesture(LongPressGesture().onEnded { _ in
+            longPressed = true
+            onLongPress()
+        })
+    }
+}
+
+private struct RowPressStyle: ButtonStyle {
+    /// Runs once the press ends, after the button's own action has had its turn.
+    let onRelease: () -> Void
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .background(configuration.isPressed ? MonitorColor.surface : Color.clear)
+            .onChange(of: configuration.isPressed) { pressed in
+                if !pressed { DispatchQueue.main.async(execute: onRelease) }
+            }
     }
 }
 

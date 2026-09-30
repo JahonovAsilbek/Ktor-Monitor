@@ -5,6 +5,9 @@ struct CallDetailView: View {
     private let onGone: () -> Void
     @StateObject private var session: DetailSession
     @State private var page = 0
+    /// Bumped by each copy; the "Copied" note shows while it is the latest.
+    @State private var copies = 0
+    @State private var showsCopied = false
 
     init(callId: String, bridge: KtorMonitorUIBridge, onGone: @escaping () -> Void) {
         self.onGone = onGone
@@ -30,6 +33,9 @@ struct CallDetailView: View {
             }
         }
         .background(MonitorColor.background.ignoresSafeArea())
+        .overlay(alignment: .bottom) {
+            if showsCopied { CopiedNote().transition(.opacity) }
+        }
         .navigationTitle(call.map { "\($0.summary.method) \($0.summary.path)" } ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -53,12 +59,41 @@ struct CallDetailView: View {
         }
         .onReceive(session.effects) { effect in
             switch effect {
-            case let .copyText(text): Platform.copy(text)
+            case let .copyText(text):
+                Platform.copy(text)
+                confirmCopy()
             case let .share(name, _, content): Platform.share(name: name, content: content)
             case .close: onGone()
             case .openCall: break
             }
         }
+    }
+}
+
+extension CallDetailView {
+    /// iOS confirms nothing on a copy, unlike Android 13 and later.
+    private func confirmCopy() {
+        copies += 1
+        let copy = copies
+        withAnimation { showsCopied = true }
+        UIAccessibility.post(notification: .announcement, argument: "Copied")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            guard copy == copies else { return }
+            withAnimation { showsCopied = false }
+        }
+    }
+}
+
+private struct CopiedNote: View {
+    var body: some View {
+        Text("Copied")
+            .font(MonitorFont.bodyMedium)
+            .foregroundColor(MonitorColor.background)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(Capsule().fill(MonitorColor.text))
+            .padding(.bottom, 24)
+            .accessibilityHidden(true)
     }
 }
 
