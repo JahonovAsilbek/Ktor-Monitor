@@ -1,2 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application>
+        <!-- A task of its own, so the monitor opens over the app without disturbing its back stack. -->
+        <activity
+            android:name=".KtorMonitorActivity"
+            android:exported="false"
+            android:label="Network monitor"
+            android:launchMode="singleTask"
+            android:taskAffinity="${applicationId}.ktormonitor" />
+
+        <receiver
+            android:name=".ClearCallsReceiver"
+            android:exported="false" />
+
+        <provider
+            android:name=".KtorMonitorFileProvider"
+            android:authorities="${applicationId}.ktormonitor.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/ktormonitor_file_paths" />
+        </provider>
+    </application>
+
+</manifest>

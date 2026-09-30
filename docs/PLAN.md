@@ -65,7 +65,7 @@ val monitor = KtorMonitor(context /* Android */) {
     sanitizeHeaders("Authorization")
 }
 monitor.attach(httpClient)          // installs the HttpSend interceptor
-KtorMonitorUi.install(application)  // notification + shake (ui module)
+KtorMonitorUi.install(application, monitor)  // notification + shake (ui module)
 ```
 
 `attach` is called after any auth that retries requests, so every attempt is seen with its final
@@ -164,7 +164,7 @@ Each phase ends with a build and the tests, and waits for approval before the ne
 2. **Core.** Copy `shared/debug/netmonitor`, rename packages, cut core/Koin/Kermit, settle the public
    API, all tests green. ✅
 3. **Android UI.** Copy `android/debug/netmonitor`, rename, replace MKBUICore with foundation
-   composables, clean the previews.
+   composables, clean the previews. ✅
 4. **iOS bridge.** `KtorMonitorBridge` in `iosMain`, the JSON state and event models, tests.
 5. **iOS UI.** `ios/KtorMonitorUI` Swift package: list, detail, body views, notification, shake,
    share sheet — the same screens as Android.
