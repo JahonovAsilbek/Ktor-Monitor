@@ -3,9 +3,11 @@ package uz.jahonov.ktormonitor
 import io.ktor.client.HttpClient
 import kotlin.time.Clock
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import uz.jahonov.ktormonitor.capture.KtorMonitorCapture
 import uz.jahonov.ktormonitor.capture.KtorMonitorConfig
 import uz.jahonov.ktormonitor.data.KtorMonitorDatabase
@@ -17,7 +19,7 @@ import uz.jahonov.ktormonitor.presentation.list.KtorMonitorListViewModel
 /**
  * The monitor: records the calls of the clients it is attached to and serves the screens that show
  * them. Create one per app (`KtorMonitor(context)` on Android, `KtorMonitor()` on iOS) and keep it
- * for the app's lifetime; every instance opens the same history.
+ * for the app's lifetime; should there be more, they share one history.
  */
 public class KtorMonitor internal constructor(
     database: KtorMonitorDatabase,
@@ -25,13 +27,14 @@ public class KtorMonitor internal constructor(
     private val appName: String,
     private val appVersion: String,
 ) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, e -> config.onInternalError(e) })
     private val repository = KtorMonitorRepository(database.calls(), config, ::currentTimeMillis)
-    private val capture = KtorMonitorCapture(
-        store = repository,
-        config = config,
-        scope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
-        now = ::currentTimeMillis,
-    )
+    private val capture = KtorMonitorCapture(repository, config, scope, ::currentTimeMillis)
+
+    init {
+        // Calls that expired while the app was not running go before anyone looks.
+        scope.launch { repository.trim() }
+    }
 
     /** What the monitor's notification says. */
     public val notifier: KtorMonitorNotifier = KtorMonitorNotifier(repository, config)

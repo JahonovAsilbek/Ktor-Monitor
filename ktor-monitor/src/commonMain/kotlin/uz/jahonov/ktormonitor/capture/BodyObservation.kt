@@ -14,6 +14,8 @@ import io.ktor.utils.io.readAvailable
 import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writer
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
@@ -72,18 +74,21 @@ internal class ObservingResponseAdapter(
     ): Any? {
         val copy = ByteChannel()
         val collector = BodyCollector(limit)
+        val updates = StreamUpdates()
         val pump = CoroutineScope(callContext).launch(start = CoroutineStart.LAZY) {
             try {
                 responseBody.forEachChunk { chunk, length ->
                     copy.writeFully(chunk, 0, length)
                     copy.flush()
                     collector.add(chunk, length)
-                    onBody(collector.body())
+                    if (updates.due()) onBody(collector.body())
                 }
                 copy.flushAndClose()
             } catch (e: Throwable) {
                 copy.cancel(e)
                 throw e
+            } finally {
+                onBody(collector.body())
             }
         }
         val adapted = original.adapt(data, status, headers, copy, outgoingContent, callContext)
@@ -94,6 +99,22 @@ internal class ObservingResponseAdapter(
             pump.start()
         }
         return adapted
+    }
+}
+
+/**
+ * When a live stream's body is written again: at once for the first chunk, then at most every
+ * [STREAM_UPDATE] — not per chunk, where a chatty stream would copy and write its whole body many
+ * times a second. The last state is written when the stream ends.
+ */
+internal class StreamUpdates {
+    private var last: TimeSource.Monotonic.ValueTimeMark? = null
+
+    fun due(): Boolean {
+        val now = TimeSource.Monotonic.markNow()
+        if (last?.let { now - it < STREAM_UPDATE } == true) return false
+        last = now
+        return true
     }
 }
 
@@ -121,3 +142,4 @@ internal suspend inline fun ByteReadChannel.forEachChunk(block: (ByteArray, Int)
 }
 
 private const val CHUNK_SIZE = 8 * 1024
+private val STREAM_UPDATE = 250.milliseconds

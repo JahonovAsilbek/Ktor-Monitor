@@ -180,6 +180,7 @@ internal class KtorMonitorCapture(
         // A streamed body is read once: pass it through, keeping a copy as it goes.
         val isEventStream = contentType?.match(ContentType.Text.EventStream) == true
         val collector = BodyCollector(config.maxContentLength)
+        val updates = StreamUpdates()
         val source = response.rawContent
         val observed = call.client.writer {
             try {
@@ -187,7 +188,7 @@ internal class KtorMonitorCapture(
                     channel.writeFully(chunk, 0, length)
                     channel.flush()
                     collector.add(chunk, length)
-                    if (isEventStream) recording.update { copy(responseBody = collector.body()) }
+                    if (isEventStream && updates.due()) recording.update { copy(responseBody = collector.body()) }
                 }
             } catch (e: Throwable) {
                 // Nothing reads the engine's stream any more: stop it, so the connection is let go.

@@ -40,7 +40,8 @@ internal class KtorMonitorRepository(
 
     suspend fun clear() = dao.deleteAll()
 
-    private suspend fun trim() {
+    /** Drops calls past the retention period and beyond `maxCalls`. Runs as calls start, and at launch. */
+    suspend fun trim() {
         val period = config.retention.period
         if (period.isFinite()) dao.deleteOlderThan(now() - period.inWholeMilliseconds)
         dao.keepNewest(config.maxCalls)

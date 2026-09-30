@@ -8,7 +8,7 @@ class HexDumpTest {
     @Test
     fun `rows hold sixteen bytes with offset hex and ascii`() {
         val bytes = "Hi!".encodeToByteArray() + ByteArray(13) { (it + 0x7d).toByte() } + bytesOf(0x41)
-        val rows = BodyAnalyzer.hex(body(bytes))
+        val rows = BodyAnalysis(body(bytes), null).hex
         assertEquals(2, rows.size)
         assertEquals(
             HexRow("00000000", "48 69 21 7d 7e 7f 80 81  82 83 84 85 86 87 88 89", "Hi!}~..........."),
@@ -21,7 +21,7 @@ class HexDumpTest {
 
     @Test
     fun `offsets count in hex across the whole body`() {
-        val rows = BodyAnalyzer.hex(body(ByteArray(4_096)))
+        val rows = BodyAnalysis(body(ByteArray(4_096)), null).hex
         assertEquals(256, rows.size)
         assertEquals("00000ff0", rows.last().offset)
         assertEquals("00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00", rows.last().hex)
@@ -30,6 +30,6 @@ class HexDumpTest {
 
     @Test
     fun `an empty body has no rows`() {
-        assertEquals(emptyList(), BodyAnalyzer.hex(body(ByteArray(0))))
+        assertEquals(emptyList(), BodyAnalysis(body(ByteArray(0)), null).hex)
     }
 }

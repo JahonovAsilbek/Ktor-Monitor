@@ -1,11 +1,14 @@
 package uz.jahonov.ktormonitor.bridge
 
 import androidx.lifecycle.ViewModelStore
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import uz.jahonov.ktormonitor.presentation.KtorMonitorNotifier
@@ -23,6 +26,7 @@ internal class BridgeSessions(
     private val detailViewModel: (callId: String) -> KtorMonitorDetailViewModel,
     private val notifier: KtorMonitorNotifier,
     private val onInternalError: (Throwable) -> Unit,
+    private val encodeDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) {
     // A failure would otherwise end the process: Kotlin/Native has no handler to fall back on.
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + CoroutineExceptionHandler { _, e -> onInternalError(e) })
@@ -33,8 +37,10 @@ internal class BridgeSessions(
         val viewModel = listViewModel()
         return open(
             viewModel = viewModel,
-            onState = { onState(BridgeJson.encodeToString(ListStateWire.serializer(), it.toWire())) },
-            onEffect = { onEffect(BridgeJson.encodeToString(EffectWire.serializer(), it.toWire())) },
+            encodeState = { BridgeJson.encodeToString(ListStateWire.serializer(), it.toWire()) },
+            encodeEffect = { BridgeJson.encodeToString(EffectWire.serializer(), it.toWire()) },
+            onState = onState,
+            onEffect = onEffect,
             onEvent = { viewModel.onEvent(BridgeJson.decodeFromString(ListEventWire.serializer(), it).toEvent()) },
         )
     }
@@ -43,8 +49,10 @@ internal class BridgeSessions(
         val viewModel = detailViewModel(callId)
         return open(
             viewModel = viewModel,
-            onState = { onState(BridgeJson.encodeToString(DetailStateWire.serializer(), it.toWire())) },
-            onEffect = { onEffect(BridgeJson.encodeToString(EffectWire.serializer(), it.toWire())) },
+            encodeState = { BridgeJson.encodeToString(DetailStateWire.serializer(), it.toWire()) },
+            encodeEffect = { BridgeJson.encodeToString(EffectWire.serializer(), it.toWire()) },
+            onState = onState,
+            onEffect = onEffect,
             onEvent = { viewModel.onEvent(BridgeJson.decodeFromString(DetailEventWire.serializer(), it).toEvent()) },
         )
     }
@@ -73,16 +81,19 @@ internal class BridgeSessions(
         sessions.remove(sessionId)?.close?.invoke()
     }
 
+    /** States can be large (a whole list, a formatted body): they are encoded off the main thread. */
     private fun <S : Any, E : Any, F : Any> open(
         viewModel: MviViewModel<S, E, F>,
-        onState: (S) -> Unit,
-        onEffect: (F) -> Unit,
+        encodeState: (S) -> String,
+        encodeEffect: (F) -> String,
+        onState: (String) -> Unit,
+        onEffect: (String) -> Unit,
         onEvent: (String) -> Unit,
     ): String {
         val store = ViewModelStore().apply { put(VIEW_MODEL_KEY, viewModel) }
         val job = scope.launch {
-            launch { viewModel.state.collect(onState) }
-            launch { viewModel.effects.collect(onEffect) }
+            launch { viewModel.state.map(encodeState).flowOn(encodeDispatcher).collect(onState) }
+            launch { viewModel.effects.collect { onEffect(encodeEffect(it)) } }
         }
         return add(
             Session(onEvent = onEvent) {

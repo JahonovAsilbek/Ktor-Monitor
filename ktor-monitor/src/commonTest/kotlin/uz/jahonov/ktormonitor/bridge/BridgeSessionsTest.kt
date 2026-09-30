@@ -46,10 +46,11 @@ class BridgeSessionsTest {
     }
 
     private fun sessions(repository: KtorMonitorRepository, showNotification: Boolean = true) = BridgeSessions(
-        listViewModel = { KtorMonitorListViewModel(repository, "ExampleApp", "1.0", now = { 0 }, onError = { errors += it }) },
+        listViewModel = { KtorMonitorListViewModel(repository, "ExampleApp", "1.0", now = { 0 }, onError = { errors += it }, workDispatcher = Dispatchers.Main) },
         detailViewModel = { KtorMonitorDetailViewModel(it, repository, "ExampleApp", "1.0", now = { 0 }, onError = { errors += it }, analysisDispatcher = Dispatchers.Main) },
         notifier = KtorMonitorNotifier(repository, KtorMonitorConfig().apply { this.showNotification = showNotification }),
         onInternalError = { errors += it },
+        encodeDispatcher = Dispatchers.Main,
     )
 
     private fun lastList() = BridgeJson.decodeFromString(ListStateWire.serializer(), states.last())

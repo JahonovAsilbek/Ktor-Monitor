@@ -1,25 +1,34 @@
 package uz.jahonov.ktormonitor.presentation.list
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import uz.jahonov.ktormonitor.export.CallExporter
 import uz.jahonov.ktormonitor.export.ExportFormat
 import uz.jahonov.ktormonitor.data.KtorMonitorRepository
 import uz.jahonov.ktormonitor.presentation.Loadable
 import uz.jahonov.ktormonitor.presentation.MviViewModel
 import uz.jahonov.ktormonitor.presentation.SharedFile
+import uz.jahonov.ktormonitor.presentation.throttleLatest
 
 /**
  * The call list. Search runs in the database (it covers the bodies); filters, "only errors" and sort
  * run here on the rows found, so changing them needs no query.
+ *
+ * The database reports every write, and a busy app writes many times a second: the list follows at
+ * most [UPDATE_MILLIS] apart, and works it out off the main thread.
  */
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 public class KtorMonitorListViewModel internal constructor(
@@ -28,28 +37,39 @@ public class KtorMonitorListViewModel internal constructor(
     private val appVersion: String,
     private val now: () -> Long,
     onError: (Throwable) -> Unit,
+    private val workDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : MviViewModel<KtorMonitorListUiState, KtorMonitorListUiEvent, KtorMonitorListUiEffect>(KtorMonitorListUiState(), onError) {
 
     /** What the user chose; the published state adds the calls found to it. */
     private val controls = MutableStateFlow(KtorMonitorListUiState())
+    private var sharing: Job? = null
 
     init {
+        val all = repository.calls()
+            .throttleLatest(UPDATE_MILLIS)
+            .shareSafely()
         val found = controls.map { it.query.trim() }
             .distinctUntilChanged()
             .debounce { if (it.isEmpty()) 0 else SEARCH_DEBOUNCE_MILLIS }
-            .flatMapLatest { repository.calls(it) }
+            // With no query every call is found: the same rows, no second query.
+            .flatMapLatest { query -> if (query.isEmpty()) all else repository.calls(query).throttleLatest(UPDATE_MILLIS) }
 
-        combine(repository.calls(), found, controls) { all, found, controls ->
-            val foundIds = found.map { it.id }.toSet()
+        combine(all, found, controls) { all, found, controls ->
+            val shown = found.shown(controls.onlyErrors, controls.filters, controls.sort)
             controls.copy(
-                calls = Loadable.Ready(found.shown(controls.onlyErrors, controls.filters, controls.sort)),
+                calls = Loadable.Ready(shown),
                 totalCount = all.size,
                 options = FilterOptions.of(all),
-                // Calls deleted meanwhile (retention, clear from the notification) leave the selection.
-                selection = controls.selection?.intersect(foundIds),
+                // Only what is shown can be selected: hidden by a filter, or deleted meanwhile, a
+                // call leaves the selection, so Delete and Share never act on what cannot be seen.
+                selection = controls.selection?.intersect(shown.mapTo(HashSet()) { it.id }),
             )
         }
-            .onEach { derived -> setState { derived } }
+            .flowOn(workDispatcher)
+            .onEach { derived ->
+                setState { derived }
+                if (derived.selection != controls.value.selection) setControls { copy(selection = derived.selection) }
+            }
             .collectSafely()
     }
 
@@ -85,15 +105,17 @@ public class KtorMonitorListViewModel internal constructor(
         }
     }
 
+    /** Selection ends at once; a second Share while the first is being written is ignored. */
     private fun share(format: ExportFormat) {
         val ids = state.value.selection.orEmpty().toList()
-        if (ids.isEmpty()) return
-        launch {
-            val calls = repository.calls(ids)
+        if (ids.isEmpty() || sharing?.isActive == true) return
+        setControls { copy(selection = null) }
+        sharing = launch {
             val exportedAt = now()
-            val content = CallExporter.export(calls, format, exportedAt, appName, appVersion)
+            val content = withContext(workDispatcher) {
+                CallExporter.export(repository.calls(ids), format, exportedAt, appName, appVersion)
+            }
             emit(KtorMonitorListUiEffect.Share(SharedFile(CallExporter.fileName(format, exportedAt), format.mimeType, content)))
-            setControls { copy(selection = null) }
         }
     }
 
@@ -111,5 +133,6 @@ public class KtorMonitorListViewModel internal constructor(
 
     private companion object {
         const val SEARCH_DEBOUNCE_MILLIS = 200L
+        const val UPDATE_MILLIS = 250L
     }
 }

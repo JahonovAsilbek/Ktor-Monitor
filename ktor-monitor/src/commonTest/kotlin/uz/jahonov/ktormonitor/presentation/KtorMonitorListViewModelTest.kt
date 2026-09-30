@@ -49,7 +49,7 @@ class KtorMonitorListViewModelTest {
     }
 
     private fun viewModel(repository: KtorMonitorRepository) =
-        viewModels.track(KtorMonitorListViewModel(repository, "ExampleApp", "1.2.3", now = { 1_727_700_000_000 }, onError = { throw it }))
+        viewModels.track(KtorMonitorListViewModel(repository, "ExampleApp", "1.2.3", now = { 1_727_700_000_000 }, onError = { throw it }, workDispatcher = Dispatchers.Main))
 
     private suspend fun KtorMonitorListViewModel.shownIds(until: (KtorMonitorListUiState) -> Boolean = { true }): List<String> =
         state.first { it.calls is Loadable.Ready && until(it) }.let { state ->

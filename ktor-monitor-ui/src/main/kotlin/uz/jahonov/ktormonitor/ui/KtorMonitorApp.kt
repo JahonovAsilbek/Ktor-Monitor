@@ -9,14 +9,20 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import uz.jahonov.ktormonitor.KtorMonitor
 import uz.jahonov.ktormonitor.ui.detail.KtorMonitorDetailScreen
@@ -39,12 +45,7 @@ internal fun KtorMonitorApp(onClose: () -> Unit) {
                 )
                 Spacer(Modifier.width(1.dp).fillMaxHeight().background(MonitorTheme.colors.border))
                 openCallId?.let { id ->
-                    KtorMonitorDetailScreen(
-                        callId = id,
-                        onBack = null,
-                        onGone = { openCallId = null },
-                        modifier = Modifier.weight(0.6f),
-                    )
+                    CallDetail(id, onBack = null, onGone = { openCallId = null }, modifier = Modifier.weight(0.6f))
                 } ?: Spacer(Modifier.weight(0.6f))
             }
         } else {
@@ -53,19 +54,49 @@ internal fun KtorMonitorApp(onClose: () -> Unit) {
                 KtorMonitorListScreen(selectedCallId = null, onOpenCall = { openCallId = it }, onClose = onClose)
             } else {
                 BackHandler { openCallId = null }
-                KtorMonitorDetailScreen(callId = id, onBack = { openCallId = null }, onGone = { openCallId = null })
+                CallDetail(id, onBack = { openCallId = null }, onGone = { openCallId = null })
             }
         }
     }
 }
 
+/**
+ * One call's detail, with view models of its own: they live through a rotation, and go when another
+ * call opens, so a detail left behind stops watching the database. All state inside starts afresh
+ * for each call.
+ */
+@Composable
+private fun CallDetail(id: String, onBack: (() -> Unit)?, onGone: () -> Unit, modifier: Modifier = Modifier) {
+    val stores = viewModel<DetailStores>()
+    key(id) {
+        val owner = remember { object : ViewModelStoreOwner { override val viewModelStore = stores.storeFor(id) } }
+        CompositionLocalProvider(LocalViewModelStoreOwner provides owner) {
+            KtorMonitorDetailScreen(callId = id, onBack = onBack, onGone = onGone, modifier = modifier)
+        }
+    }
+}
+
+/** The view models of the detail shown; those of the call shown before are cleared. */
+internal class DetailStores : ViewModel() {
+    private var current: Pair<String, ViewModelStore>? = null
+
+    fun storeFor(id: String): ViewModelStore {
+        current?.let { (currentId, store) -> if (currentId == id) return store else store.clear() }
+        return ViewModelStore().also { current = id to it }
+    }
+
+    override fun onCleared() {
+        current?.second?.clear()
+    }
+}
+
 internal val LocalKtorMonitor = staticCompositionLocalOf<KtorMonitor> { error("No KtorMonitor provided") }
 
-/** A view model kept by the screen; [key] tells apart the detail screens of different calls. */
+/** A view model kept by the screen's owner. */
 @Composable
-internal inline fun <reified VM : ViewModel> monitorViewModel(key: String? = null, crossinline create: KtorMonitor.() -> VM): VM {
+internal inline fun <reified VM : ViewModel> monitorViewModel(crossinline create: KtorMonitor.() -> VM): VM {
     val monitor = LocalKtorMonitor.current
-    return viewModel(key = key) { monitor.create() }
+    return viewModel { monitor.create() }
 }
 
 private val TWO_PANE_MIN_WIDTH = 600.dp

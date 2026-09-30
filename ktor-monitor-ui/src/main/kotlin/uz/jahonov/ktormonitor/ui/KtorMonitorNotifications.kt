@@ -15,9 +15,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -33,7 +31,6 @@ internal class KtorMonitorNotifications(private val application: Application, mo
     private val notifier = monitor.notifier
     private val manager = NotificationManagerCompat.from(application)
 
-    @OptIn(FlowPreview::class)
     fun start() {
         if (!notifier.isEnabled) {
             manager.cancel(NOTIFICATION_ID)
@@ -41,8 +38,6 @@ internal class KtorMonitorNotifications(private val application: Application, mo
         }
         createChannel()
         notifier.lines
-            // The system drops updates posted faster than a few a second.
-            .debounce(UPDATE_DEBOUNCE_MILLIS)
             .onEach(::post)
             .launchIn(CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate))
     }
@@ -86,7 +81,6 @@ internal class KtorMonitorNotifications(private val application: Application, mo
     companion object {
         private const val CHANNEL_ID = "ktormonitor"
         private const val NOTIFICATION_ID = 0x4e4d // "NM"
-        private const val UPDATE_DEBOUNCE_MILLIS = 300L
 
         fun canPost(context: Context): Boolean =
             Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||

@@ -5,36 +5,42 @@ import kotlinx.io.bytestring.ByteString
 import uz.jahonov.ktormonitor.model.CapturedBody
 
 /**
- * Everything the body views need short of drawing: which views apply, and the body laid out for
- * each. Both apps render what this returns, so they show a body the same way.
+ * Everything the body views need short of drawing, for one body: which views apply, and the body
+ * laid out for each. Both apps render what this returns, so they show a body the same way.
+ *
+ * Each view is worked out once, when first asked for: deciding whether the code view applies
+ * formats the body, and the code view then reuses that. Keep one analysis per body for as long as
+ * the body does not change.
  *
  * A truncated body has no preview and no code view: it cannot be parsed reliably.
  */
-internal object BodyAnalyzer {
+internal class BodyAnalysis(
+    private val body: CapturedBody,
+    private val contentType: String?,
+    private val isEventStream: Boolean = false,
+) {
+    private val type = parse(contentType)
+    private val text: String? by lazy(LazyThreadSafetyMode.NONE) { body.text(contentType) }
 
-    /**
-     * The views that apply, in the order the UI offers them; the first is the default. Empty for an
-     * empty body. Deciding on the code view formats the body, so call this once per body.
-     */
-    fun modes(body: CapturedBody, contentType: String?, isEventStream: Boolean): List<BodyMode> {
-        if (body.bytes.size == 0) return emptyList()
-        return buildList {
+    /** The views that apply, in the order the UI offers them; the first is the default. Empty for an empty body. */
+    val modes: List<BodyMode> by lazy(LazyThreadSafetyMode.NONE) {
+        if (body.bytes.size == 0) return@lazy emptyList()
+        buildList {
             if (isEventStream) add(BodyMode.STREAM)
-            if (canPreview(body, parse(contentType))) add(BodyMode.PREVIEW)
-            if (code(body, contentType) != null) add(BodyMode.CODE)
-            if (body.text(contentType) != null) add(BodyMode.TEXT)
+            if (preview != null) add(BodyMode.PREVIEW)
+            if (code != null) add(BodyMode.CODE)
+            if (text != null) add(BodyMode.TEXT)
             add(BodyMode.HEX)
         }
     }
 
     /** The body formatted for its language, or null when none applies or it does not parse. */
-    fun code(body: CapturedBody, contentType: String?): CodeDocument? {
-        if (body.isTruncated || body.bytes.size == 0) return null
-        val type = parse(contentType)
+    val code: CodeDocument? by lazy(LazyThreadSafetyMode.NONE) {
+        if (body.isTruncated || body.bytes.size == 0) return@lazy null
         val language = type?.let(::languageOf)
-        if (language == CodeLanguage.MULTIPART) return MultipartFormatter.format(body.bytes, contentType)
-        val text = body.text(contentType) ?: return null
-        return when (language) {
+        if (language == CodeLanguage.MULTIPART) return@lazy MultipartFormatter.format(body.bytes, contentType)
+        val text = text ?: return@lazy null
+        when (language) {
             CodeLanguage.JSON -> JsonFormatter.format(text)
             CodeLanguage.XML -> XmlFormatter.format(text, isHtml = false)
             CodeLanguage.HTML -> XmlFormatter.format(text, isHtml = true)
@@ -49,21 +55,21 @@ internal object BodyAnalyzer {
     }
 
     /** An image (by its bytes; SVG by content type) or rendered Markdown, or null. */
-    fun preview(body: CapturedBody, contentType: String?): BodyPreview? {
-        if (body.isTruncated || body.bytes.size == 0) return null
-        val type = parse(contentType)
-        imageFormat(body.bytes, type)?.let { return BodyPreview.Image(body.bytes, it) }
-        if (type == null || !isMarkdown(type)) return null
-        return body.text(contentType)?.let { BodyPreview.Markdown(MarkdownParser.parse(it)) }
+    val preview: BodyPreview? by lazy(LazyThreadSafetyMode.NONE) {
+        if (body.isTruncated || body.bytes.size == 0) return@lazy null
+        imageFormat(body.bytes, type)?.let { return@lazy BodyPreview.Image(body.bytes, it) }
+        if (type == null || !isMarkdown(type)) return@lazy null
+        text?.let { BodyPreview.Markdown(MarkdownParser.parse(it)) }
     }
 
     /** The text split into lines, for the text and stream views, or null when the body is binary. */
-    fun textLines(body: CapturedBody, contentType: String?): List<String>? = body.text(contentType)?.let(::splitLines)
+    val textLines: List<String>? by lazy(LazyThreadSafetyMode.NONE) { text?.let(::splitLines) }
 
-    fun hex(body: CapturedBody): List<HexRow> = HexDump.rows(body.bytes)
+    val hex: List<HexRow> by lazy(LazyThreadSafetyMode.NONE) { HexDump.rows(body.bytes) }
 
-    private fun canPreview(body: CapturedBody, type: ContentType?) =
-        !body.isTruncated && (imageFormat(body.bytes, type) != null || type != null && isMarkdown(type))
+    /** Whether this analysis is of [body] as it is now; one of an older state of it is stale. */
+    fun isOf(body: CapturedBody, contentType: String?, isEventStream: Boolean): Boolean =
+        this.body == body && this.contentType == contentType && this.isEventStream == isEventStream
 
     private fun imageFormat(bytes: ByteString, type: ContentType?): ImageFormat? = when {
         bytes.matchesAt(0, PNG) -> ImageFormat.PNG

@@ -22,7 +22,7 @@ import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 
-@Database(entities = [CallEntity::class], version = 1, exportSchema = false)
+@Database(entities = [CallEntity::class], version = 2)
 @ConstructedBy(KtorMonitorDatabaseConstructor::class)
 @TypeConverters(HeadersConverter::class)
 internal abstract class KtorMonitorDatabase : RoomDatabase() {
@@ -35,16 +35,26 @@ internal expect object KtorMonitorDatabaseConstructor : RoomDatabaseConstructor<
     override fun initialize(): KtorMonitorDatabase
 }
 
-/** The history is disposable: a schema change starts it afresh instead of migrating. */
+/**
+ * The history is disposable: a schema change, either way (an older library after a newer one), starts
+ * it afresh instead of migrating. Every change of [CallEntity] needs a new version; the exported
+ * schemas in `ktor-monitor/schemas` show one that was forgotten.
+ */
 internal fun RoomDatabase.Builder<KtorMonitorDatabase>.buildKtorMonitorDatabase(): KtorMonitorDatabase =
     setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
+        // Covers a downgrade too. Adding fallbackToDestructiveMigrationOnDowngrade would undo this:
+        // it makes a migration required again for an upgrade.
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
 
 internal const val KTOR_MONITOR_DB = "ktormonitor.db"
 
-/** Bodies hold the bytes kept; the sizes are what the bodies really had. */
+/**
+ * Bodies hold the bytes kept; the sizes are what the bodies really had. The bodies are the last
+ * columns: SQLite reads a row's columns in order, and one after a large body would make every list
+ * query walk through the body's pages.
+ */
 @Entity(tableName = "call", indices = [Index("requestTime")])
 internal data class CallEntity(
     @PrimaryKey val id: String,
@@ -55,16 +65,16 @@ internal data class CallEntity(
     val requestTime: Long,
     val requestHeaders: Map<String, List<String>>,
     val requestContentType: String?,
-    val requestBody: ByteArray?,
     val requestBodySize: Long?,
     val protocol: String?,
     val responseCode: Int?,
     val responseTime: Long?,
     val responseHeaders: Map<String, List<String>>,
     val responseContentType: String?,
-    val responseBody: ByteArray?,
     val responseBodySize: Long?,
     val error: String?,
+    val requestBody: ByteArray?,
+    val responseBody: ByteArray?,
 )
 
 /** A list row: everything but the headers and bodies. */

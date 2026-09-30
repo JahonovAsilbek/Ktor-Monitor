@@ -97,6 +97,6 @@ class MultipartFormatterTest {
     fun `multipart offers code and hex`() {
         val bytes = multipart("Content-Disposition: form-data; name=\"a\"\r\n\r\n1".encodeToByteArray())
         val captured = body(bytes.toByteArray())
-        assertEquals(listOf(BodyMode.CODE, BodyMode.HEX), BodyAnalyzer.modes(captured, type, isEventStream = false))
+        assertEquals(listOf(BodyMode.CODE, BodyMode.HEX), BodyAnalysis(captured, type, isEventStream = false).modes)
     }
 }

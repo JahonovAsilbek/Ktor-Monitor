@@ -10,7 +10,6 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
     private let bridge: KtorMonitorUIBridge
     private let center = UNUserNotificationCenter.current()
     private var session: String?
-    private var pending: DispatchWorkItem?
 
     init(bridge: KtorMonitorUIBridge) {
         self.bridge = bridge
@@ -28,7 +27,7 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
         if center.delegate == nil { center.delegate = self }
         session = bridge.observeNotification { [weak self] json in
             guard let update = Wire.decode(NotificationUpdate.self, json) else { return }
-            self?.schedule(update)
+            self?.post(update)
         }
     }
 
@@ -36,14 +35,7 @@ final class MonitorNotifications: NSObject, UNUserNotificationCenterDelegate {
         if let session { bridge.close(sessionId: session) }
     }
 
-    /// The system drops updates posted faster than a few a second.
-    private func schedule(_ update: NotificationUpdate) {
-        pending?.cancel()
-        let work = DispatchWorkItem { [weak self] in self?.post(update) }
-        pending = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: work)
-    }
-
+    // The Kotlin side sends updates at most a few a second, the rate the system accepts.
     private func post(_ update: NotificationUpdate) {
         guard !update.lines.isEmpty else {
             center.removeDeliveredNotifications(withIdentifiers: [Self.id])

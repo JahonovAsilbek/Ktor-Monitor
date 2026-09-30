@@ -11,12 +11,12 @@ import uz.jahonov.ktormonitor.body.BodyMode.STREAM
 import uz.jahonov.ktormonitor.body.BodyMode.TEXT
 import uz.jahonov.ktormonitor.model.CapturedBody
 
-class BodyAnalyzerTest {
+class BodyAnalysisTest {
 
     private val png = bytesOf(0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 13)
 
     private fun modes(body: CapturedBody, type: String?, stream: Boolean = false) =
-        BodyAnalyzer.modes(body, type, stream)
+        BodyAnalysis(body, type, stream).modes
 
     @Test
     fun `json offers code then text then hex`() {
@@ -28,7 +28,7 @@ class BodyAnalyzerTest {
     fun `truncated json offers no code`() {
         val truncated = body("""{"a":1}""", size = 1_000)
         assertEquals(listOf(TEXT, HEX), modes(truncated, "application/json"))
-        assertNull(BodyAnalyzer.code(truncated, "application/json"))
+        assertNull(BodyAnalysis(truncated, "application/json").code)
     }
 
     @Test
@@ -39,14 +39,14 @@ class BodyAnalyzerTest {
     @Test
     fun `json without a content type is detected`() {
         assertEquals(listOf(CODE, TEXT, HEX), modes(body(""" [1, 2] """), null))
-        assertEquals(CodeLanguage.JSON, BodyAnalyzer.code(body("[1]"), null)?.language)
+        assertEquals(CodeLanguage.JSON, BodyAnalysis(body("[1]"), null).code?.language)
         assertEquals(listOf(TEXT, HEX), modes(body("hello"), null))
     }
 
     @Test
     fun `an image is found by its magic bytes`() {
         assertEquals(listOf(PREVIEW, HEX), modes(body(png), "application/octet-stream"))
-        val preview = assertIs<BodyPreview.Image>(BodyAnalyzer.preview(body(png), null))
+        val preview = assertIs<BodyPreview.Image>(BodyAnalysis(body(png), null).preview)
         assertEquals(ImageFormat.PNG, preview.format)
 
         val formats = mapOf(
@@ -55,22 +55,22 @@ class BodyAnalyzerTest {
             ImageFormat.WEBP to "RIFF\u0000\u0000\u0000\u0000WEBPVP8 ".encodeToByteArray(),
         )
         formats.forEach { (format, bytes) ->
-            assertEquals(format, assertIs<BodyPreview.Image>(BodyAnalyzer.preview(body(bytes), "image/png")).format)
+            assertEquals(format, assertIs<BodyPreview.Image>(BodyAnalysis(body(bytes), "image/png").preview).format)
         }
     }
 
     @Test
     fun `a truncated image offers only hex`() {
         assertEquals(listOf(HEX), modes(body(png, size = 5_000), "image/png"))
-        assertNull(BodyAnalyzer.preview(body(png, size = 5_000), "image/png"))
+        assertNull(BodyAnalysis(body(png, size = 5_000), "image/png").preview)
     }
 
     @Test
     fun `svg is previewed and shown as xml`() {
         val svg = body("""<svg xmlns="http://www.w3.org/2000/svg"><rect width="1"/></svg>""")
         assertEquals(listOf(PREVIEW, CODE, TEXT, HEX), modes(svg, "image/svg+xml"))
-        assertEquals(ImageFormat.SVG, assertIs<BodyPreview.Image>(BodyAnalyzer.preview(svg, "image/svg+xml")).format)
-        assertEquals(CodeLanguage.XML, BodyAnalyzer.code(svg, "image/svg+xml")?.language)
+        assertEquals(ImageFormat.SVG, assertIs<BodyPreview.Image>(BodyAnalysis(svg, "image/svg+xml").preview).format)
+        assertEquals(CodeLanguage.XML, BodyAnalysis(svg, "image/svg+xml").code?.language)
     }
 
     @Test
@@ -78,22 +78,22 @@ class BodyAnalyzerTest {
         val markdown = body("# Title\n\nText")
         assertEquals(listOf(PREVIEW, CODE, TEXT, HEX), modes(markdown, "text/markdown"))
         assertEquals(listOf(PREVIEW, CODE, TEXT, HEX), modes(markdown, "text/x-markdown"))
-        val preview = assertIs<BodyPreview.Markdown>(BodyAnalyzer.preview(markdown, "text/markdown"))
+        val preview = assertIs<BodyPreview.Markdown>(BodyAnalysis(markdown, "text/markdown").preview)
         assertEquals(2, preview.blocks.size)
-        assertEquals(CodeLanguage.MARKDOWN, BodyAnalyzer.code(markdown, "text/markdown")?.language)
+        assertEquals(CodeLanguage.MARKDOWN, BodyAnalysis(markdown, "text/markdown").code?.language)
     }
 
     @Test
     fun `a binary body offers only hex`() {
         assertEquals(listOf(HEX), modes(body(bytesOf(0, 1, 2, 3)), "application/octet-stream"))
-        assertNull(BodyAnalyzer.textLines(body(bytesOf(0, 1, 2, 3)), "application/octet-stream"))
+        assertNull(BodyAnalysis(body(bytesOf(0, 1, 2, 3)), "application/octet-stream").textLines)
     }
 
     @Test
     fun `an empty body offers nothing`() {
         assertEquals(emptyList(), modes(body(""), "application/json", stream = true))
-        assertNull(BodyAnalyzer.code(body(""), "application/json"))
-        assertNull(BodyAnalyzer.preview(body(""), "image/svg+xml"))
+        assertNull(BodyAnalysis(body(""), "application/json").code)
+        assertNull(BodyAnalysis(body(""), "image/svg+xml").preview)
     }
 
     @Test
@@ -123,13 +123,13 @@ class BodyAnalyzerTest {
             "application/x-www-form-urlencoded" to CodeLanguage.FORM,
         )
         val text = """{"a":"b"}"""
-        cases.forEach { (type, language) -> assertEquals(language, BodyAnalyzer.code(body(text), type)?.language, type) }
-        assertNull(BodyAnalyzer.code(body(text), "text/plain"))
+        cases.forEach { (type, language) -> assertEquals(language, BodyAnalysis(body(text), type).code?.language, type) }
+        assertNull(BodyAnalysis(body(text), "text/plain").code)
     }
 
     @Test
     fun `text lines split on newlines and drop carriage returns`() {
-        assertEquals(listOf("a", "b", "", "c"), BodyAnalyzer.textLines(body("a\r\nb\n\nc\n"), "text/plain"))
-        assertEquals(emptyList(), BodyAnalyzer.textLines(body(""), "text/plain"))
+        assertEquals(listOf("a", "b", "", "c"), BodyAnalysis(body("a\r\nb\n\nc\n"), "text/plain").textLines)
+        assertEquals(emptyList(), BodyAnalysis(body(""), "text/plain").textLines)
     }
 }

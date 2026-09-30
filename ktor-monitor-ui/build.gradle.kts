@@ -8,6 +8,10 @@ kotlin {
     jvmToolchain(17)
 }
 
+composeCompiler {
+    stabilityConfigurationFiles.add(layout.projectDirectory.file("compose-stability.conf"))
+}
+
 android {
     namespace = "uz.jahonov.ktormonitor.ui"
     compileSdk = libs.versions.android.compileSdk.get().toInt()

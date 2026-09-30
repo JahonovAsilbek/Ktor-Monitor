@@ -8,11 +8,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -21,7 +24,7 @@ import kotlinx.coroutines.launch
  * one-off [effects]. Effects are buffered, so one emitted before the UI starts collecting is still
  * delivered.
  *
- * Work runs through [launch] and [collectSafely]: a failure (a database error, a bug in a parser)
+ * Work runs through [launch], [collectSafely] and [shareSafely]: a failure (a database error, a bug in a parser)
  * goes to [onError] and never reaches the app, which would otherwise crash.
  */
 public abstract class MviViewModel<S : Any, E : Any, F : Any> internal constructor(
@@ -49,4 +52,11 @@ public abstract class MviViewModel<S : Any, E : Any, F : Any> internal construct
 
     /** Collects this flow for as long as the view model lives; a failure ends it. */
     protected fun <T> Flow<T>.collectSafely(): Job = catch { onError(it) }.launchIn(viewModelScope)
+
+    /**
+     * Shares this flow between collectors, keeping the latest value. `shareIn` collects in a
+     * coroutine of its own, beyond the reach of a collector's `catch`, so its failure is caught here.
+     */
+    protected fun <T> Flow<T>.shareSafely(): SharedFlow<T> =
+        catch { onError(it) }.shareIn(viewModelScope, SharingStarted.WhileSubscribed(), replay = 1)
 }

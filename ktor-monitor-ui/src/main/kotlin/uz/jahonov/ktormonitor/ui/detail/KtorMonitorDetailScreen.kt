@@ -52,7 +52,7 @@ internal fun KtorMonitorDetailScreen(
     onGone: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel = monitorViewModel(key = callId) { detailViewModel(callId) }
+    val viewModel = monitorViewModel { detailViewModel(callId) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     CollectEffects(viewModel.effects) { effect ->

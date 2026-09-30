@@ -6,9 +6,15 @@ import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-// Library/Caches: the history is disposable, and the system may clear it.
-internal fun ktorMonitorDatabase(): KtorMonitorDatabase =
+/**
+ * One database per process, however many monitors: separate instances on one file would not see
+ * each other's writes. In Library/Caches: the history is disposable, and the system may clear it.
+ */
+private val database: KtorMonitorDatabase by lazy {
     Room.databaseBuilder<KtorMonitorDatabase>(name = "${cachesDirectory()}/$KTOR_MONITOR_DB").buildKtorMonitorDatabase()
+}
+
+internal fun ktorMonitorDatabase(): KtorMonitorDatabase = database
 
 @OptIn(ExperimentalForeignApi::class)
 private fun cachesDirectory(): String =

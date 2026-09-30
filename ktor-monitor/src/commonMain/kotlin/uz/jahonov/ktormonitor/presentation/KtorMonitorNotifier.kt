@@ -19,6 +19,8 @@ public class KtorMonitorNotifier internal constructor(repository: KtorMonitorRep
     public val lines: Flow<List<String>> = repository.calls(limit = LATEST)
         .map { calls -> calls.map { it.notificationLine() } }
         .distinctUntilChanged()
+        // Posted at most this often: the system drops notification updates that come faster.
+        .throttleLatest(UPDATE_MILLIS)
         .catch { config.onInternalError(it) }
 
     private fun CallSummary.notificationLine(): String {
@@ -33,5 +35,6 @@ public class KtorMonitorNotifier internal constructor(repository: KtorMonitorRep
     public companion object {
         public const val TITLE: String = "Recording network activity"
         public const val LATEST: Int = 5
+        private const val UPDATE_MILLIS = 300L
     }
 }

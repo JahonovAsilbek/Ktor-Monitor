@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -43,6 +44,10 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
         }
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 // The JSON the Swift package decodes. Tests compare against these files; -PrecordFixtures rewrites them.
