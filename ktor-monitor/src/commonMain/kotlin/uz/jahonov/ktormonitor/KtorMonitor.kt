@@ -2,6 +2,7 @@ package uz.jahonov.ktormonitor
 
 import io.ktor.client.HttpClient
 import kotlin.time.Clock
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -44,16 +45,22 @@ public class KtorMonitor internal constructor(
     }
 
     public fun listViewModel(): KtorMonitorListViewModel =
-        KtorMonitorListViewModel(repository, appName, appVersion, ::currentTimeMillis)
+        KtorMonitorListViewModel(repository, appName, appVersion, ::currentTimeMillis, config.onInternalError)
 
     public fun detailViewModel(callId: String): KtorMonitorDetailViewModel =
-        KtorMonitorDetailViewModel(callId, repository, appName, appVersion, ::currentTimeMillis)
+        KtorMonitorDetailViewModel(callId, repository, appName, appVersion, ::currentTimeMillis, config.onInternalError)
 
     internal val onInternalError: (Throwable) -> Unit get() = config.onInternalError
 
-    /** Deletes the whole history. */
+    /** Deletes the whole history. A failure goes to `onInternalError`. */
     public suspend fun clear() {
-        repository.clear()
+        try {
+            repository.clear()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            config.onInternalError(e)
+        }
     }
 }
 

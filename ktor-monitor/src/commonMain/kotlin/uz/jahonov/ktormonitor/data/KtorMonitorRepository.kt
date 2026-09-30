@@ -19,9 +19,13 @@ internal class KtorMonitorRepository(
     private val now: () -> Long,
 ) : CallStore {
 
-    override suspend fun upsert(call: NetworkCall) {
+    override suspend fun insert(call: NetworkCall) {
         dao.upsert(call.toEntity())
-        if (call.isInProgress) trim()
+        trim()
+    }
+
+    override suspend fun update(call: NetworkCall) {
+        dao.update(call.toEntity())
     }
 
     /** Newest first, matching [query] in the URL, method, status code or either body. */

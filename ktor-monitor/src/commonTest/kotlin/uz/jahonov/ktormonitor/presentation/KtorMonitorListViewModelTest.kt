@@ -41,15 +41,15 @@ class KtorMonitorListViewModelTest {
     }
 
     private suspend fun seeded(): KtorMonitorRepository = fakeRepository().apply {
-        upsert(testCall("cards", url = "https://api.test/cards", requestTime = 1, responseCode = 200, responseTime = 51, responseBody = "12"))
-        upsert(testCall("login", url = "https://auth.test/login", method = "POST", requestTime = 2, responseCode = 401, responseTime = 1_502))
-        upsert(testCall("slow", url = "https://api.test/report", requestTime = 3, responseCode = 500, responseTime = 7_003, responseBody = "123456"))
-        upsert(testCall("offline", url = "https://api.test/profile", requestTime = 4, responseCode = null, error = "IOException"))
-        upsert(testCall("pending", url = "https://api.test/pending", requestTime = 5, responseCode = null, responseBody = null))
+        insert(testCall("cards", url = "https://api.test/cards", requestTime = 1, responseCode = 200, responseTime = 51, responseBody = "12"))
+        insert(testCall("login", url = "https://auth.test/login", method = "POST", requestTime = 2, responseCode = 401, responseTime = 1_502))
+        insert(testCall("slow", url = "https://api.test/report", requestTime = 3, responseCode = 500, responseTime = 7_003, responseBody = "123456"))
+        insert(testCall("offline", url = "https://api.test/profile", requestTime = 4, responseCode = null, error = "IOException"))
+        insert(testCall("pending", url = "https://api.test/pending", requestTime = 5, responseCode = null, responseBody = null))
     }
 
     private fun viewModel(repository: KtorMonitorRepository) =
-        viewModels.track(KtorMonitorListViewModel(repository, "ExampleApp", "1.2.3") { 1_727_700_000_000 })
+        viewModels.track(KtorMonitorListViewModel(repository, "ExampleApp", "1.2.3", now = { 1_727_700_000_000 }, onError = { throw it }))
 
     private suspend fun KtorMonitorListViewModel.shownIds(until: (KtorMonitorListUiState) -> Boolean = { true }): List<String> =
         state.first { it.calls is Loadable.Ready && until(it) }.let { state ->

@@ -1,5 +1,6 @@
 package uz.jahonov.ktormonitor.body
 
+import kotlin.test.assertTrue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -98,5 +99,13 @@ class JsonFormatterTest {
         val depth = 2_000
         val document = format("[".repeat(depth) + "]".repeat(depth))
         assertEquals(depth * 2 - 1, document.lines.size)
+    }
+
+    @Test
+    fun `deep nesting stops indenting at 32 levels`() {
+        val depth = 2_000
+        val document = format("[".repeat(depth) + "]".repeat(depth))
+
+        assertTrue(document.lines.all { it.text.length <= 2 * 32 + 2 })
     }
 }

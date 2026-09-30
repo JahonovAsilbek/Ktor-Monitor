@@ -15,6 +15,8 @@ internal class FakeCallDao : CallDao {
 
     override suspend fun upsert(call: CallEntity) = rows.update { list -> list.filterNot { it.id == call.id } + call }
 
+    override suspend fun update(call: CallEntity) = rows.update { list -> list.map { if (it.id == call.id) call else it } }
+
     override fun observeSummaries(query: String, limit: Int): Flow<List<CallSummaryRow>> = rows.map { list ->
         val plain = query.replace("\\%", "%").replace("\\_", "_").replace("\\\\", "\\")
         list.filter { plain.isEmpty() || it.searchable().any { field -> field.contains(plain, ignoreCase = true) } }

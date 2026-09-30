@@ -52,12 +52,14 @@ internal class ObservedContent(
  * The engine hook through which Ktor's SSE plugin turns a response body into an event session before
  * any interceptor sees it. This passes the plugin a copy of the stream and keeps what goes through,
  * reporting after every chunk so an event stream shows live. When the plugin turns the response
- * down, nothing is read, and the engine uses the body as usual.
+ * down (an error status, another content type), nothing is read and [onAdapted] is not called: the
+ * engine uses the body as usual, and the monitor records it as any other.
  */
 @OptIn(InternalAPI::class)
 internal class ObservingResponseAdapter(
     val original: ResponseAdapter,
     private val limit: Int,
+    private val onAdapted: () -> Unit,
     private val onBody: (CapturedBody) -> Unit,
 ) : ResponseAdapter {
     override fun adapt(
@@ -85,7 +87,12 @@ internal class ObservingResponseAdapter(
             }
         }
         val adapted = original.adapt(data, status, headers, copy, outgoingContent, callContext)
-        if (adapted == null) pump.cancel() else pump.start()
+        if (adapted == null) {
+            pump.cancel()
+        } else {
+            onAdapted()
+            pump.start()
+        }
         return adapted
     }
 }

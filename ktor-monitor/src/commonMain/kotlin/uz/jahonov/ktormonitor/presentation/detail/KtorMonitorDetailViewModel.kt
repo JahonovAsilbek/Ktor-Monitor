@@ -1,13 +1,11 @@
 package uz.jahonov.ktormonitor.presentation.detail
 
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
@@ -32,8 +30,9 @@ public class KtorMonitorDetailViewModel internal constructor(
     private val appName: String,
     private val appVersion: String,
     private val now: () -> Long,
+    onError: (Throwable) -> Unit,
     analysisDispatcher: CoroutineDispatcher = Dispatchers.Default,
-) : MviViewModel<KtorMonitorDetailUiState, KtorMonitorDetailUiEvent, KtorMonitorDetailUiEffect>(KtorMonitorDetailUiState()) {
+) : MviViewModel<KtorMonitorDetailUiState, KtorMonitorDetailUiEvent, KtorMonitorDetailUiEffect>(KtorMonitorDetailUiState(), onError) {
 
     /** The view chosen for each body; the first one it offers until the user picks another. */
     private val chosenModes = MutableStateFlow<Map<BodySide, BodyMode>>(emptyMap())
@@ -53,7 +52,7 @@ public class KtorMonitorDetailViewModel internal constructor(
         }
             .flowOn(analysisDispatcher)
             .onEach { analysed -> setState { analysed } }
-            .launchIn(viewModelScope)
+            .collectSafely()
     }
 
     override fun onEvent(event: KtorMonitorDetailUiEvent) {

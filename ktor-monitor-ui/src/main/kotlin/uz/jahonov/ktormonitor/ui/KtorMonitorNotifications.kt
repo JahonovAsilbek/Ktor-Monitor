@@ -61,8 +61,12 @@ internal class KtorMonitorNotifications(private val application: Application, mo
             .setContentIntent(openIntent())
             .addAction(0, "Clear", clearIntent())
             .build()
-        @Suppress("MissingPermission") // checked in canPost
-        manager.notify(NOTIFICATION_ID, notification)
+        try {
+            @Suppress("MissingPermission") // checked in canPost
+            manager.notify(NOTIFICATION_ID, notification)
+        } catch (_: SecurityException) {
+            // The permission was taken back between the check and the post; the next call retries.
+        }
     }
 
     private fun createChannel() {

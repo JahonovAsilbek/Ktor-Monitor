@@ -48,7 +48,7 @@ import uz.jahonov.ktormonitor.presentation.list.StatusClass
  */
 class BridgeFixturesTest {
 
-    private val directory = File(System.getProperty("bridgeFixtures"))
+    private val directory = File(requireNotNull(System.getProperty("bridgeFixtures")))
     private val record = System.getProperty("recordFixtures").toBoolean()
     private val pretty = Json(BridgeJson) { prettyPrint = true }
 

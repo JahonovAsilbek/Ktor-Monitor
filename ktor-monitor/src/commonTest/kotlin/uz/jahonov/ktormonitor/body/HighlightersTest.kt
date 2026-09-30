@@ -99,4 +99,20 @@ class HighlightersTest {
             MarkdownParser.parse(it)
         }
     }
+
+    @Test
+    fun `yaml nested list dashes are each marked`() {
+        val document = YamlHighlighter.highlight("- - - x")
+
+        assertEquals(listOf("- - - x"), document.texts)
+        assertEquals(3, document.lines.single().spans.count { it.kind == TokenKind.PUNCTUATION && it.text == "-" })
+    }
+
+    @Test
+    fun `markdown quote markers keep their spacing`() {
+        val document = MarkdownHighlighter.highlight(">> > a")
+
+        assertEquals(listOf(">> > a"), document.texts)
+        assertEquals(CodeSpan(">> > ", TokenKind.PUNCTUATION), document.lines.single().spans.first())
+    }
 }

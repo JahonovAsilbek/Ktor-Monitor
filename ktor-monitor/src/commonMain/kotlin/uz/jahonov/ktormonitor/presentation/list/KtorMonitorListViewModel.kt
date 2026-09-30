@@ -1,6 +1,5 @@
 package uz.jahonov.ktormonitor.presentation.list
 
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,11 +7,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import uz.jahonov.ktormonitor.export.CallExporter
 import uz.jahonov.ktormonitor.export.ExportFormat
 import uz.jahonov.ktormonitor.data.KtorMonitorRepository
@@ -30,7 +27,8 @@ public class KtorMonitorListViewModel internal constructor(
     private val appName: String,
     private val appVersion: String,
     private val now: () -> Long,
-) : MviViewModel<KtorMonitorListUiState, KtorMonitorListUiEvent, KtorMonitorListUiEffect>(KtorMonitorListUiState()) {
+    onError: (Throwable) -> Unit,
+) : MviViewModel<KtorMonitorListUiState, KtorMonitorListUiEvent, KtorMonitorListUiEffect>(KtorMonitorListUiState(), onError) {
 
     /** What the user chose; the published state adds the calls found to it. */
     private val controls = MutableStateFlow(KtorMonitorListUiState())
@@ -52,7 +50,7 @@ public class KtorMonitorListViewModel internal constructor(
             )
         }
             .onEach { derived -> setState { derived } }
-            .launchIn(viewModelScope)
+            .collectSafely()
     }
 
     override fun onEvent(event: KtorMonitorListUiEvent) {
@@ -77,12 +75,12 @@ public class KtorMonitorListViewModel internal constructor(
             KtorMonitorListUiEvent.DeleteSelected -> {
                 val ids = state.value.selection.orEmpty().toList()
                 setControls { copy(selection = null) }
-                viewModelScope.launch { repository.delete(ids) }
+                launch { repository.delete(ids) }
             }
             is KtorMonitorListUiEvent.ShareSelected -> share(event.format)
             KtorMonitorListUiEvent.ClearAll -> {
                 setControls { copy(selection = null) }
-                viewModelScope.launch { repository.clear() }
+                launch { repository.clear() }
             }
         }
     }
@@ -90,7 +88,7 @@ public class KtorMonitorListViewModel internal constructor(
     private fun share(format: ExportFormat) {
         val ids = state.value.selection.orEmpty().toList()
         if (ids.isEmpty()) return
-        viewModelScope.launch {
+        launch {
             val calls = repository.calls(ids)
             val exportedAt = now()
             val content = CallExporter.export(calls, format, exportedAt, appName, appVersion)

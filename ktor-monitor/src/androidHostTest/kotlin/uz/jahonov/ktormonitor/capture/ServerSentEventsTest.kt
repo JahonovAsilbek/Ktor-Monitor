@@ -4,9 +4,11 @@ import com.sun.net.httpserver.HttpServer
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.sse.SSE
+import io.ktor.client.plugins.sse.SSEClientException
 import io.ktor.client.plugins.sse.sse
 import java.net.InetSocketAddress
 import kotlin.test.AfterTest
+import kotlin.test.assertFailsWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -26,6 +28,12 @@ import uz.jahonov.ktormonitor.model.NetworkCall
 class ServerSentEventsTest {
 
     private val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0).apply {
+        createContext("/denied") { exchange ->
+            val body = "{\"error\":\"denied\"}".toByteArray()
+            exchange.responseHeaders.add("Content-Type", "application/json")
+            exchange.sendResponseHeaders(401, body.size.toLong())
+            exchange.responseBody.use { it.write(body) }
+        }
         createContext("/events") { exchange ->
             exchange.responseHeaders.add("Content-Type", "text/event-stream")
             exchange.sendResponseHeaders(200, 0)
@@ -43,7 +51,9 @@ class ServerSentEventsTest {
     private val calls = MutableStateFlow<List<NetworkCall>>(emptyList())
     private val bodiesSeen = mutableListOf<String>()
     private val store = object : CallStore {
-        override suspend fun upsert(call: NetworkCall) {
+        override suspend fun insert(call: NetworkCall) = update(call)
+
+        override suspend fun update(call: NetworkCall) {
             call.responseBody?.let { bodiesSeen += it.bytes.decodeToString() }
             calls.update { list -> list.filterNot { it.id == call.id } + call }
         }
@@ -71,6 +81,22 @@ class ServerSentEventsTest {
         assertTrue("data: first" in call.responseBody!!.bytes.decodeToString())
         // Recorded as it streamed, not only at the end.
         assertTrue(bodiesSeen.any { "data: first" in it && "data: third" !in it }, bodiesSeen.toString())
+        client.close()
+        coroutineContext.cancelChildren()
+    }
+
+    @Test
+    fun `a refused stream keeps its response body`() = runBlocking {
+        val client = HttpClient(OkHttp) { install(SSE) }
+        KtorMonitorCapture(store, KtorMonitorConfig(), this).install(client)
+
+        assertFailsWith<SSEClientException> {
+            withTimeout(10_000) { client.sse("http://127.0.0.1:${server.address.port}/denied") {} }
+        }
+
+        val call = withTimeout(10_000) { calls.first { list -> list.any { it.responseBody != null } } }.single()
+        assertEquals(401, call.responseCode)
+        assertEquals("{\"error\":\"denied\"}", call.responseBody!!.bytes.decodeToString())
         client.close()
         coroutineContext.cancelChildren()
     }

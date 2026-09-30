@@ -57,7 +57,7 @@ class KtorMonitorRepositoryTest {
             responseBody = CapturedBody(ByteString(1, 2, 3), size = 10),
         )
 
-        repository.upsert(saved)
+        repository.insert(saved)
 
         assertEquals(saved, repository.call("a").first())
         assertTrue(repository.call("a").first()!!.responseBody!!.isTruncated)
@@ -67,8 +67,8 @@ class KtorMonitorRepositoryTest {
     fun `an update replaces the record`() = runTest {
         val repository = repository()
 
-        repository.upsert(call("a"))
-        repository.upsert(call("a", responseCode = 201))
+        repository.insert(call("a"))
+        repository.insert(call("a", responseCode = 201))
 
         assertEquals(listOf(201), repository.calls().first().map { it.responseCode })
     }
@@ -76,8 +76,8 @@ class KtorMonitorRepositoryTest {
     @Test
     fun `the list is newest first and carries sizes but no bodies`() = runTest {
         val repository = repository()
-        repository.upsert(call("old", requestTime = clock - 2))
-        repository.upsert(call("new", requestTime = clock - 1, responseBody = "12345", responseCode = 200))
+        repository.insert(call("old", requestTime = clock - 2))
+        repository.insert(call("new", requestTime = clock - 1, responseBody = "12345", responseCode = 200))
 
         val calls = repository.calls().first()
 
@@ -88,8 +88,8 @@ class KtorMonitorRepositoryTest {
     @Test
     fun `search matches url method status and bodies in any case`() = runTest {
         val repository = repository()
-        repository.upsert(call("cards", responseCode = 404))
-        repository.upsert(call("user", responseBody = """{"name":"Ali"}""", responseCode = 200))
+        repository.insert(call("cards", responseCode = 404))
+        repository.insert(call("user", responseBody = """{"name":"Ali"}""", responseCode = 200))
 
         assertEquals(listOf("cards"), repository.calls("CARDS").first().map { it.id })
         assertEquals(listOf("cards"), repository.calls("404").first().map { it.id })
@@ -100,8 +100,8 @@ class KtorMonitorRepositoryTest {
     @Test
     fun `search treats like wildcards as plain characters`() = runTest {
         val repository = repository()
-        repository.upsert(call("a", url = "https://api.test/100%_done"))
-        repository.upsert(call("b", url = "https://api.test/100x"))
+        repository.insert(call("a", url = "https://api.test/100%_done"))
+        repository.insert(call("b", url = "https://api.test/100x"))
 
         assertEquals(listOf("a"), repository.calls("%_").first().map { it.id })
     }
@@ -109,10 +109,10 @@ class KtorMonitorRepositoryTest {
     @Test
     fun `calls past the retention period are removed as new ones arrive`() = runTest {
         val repository = repository { retention = Retention.OneHour }
-        repository.upsert(call("stale", requestTime = clock - 61.minutes.inWholeMilliseconds, responseCode = 200))
-        repository.upsert(call("recent", requestTime = clock - 59.minutes.inWholeMilliseconds, responseCode = 200))
+        repository.insert(call("stale", requestTime = clock - 61.minutes.inWholeMilliseconds, responseCode = 200))
+        repository.insert(call("recent", requestTime = clock - 59.minutes.inWholeMilliseconds, responseCode = 200))
 
-        repository.upsert(call("new"))
+        repository.insert(call("new"))
 
         assertEquals(listOf("new", "recent"), repository.calls().first().map { it.id })
     }
@@ -120,9 +120,9 @@ class KtorMonitorRepositoryTest {
     @Test
     fun `forever keeps old calls`() = runTest {
         val repository = repository { retention = Retention.Forever }
-        repository.upsert(call("ancient", requestTime = 0, responseCode = 200))
+        repository.insert(call("ancient", requestTime = 0, responseCode = 200))
 
-        repository.upsert(call("new"))
+        repository.insert(call("new"))
 
         assertEquals(2, repository.calls().first().size)
     }
@@ -131,7 +131,7 @@ class KtorMonitorRepositoryTest {
     fun `only the newest max calls are kept`() = runTest {
         val repository = repository { maxCalls = 2 }
 
-        (1..4).forEach { repository.upsert(call("c$it", requestTime = clock + it)) }
+        (1..4).forEach { repository.insert(call("c$it", requestTime = clock + it)) }
 
         assertEquals(listOf("c4", "c3"), repository.calls().first().map { it.id })
     }
@@ -139,7 +139,7 @@ class KtorMonitorRepositoryTest {
     @Test
     fun `selected calls can be read and deleted and all can be cleared`() = runTest {
         val repository = repository()
-        listOf("a", "b", "c").forEach { repository.upsert(call(it)) }
+        listOf("a", "b", "c").forEach { repository.insert(call(it)) }
 
         assertEquals(setOf("a", "c"), repository.calls(listOf("a", "c")).map { it.id }.toSet())
         repository.delete(listOf("a"))

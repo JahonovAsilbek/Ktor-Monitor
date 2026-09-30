@@ -1,6 +1,7 @@
 package uz.jahonov.ktormonitor.presentation
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import uz.jahonov.ktormonitor.capture.KtorMonitorConfig
@@ -12,12 +13,13 @@ import uz.jahonov.ktormonitor.model.CallSummary
  * one fixed id, so an update replaces the one shown, and a tap opens the monitor.
  */
 public class KtorMonitorNotifier internal constructor(repository: KtorMonitorRepository, config: KtorMonitorConfig) {
-    public val isEnabled: Boolean = config.showNotification
+    public val isEnabled: Boolean = config.isActive && config.showNotification
 
     /** The latest calls, newest first: `200 GET /cards`, `⏳ GET /cards`, `❌ GET /cards`. */
     public val lines: Flow<List<String>> = repository.calls(limit = LATEST)
         .map { calls -> calls.map { it.notificationLine() } }
         .distinctUntilChanged()
+        .catch { config.onInternalError(it) }
 
     private fun CallSummary.notificationLine(): String {
         val status = when {

@@ -34,7 +34,11 @@ internal class CodeBuilder(private val language: CodeLanguage) {
         add(text.subSequence(start, text.length), kind)
     }
 
-    fun indent(depth: Int) = repeat(depth) { add("  ") }
+    /**
+     * Indents by [depth] levels, at most [MAX_INDENT]: deeper nesting would make the output grow with
+     * the square of the depth, and a body of nothing but brackets could run the app out of memory.
+     */
+    fun indent(depth: Int) = repeat(minOf(depth, MAX_INDENT)) { add("  ") }
 
     fun newLine() {
         flushSpan()
@@ -64,6 +68,8 @@ internal class CodeBuilder(private val language: CodeLanguage) {
         pending.clear()
     }
 }
+
+private const val MAX_INDENT = 32
 
 /** [text] split on `\n` with `\r` dropped; a trailing newline adds no empty line. */
 internal fun splitLines(text: String): List<String> {

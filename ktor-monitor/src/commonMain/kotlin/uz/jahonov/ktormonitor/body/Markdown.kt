@@ -150,7 +150,7 @@ private class BlockParser(private val lines: List<String>) {
 private class InlineParser(private val text: String) {
     private val spans = ArrayList<MarkdownSpan>()
     private val plain = StringBuilder()
-    private var bracketFrom = -1
+    private var bracketFrom = Int.MAX_VALUE
     private var bracketAt = -1
 
     fun parse(): List<MarkdownSpan> {
@@ -258,9 +258,13 @@ private class InlineParser(private val text: String) {
         return closeParen + 1
     }
 
-    /** The first `]` from [from]; a repeated search inside the last answer reuses it. */
+    /**
+     * The first `]` from [from]. A search from inside the last answer reuses it, and so does one
+     * after a search that found none: nested emphasis starts each `[` afresh, and without this a
+     * line of `*[x* ` repeated would scan to its end once per bracket.
+     */
     private fun closingBracket(from: Int): Int {
-        if (from in bracketFrom..bracketAt) return bracketAt
+        if (from >= bracketFrom && (bracketAt < 0 || from <= bracketAt)) return bracketAt
         bracketFrom = from
         bracketAt = text.indexOf(']', from)
         return bracketAt

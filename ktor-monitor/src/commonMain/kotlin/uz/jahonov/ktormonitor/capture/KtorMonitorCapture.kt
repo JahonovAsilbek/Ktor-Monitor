@@ -7,6 +7,7 @@ import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.isSaved
 import io.ktor.client.plugins.plugin
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.ResponseAdapterAttributeKey
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.readRawBytes
@@ -16,8 +17,10 @@ import io.ktor.http.content.OutgoingContent
 import io.ktor.http.contentType
 import io.ktor.util.AttributeKey
 import io.ktor.utils.io.InternalAPI
+import io.ktor.utils.io.cancel
 import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writer
+import kotlin.concurrent.Volatile
 import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -36,9 +39,15 @@ import kotlinx.serialization.json.JsonPrimitive
 import uz.jahonov.ktormonitor.model.CapturedBody
 import uz.jahonov.ktormonitor.model.NetworkCall
 
-/** Where recorded calls go. All writes come from one coroutine, in the order they happened. */
+/**
+ * Where recorded calls go. All writes come from one coroutine, in the order they happened: one
+ * [insert] per attempt, then [update]s. An update of a call deleted meanwhile does nothing, so a
+ * cleared call does not come back when its response arrives.
+ */
 internal interface CallStore {
-    suspend fun upsert(call: NetworkCall)
+    suspend fun insert(call: NetworkCall)
+
+    suspend fun update(call: NetworkCall)
 }
 
 /**
@@ -68,10 +77,17 @@ internal class KtorMonitorCapture(
         }
     }
 
+    /** Attaching a client a second time does nothing: every call would be recorded twice. */
     fun install(client: HttpClient) {
-        if (!config.isActive) return
+        if (!config.isActive || client.attributes.contains(AttachedKey)) return
+        client.attributes.put(AttachedKey, Unit)
         writer.start()
 
+        // Tags the request before any plugin copies it per attempt (HttpRequestRetry does), so every
+        // attempt of one request shares the tag and counts on from the others.
+        client.requestPipeline.intercept(HttpRequestPipeline.Before) {
+            context.attributes.computeIfAbsent(AttemptsKey) { Attempts(newId()) }
+        }
         client.plugin(HttpSend).intercept { request ->
             val recording = if (config.accepts(request)) guarded { start(request) } else null
             if (recording == null) return@intercept execute(request)
@@ -90,9 +106,8 @@ internal class KtorMonitorCapture(
         filters.isEmpty() || filters.any { it(request) }
 
     private fun start(request: HttpRequestBuilder): Recording {
-        val attempt = (request.attributes.getOrNull(AttemptKey) ?: 0) + 1
-        request.attributes.put(AttemptKey, attempt)
-        val groupId = request.attributes.computeIfAbsent(GroupKey) { newId() }
+        val attempts = request.attributes.computeIfAbsent(AttemptsKey) { Attempts(newId()) }
+        val attempt = ++attempts.count
 
         // A retry sends the same builder again: record its body afresh, not through our last wrapper.
         val content = (request.body as? OutgoingContent)?.let { (it as? ObservedContent)?.original ?: it }
@@ -101,7 +116,7 @@ internal class KtorMonitorCapture(
         val recording = Recording(
             NetworkCall(
                 id = newId(),
-                groupId = groupId,
+                groupId = attempts.groupId,
                 attempt = attempt,
                 method = request.method.value,
                 url = request.url.buildString(),
@@ -129,11 +144,13 @@ internal class KtorMonitorCapture(
         val original = (adapter as? ObservingResponseAdapter)?.original ?: adapter
         request.attributes.put(
             ResponseAdapterAttributeKey,
-            ObservingResponseAdapter(original, config.maxContentLength) { body ->
-                recording.update { copy(responseBody = body) }
-            },
+            ObservingResponseAdapter(
+                original = original,
+                limit = config.maxContentLength,
+                onAdapted = { recording.bodyFromEngine = true },
+                onBody = { body -> recording.update { copy(responseBody = body) } },
+            ),
         )
-        recording.bodyFromEngine = true
     }
 
     @OptIn(InternalAPI::class)
@@ -173,7 +190,12 @@ internal class KtorMonitorCapture(
                     if (isEventStream) recording.update { copy(responseBody = collector.body()) }
                 }
             } catch (e: Throwable) {
-                recording.update { copy(error = e.stackTraceToString()) }
+                // Nothing reads the engine's stream any more: stop it, so the connection is let go.
+                source.cancel(e)
+                // The app closing the body early is not a failure of the call.
+                if (!channel.isClosedForWrite && e !is CancellationException) {
+                    recording.update { copy(error = e.stackTraceToString()) }
+                }
                 throw e
             } finally {
                 val captured = collector.body()
@@ -224,8 +246,10 @@ internal class KtorMonitorCapture(
 
     /** The latest state of one attempt. Only the write queue reads or changes it. */
     private inner class Recording(private var call: NetworkCall) {
-        /** Set before the request is sent, read once it has its response. */
+        /** Set by the engine when Ktor's SSE plugin takes the body, read once the call has its response. */
+        @Volatile
         var bodyFromEngine = false
+        private var isStored = false
 
         init {
             update { this }
@@ -234,9 +258,19 @@ internal class KtorMonitorCapture(
         fun update(change: NetworkCall.() -> NetworkCall) {
             writes.trySend {
                 call = call.change()
-                store.upsert(call)
+                if (isStored) {
+                    store.update(call)
+                } else {
+                    store.insert(call)
+                    isStored = true
+                }
             }
         }
+    }
+
+    /** The attempts of one request as the app made it: a retry, a refresh and a redirect count on. */
+    private class Attempts(val groupId: String) {
+        var count = 0
     }
 
     private inline fun <T> guarded(block: () -> T): T? = try {
@@ -249,8 +283,8 @@ internal class KtorMonitorCapture(
     }
 
     private companion object {
-        val AttemptKey = AttributeKey<Int>("KtorMonitorAttempt")
-        val GroupKey = AttributeKey<String>("KtorMonitorGroup")
+        val AttemptsKey = AttributeKey<Attempts>("KtorMonitorAttempts")
+        val AttachedKey = AttributeKey<Unit>("KtorMonitorAttached")
     }
 }
 

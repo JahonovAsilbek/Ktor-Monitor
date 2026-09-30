@@ -43,7 +43,7 @@ class KtorMonitorDetailViewModelTest {
     }
 
     private fun viewModel(repository: KtorMonitorRepository, id: String = "cards") = viewModels.track(
-        KtorMonitorDetailViewModel(id, repository, "ExampleApp", "1.2.3", now = { 0 }, analysisDispatcher = Dispatchers.Main),
+        KtorMonitorDetailViewModel(id, repository, "ExampleApp", "1.2.3", now = { 0 }, onError = { throw it }, analysisDispatcher = Dispatchers.Main),
     )
 
     private suspend fun KtorMonitorDetailViewModel.ready(until: (KtorMonitorDetailUiState) -> Boolean = { true }) =
@@ -51,7 +51,7 @@ class KtorMonitorDetailViewModelTest {
 
     @Test
     fun `a json response opens in the code view`() = runTest {
-        val repository = fakeRepository().apply { upsert(testCall("cards", responseBody = """{"id":1}""")) }
+        val repository = fakeRepository().apply { insert(testCall("cards", responseBody = """{"id":1}""")) }
 
         val state = viewModel(repository).ready()
 
@@ -64,7 +64,7 @@ class KtorMonitorDetailViewModelTest {
 
     @Test
     fun `another view is kept once chosen`() = runTest {
-        val repository = fakeRepository().apply { upsert(testCall("cards", responseBody = """{"id":1}""")) }
+        val repository = fakeRepository().apply { insert(testCall("cards", responseBody = """{"id":1}""")) }
         val vm = viewModel(repository)
         vm.ready()
 
@@ -75,18 +75,18 @@ class KtorMonitorDetailViewModelTest {
 
     @Test
     fun `a call in flight updates in place`() = runTest {
-        val repository = fakeRepository().apply { upsert(testCall("cards", responseCode = null, responseBody = null)) }
+        val repository = fakeRepository().apply { insert(testCall("cards", responseCode = null, responseBody = null)) }
         val vm = viewModel(repository)
         assertTrue((vm.ready().call as Loadable.Ready).value.isInProgress)
 
-        repository.upsert(testCall("cards", responseCode = 200))
+        repository.insert(testCall("cards", responseCode = 200))
 
         assertEquals(200, (vm.ready { (it.call as Loadable.Ready).value.responseCode != null }.call as Loadable.Ready).value.responseCode)
     }
 
     @Test
     fun `copy actions hand the text to the platform`() = runTest {
-        val repository = fakeRepository().apply { upsert(testCall("cards", responseBody = """{"id":1}""")) }
+        val repository = fakeRepository().apply { insert(testCall("cards", responseBody = """{"id":1}""")) }
         val vm = viewModel(repository)
         vm.ready()
 
@@ -107,7 +107,7 @@ class KtorMonitorDetailViewModelTest {
 
     @Test
     fun `sharing as har gives a har file`() = runTest {
-        val repository = fakeRepository().apply { upsert(testCall("cards")) }
+        val repository = fakeRepository().apply { insert(testCall("cards")) }
         val vm = viewModel(repository)
         vm.ready()
 
@@ -121,7 +121,7 @@ class KtorMonitorDetailViewModelTest {
 
     @Test
     fun `a deleted call closes the screen`() = runTest {
-        val repository = fakeRepository().apply { upsert(testCall("cards")) }
+        val repository = fakeRepository().apply { insert(testCall("cards")) }
         val vm = viewModel(repository)
         vm.ready()
 

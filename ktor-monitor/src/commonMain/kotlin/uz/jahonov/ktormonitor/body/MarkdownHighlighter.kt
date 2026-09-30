@@ -34,7 +34,8 @@ internal object MarkdownHighlighter {
         var start = line.indexOfFirst { !it.isWhitespace() }.coerceAtLeast(0)
         out.add(line.substring(0, start))
         while (line.startsWith(">", start)) {
-            val end = start + 1 + line.drop(start + 1).takeWhile { it == ' ' }.length
+            var end = start + 1
+            while (end < line.length && line[end] == ' ') end++
             out.add(line.substring(start, end), TokenKind.PUNCTUATION)
             start = end
         }

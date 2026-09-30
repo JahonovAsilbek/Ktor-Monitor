@@ -36,12 +36,16 @@ internal object YamlHighlighter {
                 return false
             }
         }
-        while (rest == "-" || rest.startsWith("- ")) {
+        // An index walk: cutting `rest` once per dash would copy a line of `- - - …` over and over.
+        var at = 0
+        while (at < rest.length && rest[at] == '-' && (at + 1 == rest.length || rest[at + 1] == ' ')) {
             out.add("-", TokenKind.PUNCTUATION)
-            val spaces = rest.drop(1).takeWhile { it == ' ' }
-            out.add(spaces)
-            rest = rest.substring(1 + spaces.length)
+            var end = at + 1
+            while (end < rest.length && rest[end] == ' ') end++
+            out.add(rest.substring(at + 1, end))
+            at = end
         }
+        if (at > 0) rest = rest.substring(at)
         val colon = keyColon(rest)
         if (colon >= 0) {
             out.add(rest.substring(0, colon), TokenKind.KEY)

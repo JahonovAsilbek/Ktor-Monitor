@@ -5,6 +5,7 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.toByteArray
+import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.plugin
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -38,6 +39,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.IOException
 import kotlinx.io.bytestring.decodeToString
+import uz.jahonov.ktormonitor.data.fakeRepository
+import uz.jahonov.ktormonitor.data.testCall
 import uz.jahonov.ktormonitor.model.NetworkCall
 
 class KtorMonitorCaptureTest {
@@ -46,9 +49,14 @@ class KtorMonitorCaptureTest {
         val calls = MutableStateFlow<List<NetworkCall>>(emptyList())
         var failsFor: String? = null
 
-        override suspend fun upsert(call: NetworkCall) {
+        override suspend fun insert(call: NetworkCall) {
             failsFor?.let { if (it in call.url) error("disk full") }
-            calls.update { list -> list.filterNot { it.id == call.id } + call }
+            calls.update { list -> list + call }
+        }
+
+        override suspend fun update(call: NetworkCall) {
+            failsFor?.let { if (it in call.url) error("disk full") }
+            calls.update { list -> list.map { if (it.id == call.id) call else it } }
         }
 
         suspend fun await(count: Int, until: (NetworkCall) -> Boolean = { !it.isInProgress }) =
@@ -240,7 +248,61 @@ class KtorMonitorCaptureTest {
         val client = backgroundScope.monitoredClient(store, { isActive = false }) { json("{}") }
 
         client.get("https://api.test/")
+        testScheduler.advanceUntilIdle()
 
         assertTrue(store.calls.value.isEmpty())
+    }
+
+    @Test
+    fun `the attempts HttpRequestRetry makes share one group`() = runTest {
+        val store = FakeCallStore()
+        var answered = 0
+        val engine = MockEngine { json("{}", if (answered++ < 2) HttpStatusCode.ServiceUnavailable else HttpStatusCode.OK) }
+        // HttpRequestRetry sends a fresh copy of the request for every attempt.
+        val client = HttpClient(engine) {
+            expectSuccess = false
+            install(HttpRequestRetry) {
+                retryOnServerErrors(maxRetries = 2)
+                delayMillis { 0 }
+            }
+        }
+        KtorMonitorCapture(store, KtorMonitorConfig(), backgroundScope).install(client)
+
+        client.get("https://api.test/cards")
+
+        val calls = store.await(3).sortedBy { it.attempt }
+        assertEquals(listOf(503, 503, 200), calls.map { it.responseCode })
+        assertEquals(listOf(1, 2, 3), calls.map { it.attempt })
+        assertEquals(1, calls.map { it.groupId }.distinct().size)
+    }
+
+    @Test
+    fun `attaching a client twice records each call once`() = runTest {
+        val store = FakeCallStore()
+        val client = backgroundScope.monitoredClient(store) { json("{}") }
+        KtorMonitorCapture(store, KtorMonitorConfig(), backgroundScope).install(client)
+
+        client.get("https://api.test/")
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(listOf(1), store.calls.value.map { it.attempt })
+    }
+
+    @Test
+    fun `an update after the call was deleted does not bring it back`() = runTest {
+        val repository = fakeRepository()
+        val call = testCall("cards", responseCode = null)
+        repository.insert(call)
+
+        repository.clear()
+        repository.update(call.copy(responseCode = 200))
+
+        assertTrue(repository.calls().first().isEmpty())
+    }
+
+    @Test
+    fun `limits below their minimum are refused`() {
+        assertFailsWith<IllegalArgumentException> { KtorMonitorConfig().maxCalls = 0 }
+        assertFailsWith<IllegalArgumentException> { KtorMonitorConfig().maxContentLength = -1 }
     }
 }

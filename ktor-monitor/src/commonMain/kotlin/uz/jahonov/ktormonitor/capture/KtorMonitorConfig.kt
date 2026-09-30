@@ -7,17 +7,25 @@ import kotlin.time.Duration.Companion.hours
 
 /** Set once, when the monitor is created. Defaults record everything and redact nothing. */
 public class KtorMonitorConfig internal constructor() {
-    /** `false` installs nothing. */
+    /** `false` records nothing and shows no notification. */
     public var isActive: Boolean = true
 
-    /** Bytes kept per body; the rest is counted, not stored. */
+    /** Bytes kept per body, at least 0; the rest is counted, not stored. */
     public var maxContentLength: Int = DEFAULT_MAX_CONTENT_LENGTH
+        set(value) {
+            require(value >= 0) { "maxContentLength must be at least 0, was $value" }
+            field = value
+        }
 
     /** How long a call is kept. */
     public var retention: Retention = Retention.OneHour
 
-    /** Most calls kept; the oldest go first. */
+    /** Most calls kept, at least 1; the oldest go first. */
     public var maxCalls: Int = DEFAULT_MAX_CALLS
+        set(value) {
+            require(value > 0) { "maxCalls must be at least 1, was $value" }
+            field = value
+        }
 
     /** A notification with the latest calls. `false` also removes one already shown. */
     public var showNotification: Boolean = true

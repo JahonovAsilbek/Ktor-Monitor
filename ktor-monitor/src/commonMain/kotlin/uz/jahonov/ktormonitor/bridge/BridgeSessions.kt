@@ -1,6 +1,7 @@
 package uz.jahonov.ktormonitor.bridge
 
 import androidx.lifecycle.ViewModelStore
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,7 +24,8 @@ internal class BridgeSessions(
     private val notifier: KtorMonitorNotifier,
     private val onInternalError: (Throwable) -> Unit,
 ) {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    // A failure would otherwise end the process: Kotlin/Native has no handler to fall back on.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + CoroutineExceptionHandler { _, e -> onInternalError(e) })
     private val sessions = mutableMapOf<String, Session>()
     private var lastId = 0
 

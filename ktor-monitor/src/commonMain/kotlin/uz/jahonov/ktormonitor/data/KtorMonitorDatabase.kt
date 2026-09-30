@@ -11,6 +11,7 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
+import androidx.room.Update
 import androidx.room.Upsert
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
@@ -88,6 +89,10 @@ internal data class CallSummaryRow(
 internal interface CallDao {
     @Upsert
     suspend fun upsert(call: CallEntity)
+
+    /** Does nothing when the call is gone. */
+    @Update
+    suspend fun update(call: CallEntity)
 
     /**
      * Newest first. [query] matches the URL, method, status code and both bodies, ignoring letter
