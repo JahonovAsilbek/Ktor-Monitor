@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import uz.jahonov.ktormonitor.presentation.list.CallFilters
 import uz.jahonov.ktormonitor.presentation.list.KtorMonitorListUiEvent
 import uz.jahonov.ktormonitor.presentation.list.KtorMonitorListUiState
 import uz.jahonov.ktormonitor.ui.ui.Chip
@@ -177,5 +176,3 @@ internal fun ActiveFilters(state: KtorMonitorListUiState, onEvent: (KtorMonitorL
     }
 }
 
-internal val CallFilters.count: Int
-    get() = hosts.size + methods.size + contentTypes.size + statuses.size + durations.size

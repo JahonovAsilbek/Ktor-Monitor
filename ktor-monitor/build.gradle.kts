@@ -45,6 +45,16 @@ kotlin {
     }
 }
 
+// The JSON the Swift package decodes. Tests compare against these files; -PrecordFixtures rewrites them.
+val bridgeFixtures = rootDir.resolve("ios/KtorMonitorUI/Tests/KtorMonitorUITests/Fixtures")
+val recordFixtures = providers.gradleProperty("recordFixtures").isPresent
+tasks.withType<Test>().configureEach {
+    inputs.dir(bridgeFixtures)
+    systemProperty("bridgeFixtures", bridgeFixtures.absolutePath)
+    systemProperty("recordFixtures", recordFixtures)
+    if (recordFixtures) outputs.upToDateWhen { false }
+}
+
 dependencies {
     listOf("kspAndroid", "kspIosArm64", "kspIosSimulatorArm64").forEach { add(it, libs.androidx.room.compiler) }
 }

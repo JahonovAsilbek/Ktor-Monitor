@@ -165,7 +165,7 @@ Each phase ends with a build and the tests, and waits for approval before the ne
    API, all tests green. ✅
 3. **Android UI.** Copy `android/debug/netmonitor`, rename, replace MKBUICore with foundation
    composables, clean the previews. ✅
-4. **iOS bridge.** `KtorMonitorBridge` in `iosMain`, the JSON state and event models, tests.
+4. **iOS bridge.** `KtorMonitorBridge` in `iosMain`, the JSON state and event models, tests. ✅
 5. **iOS UI.** `ios/KtorMonitorUI` Swift package: list, detail, body views, notification, shake,
    share sheet — the same screens as Android.
 6. **Samples + docs.** Android and iOS sample apps on devices, `README.md`, licence.

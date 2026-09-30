@@ -1,7 +1,13 @@
 package uz.jahonov.ktormonitor.body
 
 /** The ways a body can be shown, in the order the UI prefers them. */
-public enum class BodyMode { STREAM, PREVIEW, CODE, TEXT, HEX }
+public enum class BodyMode(public val label: String) {
+    STREAM("Stream"),
+    PREVIEW("Preview"),
+    CODE("Code"),
+    TEXT("Text"),
+    HEX("Hex"),
+}
 
 public enum class CodeLanguage { JSON, XML, HTML, CSS, JAVASCRIPT, YAML, MARKDOWN, FORM, MULTIPART }
 

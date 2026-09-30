@@ -1,0 +1,7 @@
+{
+    "title": "Recording network activity",
+    "lines": [
+        "❌ POST /login",
+        "200 GET /v1/items?page=2"
+    ]
+}

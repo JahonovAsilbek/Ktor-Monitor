@@ -1,12 +1,12 @@
 package uz.jahonov.ktormonitor.export
 
 /** What calls can be shared as, with the file extension and MIME type of the shared file. */
-public enum class ExportFormat(public val extension: String, public val mimeType: String) {
-    JSON("json", "application/json"),
-    TEXT("txt", "text/plain"),
-    MARKDOWN("md", "text/markdown"),
-    CURL("sh", "text/x-shellscript"),
-    WGET("sh", "text/x-shellscript"),
-    URLS("txt", "text/plain"),
-    HAR("har", "application/json"),
+public enum class ExportFormat(public val label: String, public val extension: String, public val mimeType: String) {
+    JSON("JSON", "json", "application/json"),
+    TEXT("Text", "txt", "text/plain"),
+    MARKDOWN("Markdown", "md", "text/markdown"),
+    CURL("cURL", "sh", "text/x-shellscript"),
+    WGET("wget", "sh", "text/x-shellscript"),
+    URLS("URL list", "txt", "text/plain"),
+    HAR("HAR", "har", "application/json"),
 }

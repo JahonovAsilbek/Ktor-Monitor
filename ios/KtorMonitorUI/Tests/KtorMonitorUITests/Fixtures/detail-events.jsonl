@@ -1,0 +1,5 @@
+{"type":"selectMode","side":"RESPONSE","mode":"HEX"}
+{"type":"copy","format":"CURL"}
+{"type":"copyHeaders","side":"REQUEST"}
+{"type":"copyBody","side":"RESPONSE"}
+{"type":"share","format":"MARKDOWN"}

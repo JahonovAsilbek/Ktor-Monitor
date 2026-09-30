@@ -1,0 +1,154 @@
+{
+    "call": {
+        "summary": {
+            "id": "cards",
+            "groupId": "group-cards",
+            "attempt": 1,
+            "method": "GET",
+            "url": "https://api.example.com/v1/items?page=2",
+            "host": "api.example.com",
+            "path": "/v1/items?page=2",
+            "isSecure": true,
+            "protocol": null,
+            "requestTime": 1790000000000,
+            "responseTime": null,
+            "durationMillis": null,
+            "requestContentType": null,
+            "responseContentType": "application/json",
+            "requestSize": null,
+            "responseSize": 2,
+            "responseCode": null,
+            "error": null,
+            "isInProgress": true,
+            "isRedirect": false,
+            "isError": false,
+            "kind": {
+                "id": "JSON",
+                "label": "JSON"
+            }
+        },
+        "requestHeaders": [
+            {
+                "name": "Accept",
+                "value": "application/json"
+            }
+        ],
+        "responseHeaders": [
+            {
+                "name": "Content-Type",
+                "value": "application/json"
+            }
+        ]
+    },
+    "request": null,
+    "response": {
+        "modes": [
+            {
+                "id": "PREVIEW",
+                "label": "Preview"
+            },
+            {
+                "id": "CODE",
+                "label": "Code"
+            }
+        ],
+        "mode": {
+            "id": "PREVIEW",
+            "label": "Preview"
+        },
+        "size": 120,
+        "isTruncated": false,
+        "content": {
+            "type": "markdown",
+            "blocks": [
+                {
+                    "type": "heading",
+                    "level": 1,
+                    "spans": [
+                        {
+                            "text": "Title",
+                            "isBold": false,
+                            "isItalic": false,
+                            "isCode": false,
+                            "link": null
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "spans": [
+                        {
+                            "text": "Plain ",
+                            "isBold": false,
+                            "isItalic": false,
+                            "isCode": false,
+                            "link": null
+                        },
+                        {
+                            "text": "bold",
+                            "isBold": true,
+                            "isItalic": false,
+                            "isCode": false,
+                            "link": null
+                        },
+                        {
+                            "text": "docs",
+                            "isBold": false,
+                            "isItalic": false,
+                            "isCode": false,
+                            "link": "https://example.com"
+                        }
+                    ]
+                },
+                {
+                    "type": "listItem",
+                    "depth": 0,
+                    "number": 1,
+                    "spans": [
+                        {
+                            "text": "first",
+                            "isBold": false,
+                            "isItalic": false,
+                            "isCode": false,
+                            "link": null
+                        }
+                    ]
+                },
+                {
+                    "type": "listItem",
+                    "depth": 1,
+                    "number": null,
+                    "spans": [
+                        {
+                            "text": "nested",
+                            "isBold": false,
+                            "isItalic": true,
+                            "isCode": false,
+                            "link": null
+                        }
+                    ]
+                },
+                {
+                    "type": "quote",
+                    "spans": [
+                        {
+                            "text": "quoted",
+                            "isBold": false,
+                            "isItalic": false,
+                            "isCode": false,
+                            "link": null
+                        }
+                    ]
+                },
+                {
+                    "type": "codeBlock",
+                    "language": "kotlin",
+                    "text": "val x = 1"
+                },
+                {
+                    "type": "rule"
+                }
+            ]
+        }
+    }
+}

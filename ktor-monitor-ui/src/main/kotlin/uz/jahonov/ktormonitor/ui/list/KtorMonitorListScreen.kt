@@ -164,10 +164,6 @@ private fun KtorMonitorListContent(
     }
 }
 
-/** Whether search, filters or "only errors" hide some of the calls. */
-private val KtorMonitorListUiState.isNarrowed: Boolean
-    get() = query.isNotBlank() || onlyErrors || !filters.isEmpty
-
 @Composable
 private fun CallList(
     calls: List<CallSummary>,

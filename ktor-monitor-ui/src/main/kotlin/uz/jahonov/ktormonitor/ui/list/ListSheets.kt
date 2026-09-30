@@ -87,15 +87,6 @@ internal fun SortSheet(current: CallSort, onSort: (CallSort) -> Unit, onDismiss:
     }
 }
 
-private val CallSort.label: String
-    get() = when (this) {
-        CallSort.NEWEST -> "Newest first"
-        CallSort.SIZE_ASCENDING -> "Size, smallest first"
-        CallSort.SIZE_DESCENDING -> "Size, largest first"
-        CallSort.DURATION_ASCENDING -> "Duration, fastest first"
-        CallSort.DURATION_DESCENDING -> "Duration, slowest first"
-    }
-
 internal enum class MenuAction { SELECT, SORT, CLEAR_ALL }
 
 /** The overflow menu. [onAction] runs once the sheet is gone, so a following sheet never overlaps it. */
@@ -140,14 +131,3 @@ internal fun ShareSheet(onShare: (ExportFormat) -> Unit, onDismiss: () -> Unit) 
         }
     }
 }
-
-private val ExportFormat.label: String
-    get() = when (this) {
-        ExportFormat.JSON -> "JSON"
-        ExportFormat.TEXT -> "Text"
-        ExportFormat.MARKDOWN -> "Markdown"
-        ExportFormat.CURL -> "cURL"
-        ExportFormat.WGET -> "wget"
-        ExportFormat.URLS -> "URL list"
-        ExportFormat.HAR -> "HAR"
-    }

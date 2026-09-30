@@ -21,6 +21,9 @@ public data class KtorMonitorListUiState(
     val selection: Set<String>? = null,
 ) {
     val isSelecting: Boolean get() = selection != null
+
+    /** Whether search, filters or "only errors" hide some of the calls. */
+    val isNarrowed: Boolean get() = query.isNotBlank() || onlyErrors || !filters.isEmpty
 }
 
 public sealed interface KtorMonitorListUiEvent {

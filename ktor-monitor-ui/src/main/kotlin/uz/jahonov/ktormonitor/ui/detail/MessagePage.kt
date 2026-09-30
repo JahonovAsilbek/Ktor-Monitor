@@ -228,15 +228,6 @@ private fun Modes(body: BodyState, onSelect: (BodyMode) -> Unit) {
     }
 }
 
-private val BodyMode.label: String
-    get() = when (this) {
-        BodyMode.STREAM -> "Stream"
-        BodyMode.PREVIEW -> "Preview"
-        BodyMode.CODE -> "Code"
-        BodyMode.TEXT -> "Text"
-        BodyMode.HEX -> "Hex"
-    }
-
 /** The stack trace as it was recorded: not wrapped, so its frames stay one per line. */
 @Composable
 private fun ErrorBlock(error: String) {

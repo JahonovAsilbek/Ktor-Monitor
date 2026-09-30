@@ -1,0 +1,90 @@
+{
+    "call": {
+        "summary": {
+            "id": "cards",
+            "groupId": "group-cards",
+            "attempt": 1,
+            "method": "GET",
+            "url": "https://api.example.com/v1/items?page=2",
+            "host": "api.example.com",
+            "path": "/v1/items?page=2",
+            "isSecure": true,
+            "protocol": "HTTP/1.1",
+            "requestTime": 1790000000000,
+            "responseTime": 1790000000100,
+            "durationMillis": 100,
+            "requestContentType": null,
+            "responseContentType": "image/png",
+            "requestSize": null,
+            "responseSize": 2,
+            "responseCode": 200,
+            "error": null,
+            "isInProgress": false,
+            "isRedirect": false,
+            "isError": false,
+            "kind": {
+                "id": "IMAGE",
+                "label": "IMG"
+            }
+        },
+        "requestHeaders": [
+            {
+                "name": "Accept",
+                "value": "application/json"
+            }
+        ],
+        "responseHeaders": [
+            {
+                "name": "Content-Type",
+                "value": "application/json"
+            }
+        ]
+    },
+    "request": {
+        "modes": [
+            {
+                "id": "HEX",
+                "label": "Hex"
+            }
+        ],
+        "mode": {
+            "id": "HEX",
+            "label": "Hex"
+        },
+        "size": 2,
+        "isTruncated": false,
+        "content": {
+            "type": "hex",
+            "rows": [
+                {
+                    "offset": "00000000",
+                    "hex": "7b 7d                                          ",
+                    "ascii": "{}"
+                }
+            ]
+        }
+    },
+    "response": {
+        "modes": [
+            {
+                "id": "PREVIEW",
+                "label": "Preview"
+            },
+            {
+                "id": "HEX",
+                "label": "Hex"
+            }
+        ],
+        "mode": {
+            "id": "PREVIEW",
+            "label": "Preview"
+        },
+        "size": 4,
+        "isTruncated": false,
+        "content": {
+            "type": "image",
+            "format": "PNG",
+            "base64": "iVBORw=="
+        }
+    }
+}

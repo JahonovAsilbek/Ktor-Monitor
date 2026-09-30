@@ -1,0 +1,133 @@
+{
+    "call": {
+        "summary": {
+            "id": "cards",
+            "groupId": "group-cards",
+            "attempt": 1,
+            "method": "GET",
+            "url": "https://api.example.com/v1/items?page=2",
+            "host": "api.example.com",
+            "path": "/v1/items?page=2",
+            "isSecure": true,
+            "protocol": "HTTP/1.1",
+            "requestTime": 1790000000000,
+            "responseTime": 1790000000100,
+            "durationMillis": 100,
+            "requestContentType": null,
+            "responseContentType": "application/json",
+            "requestSize": null,
+            "responseSize": 2,
+            "responseCode": 200,
+            "error": null,
+            "isInProgress": false,
+            "isRedirect": false,
+            "isError": false,
+            "kind": {
+                "id": "JSON",
+                "label": "JSON"
+            }
+        },
+        "requestHeaders": [
+            {
+                "name": "Accept",
+                "value": "application/json"
+            }
+        ],
+        "responseHeaders": [
+            {
+                "name": "Content-Type",
+                "value": "application/json"
+            }
+        ]
+    },
+    "request": {
+        "modes": [
+            {
+                "id": "TEXT",
+                "label": "Text"
+            },
+            {
+                "id": "HEX",
+                "label": "Hex"
+            }
+        ],
+        "mode": {
+            "id": "TEXT",
+            "label": "Text"
+        },
+        "size": 14,
+        "isTruncated": false,
+        "content": {
+            "type": "lines",
+            "lines": [
+                "page=2",
+                "size=20"
+            ]
+        }
+    },
+    "response": {
+        "modes": [
+            {
+                "id": "CODE",
+                "label": "Code"
+            },
+            {
+                "id": "TEXT",
+                "label": "Text"
+            },
+            {
+                "id": "HEX",
+                "label": "Hex"
+            }
+        ],
+        "mode": {
+            "id": "CODE",
+            "label": "Code"
+        },
+        "size": 250000,
+        "isTruncated": true,
+        "content": {
+            "type": "code",
+            "language": "JSON",
+            "lines": [
+                [
+                    {
+                        "text": "{",
+                        "kind": "PUNCTUATION"
+                    }
+                ],
+                [
+                    {
+                        "text": "  ",
+                        "kind": "PLAIN"
+                    },
+                    {
+                        "text": "\"id\"",
+                        "kind": "KEY"
+                    },
+                    {
+                        "text": ": ",
+                        "kind": "PUNCTUATION"
+                    },
+                    {
+                        "text": "42",
+                        "kind": "NUMBER"
+                    }
+                ],
+                [
+                    {
+                        "text": "}",
+                        "kind": "PUNCTUATION"
+                    }
+                ]
+            ],
+            "folds": [
+                {
+                    "startLine": 0,
+                    "endLine": 2,
+                    "isCollapsedByDefault": false
+                }
+            ]
+        }
+    }
+}

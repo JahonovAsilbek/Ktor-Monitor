@@ -1,0 +1,19 @@
+[
+    {
+        "type": "openCall",
+        "id": "cards"
+    },
+    {
+        "type": "share",
+        "name": "calls.har",
+        "mimeType": "application/json",
+        "content": "{}"
+    },
+    {
+        "type": "copyText",
+        "text": "https://api.example.com/v1/items"
+    },
+    {
+        "type": "close"
+    }
+]

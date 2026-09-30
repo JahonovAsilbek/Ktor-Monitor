@@ -49,6 +49,8 @@ public class KtorMonitor internal constructor(
     public fun detailViewModel(callId: String): KtorMonitorDetailViewModel =
         KtorMonitorDetailViewModel(callId, repository, appName, appVersion, ::currentTimeMillis)
 
+    internal val onInternalError: (Throwable) -> Unit get() = config.onInternalError
+
     /** Deletes the whole history. */
     public suspend fun clear() {
         repository.clear()

@@ -1,0 +1,114 @@
+{
+    "calls": null,
+    "totalCount": 0,
+    "isSearchVisible": false,
+    "query": "",
+    "onlyErrors": false,
+    "isNarrowed": false,
+    "filters": {
+        "hosts": [],
+        "methods": [],
+        "contentTypes": [],
+        "statuses": [],
+        "durations": []
+    },
+    "filterCount": 0,
+    "options": {
+        "hosts": [],
+        "methods": [],
+        "contentTypes": [],
+        "statuses": [
+            {
+                "id": "SUCCESS",
+                "label": "2xx"
+            },
+            {
+                "id": "REDIRECT",
+                "label": "3xx"
+            },
+            {
+                "id": "CLIENT_ERROR",
+                "label": "4xx"
+            },
+            {
+                "id": "SERVER_ERROR",
+                "label": "5xx"
+            }
+        ],
+        "durations": [
+            {
+                "id": "UNDER_200_MS",
+                "label": "< 200 ms"
+            },
+            {
+                "id": "UNDER_1_S",
+                "label": "200 ms – 1 s"
+            },
+            {
+                "id": "UNDER_5_S",
+                "label": "1 – 5 s"
+            },
+            {
+                "id": "OVER_5_S",
+                "label": "> 5 s"
+            }
+        ]
+    },
+    "sort": {
+        "id": "NEWEST",
+        "label": "Newest first"
+    },
+    "sorts": [
+        {
+            "id": "NEWEST",
+            "label": "Newest first"
+        },
+        {
+            "id": "SIZE_ASCENDING",
+            "label": "Size, smallest first"
+        },
+        {
+            "id": "SIZE_DESCENDING",
+            "label": "Size, largest first"
+        },
+        {
+            "id": "DURATION_ASCENDING",
+            "label": "Duration, fastest first"
+        },
+        {
+            "id": "DURATION_DESCENDING",
+            "label": "Duration, slowest first"
+        }
+    ],
+    "exportFormats": [
+        {
+            "id": "JSON",
+            "label": "JSON"
+        },
+        {
+            "id": "TEXT",
+            "label": "Text"
+        },
+        {
+            "id": "MARKDOWN",
+            "label": "Markdown"
+        },
+        {
+            "id": "CURL",
+            "label": "cURL"
+        },
+        {
+            "id": "WGET",
+            "label": "wget"
+        },
+        {
+            "id": "URLS",
+            "label": "URL list"
+        },
+        {
+            "id": "HAR",
+            "label": "HAR"
+        }
+    ],
+    "selection": null
+}

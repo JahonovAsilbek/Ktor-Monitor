@@ -1,0 +1,184 @@
+{
+    "calls": [
+        {
+            "id": "login",
+            "groupId": "group-login",
+            "attempt": 1,
+            "method": "POST",
+            "url": "https://auth.example.com/login",
+            "host": "auth.example.com",
+            "path": "/login",
+            "isSecure": true,
+            "protocol": null,
+            "requestTime": 1790000001000,
+            "responseTime": null,
+            "durationMillis": null,
+            "requestContentType": null,
+            "responseContentType": "application/json",
+            "requestSize": null,
+            "responseSize": 2,
+            "responseCode": null,
+            "error": "java.net.UnknownHostException: Unable to resolve host",
+            "isInProgress": false,
+            "isRedirect": false,
+            "isError": true,
+            "kind": {
+                "id": "JSON",
+                "label": "JSON"
+            }
+        },
+        {
+            "id": "cards",
+            "groupId": "group-cards",
+            "attempt": 1,
+            "method": "GET",
+            "url": "https://api.example.com/v1/items?page=2",
+            "host": "api.example.com",
+            "path": "/v1/items?page=2",
+            "isSecure": true,
+            "protocol": "HTTP/1.1",
+            "requestTime": 1790000000000,
+            "responseTime": 1790000000100,
+            "durationMillis": 100,
+            "requestContentType": null,
+            "responseContentType": "application/json",
+            "requestSize": null,
+            "responseSize": 2,
+            "responseCode": 200,
+            "error": null,
+            "isInProgress": false,
+            "isRedirect": false,
+            "isError": false,
+            "kind": {
+                "id": "JSON",
+                "label": "JSON"
+            }
+        }
+    ],
+    "totalCount": 2,
+    "isSearchVisible": true,
+    "query": "api",
+    "onlyErrors": false,
+    "isNarrowed": true,
+    "filters": {
+        "hosts": [
+            "api.example.com"
+        ],
+        "methods": [],
+        "contentTypes": [],
+        "statuses": [
+            {
+                "id": "SUCCESS",
+                "label": "2xx"
+            }
+        ],
+        "durations": []
+    },
+    "filterCount": 2,
+    "options": {
+        "hosts": [
+            "api.example.com",
+            "auth.example.com"
+        ],
+        "methods": [
+            "GET",
+            "POST"
+        ],
+        "contentTypes": [],
+        "statuses": [
+            {
+                "id": "SUCCESS",
+                "label": "2xx"
+            },
+            {
+                "id": "REDIRECT",
+                "label": "3xx"
+            },
+            {
+                "id": "CLIENT_ERROR",
+                "label": "4xx"
+            },
+            {
+                "id": "SERVER_ERROR",
+                "label": "5xx"
+            }
+        ],
+        "durations": [
+            {
+                "id": "UNDER_200_MS",
+                "label": "< 200 ms"
+            },
+            {
+                "id": "UNDER_1_S",
+                "label": "200 ms – 1 s"
+            },
+            {
+                "id": "UNDER_5_S",
+                "label": "1 – 5 s"
+            },
+            {
+                "id": "OVER_5_S",
+                "label": "> 5 s"
+            }
+        ]
+    },
+    "sort": {
+        "id": "DURATION_DESCENDING",
+        "label": "Duration, slowest first"
+    },
+    "sorts": [
+        {
+            "id": "NEWEST",
+            "label": "Newest first"
+        },
+        {
+            "id": "SIZE_ASCENDING",
+            "label": "Size, smallest first"
+        },
+        {
+            "id": "SIZE_DESCENDING",
+            "label": "Size, largest first"
+        },
+        {
+            "id": "DURATION_ASCENDING",
+            "label": "Duration, fastest first"
+        },
+        {
+            "id": "DURATION_DESCENDING",
+            "label": "Duration, slowest first"
+        }
+    ],
+    "exportFormats": [
+        {
+            "id": "JSON",
+            "label": "JSON"
+        },
+        {
+            "id": "TEXT",
+            "label": "Text"
+        },
+        {
+            "id": "MARKDOWN",
+            "label": "Markdown"
+        },
+        {
+            "id": "CURL",
+            "label": "cURL"
+        },
+        {
+            "id": "WGET",
+            "label": "wget"
+        },
+        {
+            "id": "URLS",
+            "label": "URL list"
+        },
+        {
+            "id": "HAR",
+            "label": "HAR"
+        }
+    ],
+    "selection": [
+        "cards"
+    ]
+}

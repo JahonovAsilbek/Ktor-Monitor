@@ -17,7 +17,13 @@ public enum class DurationRange(public val label: String, internal val millis: L
     OVER_5_S("> 5 s", 5_000L..Long.MAX_VALUE),
 }
 
-public enum class CallSort { NEWEST, SIZE_ASCENDING, SIZE_DESCENDING, DURATION_ASCENDING, DURATION_DESCENDING }
+public enum class CallSort(public val label: String) {
+    NEWEST("Newest first"),
+    SIZE_ASCENDING("Size, smallest first"),
+    SIZE_DESCENDING("Size, largest first"),
+    DURATION_ASCENDING("Duration, fastest first"),
+    DURATION_DESCENDING("Duration, slowest first"),
+}
 
 /** Values chosen in each filter. A call passes when it matches one value of every non-empty filter. */
 public data class CallFilters(
@@ -29,6 +35,10 @@ public data class CallFilters(
 ) {
     val isEmpty: Boolean
         get() = hosts.isEmpty() && methods.isEmpty() && contentTypes.isEmpty() && statuses.isEmpty() && durations.isEmpty()
+
+    /** How many values are chosen, across all filters. */
+    val count: Int
+        get() = hosts.size + methods.size + contentTypes.size + statuses.size + durations.size
 
     internal fun matches(call: CallSummary): Boolean =
         (hosts.isEmpty() || call.host in hosts) &&
