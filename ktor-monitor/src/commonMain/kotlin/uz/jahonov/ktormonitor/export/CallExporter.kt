@@ -11,18 +11,27 @@ import uz.jahonov.ktormonitor.model.NetworkCall
 /** Renders recorded calls for copying and sharing: shell commands, readable dumps, JSON and HAR. */
 internal object CallExporter {
 
-    /** A `curl` command that repeats the request, text body included as it was sent. */
+    /**
+     * A `curl` command that repeats the request, text body included as it was sent. The body goes as
+     * `--data-raw`: with `--data-binary`, one starting with `@` would upload a file from the disk. A
+     * recorded `Accept-Encoding` becomes `--compressed`, so the response prints as text.
+     */
     fun curl(call: NetworkCall): String {
-        val args = listOf("curl -X ${call.method} ${shellQuoted(call.url)}") +
-            call.sentHeaders().map { "-H ${shellQuoted(it)}" } +
-            listOfNotNull(call.sentBody()?.let { "--data-binary ${shellQuoted(it)}" })
+        val start = if (call.method.equals("HEAD", ignoreCase = true)) "curl --head" else "curl -X ${shellWord(call.method)}"
+        val compressed = call.requestHeaders.keys.any { it.equals(HttpHeaders.AcceptEncoding, ignoreCase = true) }
+        val args = listOf("$start ${shellQuoted(call.url)}") +
+            call.sentHeaders().map { "-H ${shellQuoted(it.forCurl())}" } +
+            listOfNotNull(
+                call.sentBody()?.let { "--data-raw ${shellQuoted(it)}" },
+                "--compressed".takeIf { compressed },
+            )
         return (call.bodyNotes() + args.joinToString(" \\\n  ")).joinToString("\n")
     }
 
     /** A `wget` command that repeats the request and prints the response. */
     fun wget(call: NetworkCall): String {
-        val args = listOf("wget --method=${call.method}") +
-            call.sentHeaders().map { "--header=${shellQuoted(it)}" } +
+        val args = listOf("wget --method=${shellWord(call.method)}") +
+            call.sentHeaders().map { "--header=${shellQuoted(it.toString())}" } +
             listOfNotNull(call.sentBody()?.let { "--body-data=${shellQuoted(it)}" }) +
             "-O - ${shellQuoted(call.url)}"
         return (call.bodyNotes() + args.joinToString(" \\\n  ")).joinToString("\n")
@@ -71,19 +80,30 @@ internal object CallExporter {
         ExportFormat.HAR -> harLog(calls, appName, appVersion)
     }
 
-    /** e.g. "netmonitor-2026-09-30-142501.har"; a single call shared as TEXT uses the ".http" extension instead. */
+    /** e.g. "ktormonitor-2026-09-30-142501.har"; a single call shared as TEXT uses the ".http" extension instead. */
     fun fileName(format: ExportFormat, exportedAt: Long, single: Boolean = false): String {
         // "2026-09-30T14:25:01.123Z"
         val iso = isoTime(exportedAt)
         val stamp = iso.substring(0, 10) + "-" + iso.substring(11, 19).replace(":", "")
         val extension = if (single && format == ExportFormat.TEXT) "http" else format.extension
-        return "netmonitor-$stamp.$extension"
+        return "ktormonitor-$stamp.$extension"
     }
 
-    private fun NetworkCall.sentHeaders(): List<String> =
+    /**
+     * The headers to send again. Content-Length follows from the body; Accept-Encoding would have the
+     * server compress a response that the terminal then shows as bytes.
+     */
+    private fun NetworkCall.sentHeaders(): List<Header> =
         requestHeaders
-            .filterKeys { !it.equals(HttpHeaders.ContentLength, ignoreCase = true) }
-            .flatMap { (name, values) -> values.map { "$name: $it" } }
+            .filterKeys { !it.equals(HttpHeaders.ContentLength, ignoreCase = true) && !it.equals(HttpHeaders.AcceptEncoding, ignoreCase = true) }
+            .flatMap { (name, values) -> values.map { Header(name, it) } }
+
+    private class Header(val name: String, val value: String) {
+        override fun toString() = "$name: $value"
+
+        /** `Name;` is how curl sends a header with an empty value; `Name:` would remove it. */
+        fun forCurl() = if (value.isEmpty()) "$name;" else toString()
+    }
 
     private fun NetworkCall.sentBody(): String? = requestBody?.text(requestContentType)
 
@@ -166,6 +186,10 @@ internal object CallExporter {
 
     /** Single-quoted for a POSIX shell: exact for any content, since nothing inside quotes is special but `'`. */
     private fun shellQuoted(value: String) = "'" + value.replace("'", "'\\''") + "'"
+
+    /** [value] as it is when the shell reads it so anyway (`GET`), quoted when it would not. */
+    private fun shellWord(value: String) =
+        if (value.isNotEmpty() && value.all { it.isLetterOrDigit() || it in "-_." }) value else shellQuoted(value)
 }
 
 private const val DEFAULT_PROTOCOL = "HTTP/1.1"

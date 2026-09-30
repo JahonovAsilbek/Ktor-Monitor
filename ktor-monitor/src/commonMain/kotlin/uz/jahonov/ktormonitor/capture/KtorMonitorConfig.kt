@@ -42,6 +42,7 @@ public class KtorMonitorConfig internal constructor() {
     internal val filters = mutableListOf<(HttpRequestBuilder) -> Boolean>()
     internal val headerRules = mutableListOf<HeaderRule>()
     internal val redactedFields = mutableSetOf<String>()
+    internal val redactedQueryParameters = mutableSetOf<String>()
 
     /** Records only the calls some predicate accepts. With no filter, every call is recorded. */
     public fun filter(predicate: (HttpRequestBuilder) -> Boolean) {
@@ -58,11 +59,18 @@ public class KtorMonitorConfig internal constructor() {
         sanitizeHeader(placeholder) { name -> names.any { it.equals(name, ignoreCase = true) } }
 
     /**
-     * Replaces the values of these JSON keys, at any depth and in any letter case, in both bodies.
-     * A JSON body that cannot be redacted (cut short, malformed) is not recorded at all.
+     * Replaces the values of these fields, in any letter case, in both bodies: JSON keys at any depth
+     * (in a JSON body, or a text one that is JSON), and form fields (`application/x-www-form-urlencoded`).
+     * A JSON body that cannot be redacted (cut short, malformed) is not recorded at all. Other bodies,
+     * multipart included, are recorded as they are.
      */
     public fun redactBodyFields(vararg names: String) {
         redactedFields += names.map { it.lowercase() }
+    }
+
+    /** Replaces the values of these URL query parameters, in any letter case, such as `access_token`. */
+    public fun redactQueryParameters(vararg names: String) {
+        redactedQueryParameters += names.map { it.lowercase() }
     }
 
     internal class HeaderRule(val placeholder: String, val matches: (String) -> Boolean)

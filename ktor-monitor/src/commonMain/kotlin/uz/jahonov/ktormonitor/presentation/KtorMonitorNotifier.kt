@@ -29,7 +29,8 @@ public class KtorMonitorNotifier internal constructor(repository: KtorMonitorRep
             responseCode == null -> "⏳"
             else -> responseCode.toString()
         }
-        return "$status $method $path"
+        // No query: a notification can show on the lock screen, and a query may carry a token.
+        return "$status $method ${path.substringBefore('?')}"
     }
 
     public companion object {

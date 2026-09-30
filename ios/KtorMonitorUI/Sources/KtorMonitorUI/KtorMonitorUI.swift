@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 import UserNotifications
 
 /// The monitor's screens on iOS, and the ways in: a notification and a shake of the device.
@@ -96,22 +97,29 @@ enum Platform {
         return top
     }
 
+    /// Kept to this device and for ten minutes: a copy can hold a token.
     static func copy(_ text: String) {
-        UIPasteboard.general.string = text
+        UIPasteboard.general.setItems(
+            [[UTType.utf8PlainText.identifier: text]],
+            options: [.localOnly: true, .expirationDate: Date().addingTimeInterval(10 * 60)]
+        )
     }
 
-    /// Writes the file to a temporary directory and opens the share sheet for it.
+    /// Writes the file to a temporary directory and opens the share sheet for it. An export holds
+    /// tokens and bodies: it is protected on disk, and removed once the sheet closes.
     static func share(name: String, content: String) {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent("ktormonitor", isDirectory: true)
         let file = directory.appendingPathComponent(name)
         do {
+            try? FileManager.default.removeItem(at: directory)
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try content.write(to: file, atomically: true, encoding: .utf8)
+            try Data(content.utf8).write(to: file, options: [.atomic, .completeFileProtection])
         } catch {
             return
         }
         guard let top = topViewController() else { return }
         let sheet = UIActivityViewController(activityItems: [file], applicationActivities: nil)
+        sheet.completionWithItemsHandler = { _, _, _, _ in try? FileManager.default.removeItem(at: file) }
         sheet.popoverPresentationController?.sourceView = top.view
         sheet.popoverPresentationController?.sourceRect = CGRect(x: top.view.bounds.midX, y: top.view.bounds.midY, width: 0, height: 0)
         top.present(sheet, animated: true)

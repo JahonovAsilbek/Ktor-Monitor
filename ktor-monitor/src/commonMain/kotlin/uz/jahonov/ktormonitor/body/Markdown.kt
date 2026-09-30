@@ -254,7 +254,8 @@ private class InlineParser(private val text: String) {
         }
         val url = text.substring(closeBracket + 2, closeParen).trim().substringBefore(' ')
         flush(style)
-        parse(textStart, closeBracket, style.copy(link = url))
+        // The body comes from a server: a link to a custom scheme could reach into the app itself.
+        parse(textStart, closeBracket, style.copy(link = url.takeIf(::isWebLink)))
         return closeParen + 1
     }
 
@@ -287,3 +288,9 @@ private class InlineParser(private val text: String) {
 }
 
 private const val ESCAPABLE = "\\`*_{}[]()#+-.!>|~"
+
+/** Only links a browser or a mail app opens; anything else shows as plain text. */
+private fun isWebLink(url: String): Boolean =
+    WEB_SCHEMES.any { url.startsWith(it, ignoreCase = true) }
+
+private val WEB_SCHEMES = listOf("https://", "http://", "mailto:")

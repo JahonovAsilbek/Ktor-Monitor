@@ -1,5 +1,8 @@
 package uz.jahonov.ktormonitor.capture
 
+import io.ktor.http.content.OutgoingContent
+import io.ktor.http.parametersOf
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
@@ -220,6 +223,76 @@ class KtorMonitorCaptureTest {
     }
 
     @Test
+    fun `a JSON body cut short is not kept when it should be redacted`() = runTest {
+        val store = FakeCallStore()
+        val client = backgroundScope.monitoredClient(store, { maxContentLength = 10; redactBodyFields("token") }) {
+            json("""{"token":"secret-value-that-goes-on"}""")
+        }
+
+        client.get("https://api.test/")
+
+        assertNull(store.await(1).single().responseBody)
+    }
+
+    @Test
+    fun `a request body is redacted too whether sent whole or streamed`() = runTest {
+        val store = FakeCallStore()
+        // The engine sends a streamed body only as it reads it.
+        val client = backgroundScope.monitoredClient(store, { redactBodyFields("password") }) { request ->
+            request.body.toByteArray()
+            json("{}")
+        }
+
+        client.post("https://api.test/whole") {
+            contentType(ContentType.Application.Json)
+            setBody("""{"user":"ali","password":"secret"}""")
+        }
+        client.post("https://api.test/streamed") {
+            setBody(ChannelContent("""{"password":"secret"}""", ContentType.Application.Json))
+        }
+
+        val bodies = store.await(2).associate { it.url to it.requestBody?.bytes?.decodeToString() }
+        assertEquals("""{"user":"ali","password":"***"}""", bodies["https://api.test/whole"])
+        assertEquals("""{"password":"***"}""", bodies["https://api.test/streamed"])
+    }
+
+    @Test
+    fun `form fields and JSON sent as text are redacted`() = runTest {
+        val store = FakeCallStore()
+        val client = backgroundScope.monitoredClient(store, { redactBodyFields("password", "token") }) {
+            respond("""{"token":"secret"}""", HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "text/plain"))
+        }
+
+        client.post("https://api.test/login") { setBody(FormDataContent(parametersOf("user" to listOf("ali"), "password" to listOf("p@ss word")))) }
+
+        val call = store.await(1).single()
+        assertEquals("user=ali&password=***", call.requestBody?.bytes?.decodeToString())
+        assertEquals("""{"token":"***"}""", call.responseBody?.bytes?.decodeToString())
+    }
+
+    @Test
+    fun `redacted query parameters keep their name and lose their value`() = runTest {
+        val store = FakeCallStore()
+        val client = backgroundScope.monitoredClient(store, { redactQueryParameters("access_token") }) { json("{}") }
+
+        client.get("https://api.test/cards?page=2&Access_Token=secret")
+
+        assertEquals("https://api.test/cards?page=2&Access_Token=***", store.await(1).single().url)
+    }
+
+    @Test
+    fun `response headers are sanitized too`() = runTest {
+        val store = FakeCallStore()
+        val client = backgroundScope.monitoredClient(store, { sanitizeHeaders("Set-Cookie") }) {
+            respond("{}", HttpStatusCode.OK, headersOf(HttpHeaders.SetCookie, "session=secret"))
+        }
+
+        client.get("https://api.test/")
+
+        assertEquals(listOf("***"), store.await(1).single().responseHeaders[HttpHeaders.SetCookie])
+    }
+
+    @Test
     fun `nothing is redacted by default`() = runTest {
         val store = FakeCallStore()
         val client = backgroundScope.monitoredClient(store) { json("""{"accessToken":"secret"}""") }
@@ -305,4 +378,9 @@ class KtorMonitorCaptureTest {
         assertFailsWith<IllegalArgumentException> { KtorMonitorConfig().maxCalls = 0 }
         assertFailsWith<IllegalArgumentException> { KtorMonitorConfig().maxContentLength = -1 }
     }
+}
+
+/** A body the client streams, as an upload from a file or a generator would be. */
+private class ChannelContent(private val text: String, override val contentType: ContentType) : OutgoingContent.ReadChannelContent() {
+    override fun readFrom() = ByteReadChannel(text)
 }

@@ -28,29 +28,40 @@ The Maven group is `uz.jahonov`. Another library with a similar name exists
 
 ### Android
 
+Debug builds only (see [Keeping it out of release builds](#keeping-it-out-of-release-builds)):
+
 ```kotlin
 // build.gradle.kts
 dependencies {
-    implementation("uz.jahonov:ktor-monitor:<version>")
-    implementation("uz.jahonov:ktor-monitor-ui:<version>")
+    debugImplementation("uz.jahonov:ktor-monitor:<version>")
+    debugImplementation("uz.jahonov:ktor-monitor-ui:<version>")
 }
 ```
+
+The monitor is created in `src/debug`, which release builds do not compile; `src/release` has the
+same function doing nothing, and the app calls it from `Application.onCreate`:
 
 ```kotlin
-class App : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        val monitor = KtorMonitor(this) {
-            retention = Retention.OneDay
-            sanitizeHeaders("Authorization")
-        }
-        monitor.attach(httpClient)
-        KtorMonitorUi.install(this, monitor)
+// src/debug/kotlin/…/DebugTools.kt
+fun installDebugTools(app: Application, client: HttpClient) {
+    val monitor = KtorMonitor(app) {
+        retention = Retention.OneDay
+        sanitizeHeaders("Authorization", "Cookie", "Set-Cookie")
+        redactQueryParameters("access_token")
     }
+    monitor.attach(client)
+    KtorMonitorUi.install(app, monitor)
 }
+
+// src/release/kotlin/…/DebugTools.kt
+fun installDebugTools(app: Application, client: HttpClient) = Unit
 ```
 
-`KtorMonitorUi.open(context)` opens the monitor from code.
+`KtorMonitorUi.open(context)` opens the monitor from code; `install(…, shakeToOpen = false)` turns
+the shake off. `monitor.clear()` deletes the history.
+
+In an app with more than one process (a `:remote` service, a push process), call it from the main
+process only: `Application.onCreate` runs in each of them.
 
 ### Kotlin Multiplatform + iOS
 
@@ -86,23 +97,30 @@ object Monitor {
 In Xcode, add this repository as a Swift package (product `KtorMonitorUI`), then:
 
 ```swift
-import KtorMonitorUI
 import Shared
+#if DEBUG
+import KtorMonitorUI
 
 // The one line that connects the Kotlin bridge to the SwiftUI package.
 extension KtorMonitorBridge: @retroactive KtorMonitorUIBridge {}
+#endif
 
 @main
 struct MyApp: App {
     init() {
+        #if DEBUG
         KtorMonitorUI.install(bridge: Monitor.shared.bridge)
+        #endif
     }
     // ...
 }
 ```
 
+Use `DEBUG` or the condition of your internal builds, and export the monitor only from the
+framework those builds link, so release builds carry none of it.
+
 `KtorMonitorUI.present()` opens the monitor from code; `KtorMonitorView` embeds it in your own
-view hierarchy. If the app sets its own `UNUserNotificationCenterDelegate`, pass responses to
+view hierarchy; `install(bridge:shakeToOpen: false)` turns the shake off. If the app sets its own `UNUserNotificationCenterDelegate`, pass responses to
 `KtorMonitorUI.handleNotificationResponse(_:)` first. `@retroactive` needs Xcode 16; drop it on
 older versions.
 
@@ -125,14 +143,26 @@ each attempt with its final headers. Attaching it to a client built earlier is f
 | `onInternalError` | ignore | failures of the monitor itself |
 | `filter { request -> … }` | | record only the calls it accepts |
 | `sanitizeHeader { name -> … }`, `sanitizeHeaders(…)` | | replace header values |
-| `redactBodyFields(…)` | | replace JSON field values at any depth |
+| `redactBodyFields(…)` | | replace JSON keys at any depth, and form fields |
+| `redactQueryParameters(…)` | | replace URL query parameter values |
+
+Nothing is redacted by default: against a development backend, the tokens are what you want to
+see. A JSON body that should be redacted but cannot be parsed (cut at `maxContentLength`, malformed)
+is not recorded at all. Multipart and other bodies are recorded as they are.
 
 ## Keeping it out of release builds
 
-The monitor records everything, tokens included. Ship it in debug or internal builds only: on
-Android, depend on it with `debugImplementation` (or a flavor's configuration) and create it from a
-source set that release builds do not compile; on iOS, export it only from the framework of those
-builds.
+The monitor records everything, tokens included, and a shake opens it. Ship it in debug or internal
+builds only:
+
+- **Android:** `debugImplementation` (or a flavor's configuration), with the monitor created in a
+  source set release builds do not compile, as in the setup above. `ktor-monitor-ui` also adds the
+  `POST_NOTIFICATIONS` permission to the app's manifest, so a release build that does not depend on
+  it does not ask for it either.
+- **iOS:** export `ktor-monitor` only from the framework of those builds, and keep the Swift lines
+  behind `#if DEBUG`.
+
+The notification shows only its title on the lock screen, and its lines leave out query strings.
 
 ## How iOS works
 

@@ -13,6 +13,9 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.readRawBytes
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.URLBuilder
+import io.ktor.http.decodeURLQueryComponent
+import io.ktor.http.takeFrom
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.contentType
 import io.ktor.util.AttributeKey
@@ -119,7 +122,7 @@ internal class KtorMonitorCapture(
                 groupId = attempts.groupId,
                 attempt = attempt,
                 method = request.method.value,
-                url = request.url.buildString(),
+                url = redactedUrl(request.url),
                 requestTime = now(),
                 requestHeaders = requestHeaders(request, content),
                 requestContentType = contentType?.toString(),
@@ -228,11 +231,49 @@ internal class KtorMonitorCapture(
         return redacted(CapturedBody(ByteString(bytes, 0, kept), bytes.size.toLong()), contentType)
     }
 
+    /** The URL as recorded: with the values of redacted query parameters replaced. */
+    private fun redactedUrl(url: URLBuilder): String {
+        val names = config.redactedQueryParameters
+        if (names.isEmpty()) return url.buildString()
+        val copy = URLBuilder().takeFrom(url)
+        val query = copy.encodedParameters.build()
+        copy.encodedParameters.clear()
+        query.forEach { name, values ->
+            val redact = name.decodeURLQueryComponent().lowercase() in names
+            copy.encodedParameters.appendAll(name, if (redact) values.map { KtorMonitorConfig.PLACEHOLDER } else values)
+        }
+        return copy.buildString()
+    }
+
+    /**
+     * The body as recorded, with the fields to redact replaced; null when it should be redacted but
+     * cannot be (JSON cut short or malformed), so a secret in it is never kept.
+     */
     private fun redacted(body: CapturedBody, contentType: ContentType?): CapturedBody? {
-        if (config.redactedFields.isEmpty() || contentType?.isJson() != true) return body
+        if (config.redactedFields.isEmpty()) return body
+        return when {
+            contentType?.isJson() == true -> redactedJson(body)
+            contentType?.match(ContentType.Application.FormUrlEncoded) == true -> redactedForm(body)
+            // A text body may be JSON sent under another name.
+            contentType == null || contentType.contentType.equals("text", ignoreCase = true) ->
+                if (body.bytes.decodeToString().trimStart().let { it.startsWith("{") || it.startsWith("[") }) redactedJson(body) else body
+            else -> body
+        }
+    }
+
+    private fun redactedJson(body: CapturedBody): CapturedBody? {
         if (body.isTruncated) return null
         val json = runCatching { Json.parseToJsonElement(body.bytes.decodeToString()) }.getOrNull() ?: return null
         return body.copy(bytes = ByteString(json.redacted().toString().encodeToByteArray()))
+    }
+
+    private fun redactedForm(body: CapturedBody): CapturedBody {
+        val fields = body.bytes.decodeToString().split('&').joinToString("&") { field ->
+            val name = field.substringBefore('=')
+            val decoded = runCatching { name.decodeURLQueryComponent(plusIsSpace = true) }.getOrDefault(name)
+            if (decoded.lowercase() in config.redactedFields) "$name=${KtorMonitorConfig.PLACEHOLDER}" else field
+        }
+        return body.copy(bytes = ByteString(fields.encodeToByteArray()))
     }
 
     private fun JsonElement.redacted(): JsonElement = when (this) {

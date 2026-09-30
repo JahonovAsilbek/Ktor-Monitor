@@ -1,10 +1,13 @@
 package uz.jahonov.ktormonitor.ui
 
+import android.annotation.SuppressLint
 import android.content.ClipData
+import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import java.io.IOException
@@ -15,7 +18,8 @@ internal class KtorMonitorFileProvider : FileProvider()
 
 /** Writes [file] to the cache and opens the share sheet for it. A full disk only shows a message. */
 internal fun Context.share(file: SharedFile) {
-    val directory = cacheDir.resolve(SHARE_DIRECTORY).apply { mkdirs() }
+    // An export holds tokens and bodies: the last one goes as the next is written.
+    val directory = cacheDir.resolve(SHARE_DIRECTORY).apply { deleteRecursively(); mkdirs() }
     val written = directory.resolve(file.name)
     try {
         written.writeText(file.content)
@@ -31,8 +35,13 @@ internal fun Context.share(file: SharedFile) {
     startActivity(Intent.createChooser(send, file.name))
 }
 
+/** Marked sensitive: Android 13 and later then hide the text in the clipboard preview. */
+@SuppressLint("InlinedApi") // A plain string extra: older versions ignore it.
 internal fun Context.copyToClipboard(text: String) {
-    getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Network monitor", text))
+    val clip = ClipData.newPlainText("Network monitor", text).apply {
+        description.extras = PersistableBundle().apply { putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true) }
+    }
+    getSystemService(ClipboardManager::class.java).setPrimaryClip(clip)
     // Android 13 and later confirm a copy themselves.
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) Toast.makeText(this, "Copied", Toast.LENGTH_SHORT).show()
 }

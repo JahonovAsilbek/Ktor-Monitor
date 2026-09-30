@@ -144,7 +144,7 @@ class BridgeSessionsTest {
 
         val last = BridgeJson.decodeFromString(NotificationWire.serializer(), updates.last())
         assertEquals(KtorMonitorNotifier.TITLE, last.title)
-        assertEquals(listOf("401 POST /login", "200 GET /cards?page=2"), last.lines)
+        assertEquals(listOf("401 POST /login", "200 GET /cards"), last.lines)
     }
 
     @Test

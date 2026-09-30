@@ -81,8 +81,11 @@ private fun headersJson(headers: Map<String, List<String>>) = buildJsonObject {
     headers.forEach { (name, values) -> putJsonArray(name) { values.forEach { add(it) } } }
 }
 
+/** The body as kept, text as it was sent and anything else in Base64, so the export loses nothing. */
 private fun JsonObjectBuilder.putBody(body: CapturedBody?, contentType: String?) {
-    put("body", body?.display(contentType))
+    val text = body?.text(contentType)
+    put("body", text ?: body?.let { Base64.encode(it.bytes.toByteArray()) })
+    put("bodyEncoding", if (body != null && text == null) "base64" else null)
     put("bodySize", body?.size ?: 0)
     put("bodyTruncated", body?.isTruncated == true)
 }

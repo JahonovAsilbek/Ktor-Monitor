@@ -83,7 +83,7 @@ class CallExporterTest {
             curl -X POST 'https://api.example.com/v1/cards?page=2&q=a%20b' \
               -H 'Authorization: Bearer abc' \
               -H 'Content-Type: application/json' \
-              --data-binary '{"name":"it'\''s","count":1}'
+              --data-raw '{"name":"it'\''s","count":1}'
         """.trimIndent()
         assertEquals(expected, CallExporter.curl(post))
     }
@@ -93,7 +93,7 @@ class CallExporterTest {
         val call = post.copy(requestContentType = "image/png", requestBody = binaryBody)
         val curl = CallExporter.curl(call)
         assertTrue(curl.startsWith("# binary body of 1234 bytes not included\ncurl -X POST"))
-        assertFalse("--data-binary" in curl)
+        assertFalse("--data-raw" in curl)
     }
 
     @Test
@@ -210,7 +210,8 @@ class CallExporterTest {
         val request = first.obj("request")
         assertEquals("POST", request.string("method"))
         assertEquals(listOf("Bearer abc"), request.obj("headers").array("Authorization").map { it.jsonPrimitive.content })
-        assertEquals("{\n    \"name\": \"it's\",\n    \"count\": 1\n}", request.string("body"))
+        assertEquals("""{"name":"it's","count":1}""", request.string("body"))
+        assertEquals(JsonNull, request.getValue("bodyEncoding"))
         assertEquals(25, request.getValue("bodySize").jsonPrimitive.int)
         assertFalse(request.getValue("bodyTruncated").jsonPrimitive.boolean)
         val response = first.obj("response")
@@ -320,9 +321,49 @@ class CallExporterTest {
 
     @Test
     fun fileNameUsesUtcTimestampAndExtension() {
-        assertEquals("netmonitor-2026-09-30-142501.har", CallExporter.fileName(ExportFormat.HAR, start + 250))
-        assertEquals("netmonitor-2026-09-30-142501.txt", CallExporter.fileName(ExportFormat.TEXT, start))
-        assertEquals("netmonitor-2026-09-30-142501.http", CallExporter.fileName(ExportFormat.TEXT, start, single = true))
-        assertEquals("netmonitor-2026-09-30-142501.md", CallExporter.fileName(ExportFormat.MARKDOWN, start, single = true))
+        assertEquals("ktormonitor-2026-09-30-142501.har", CallExporter.fileName(ExportFormat.HAR, start + 250))
+        assertEquals("ktormonitor-2026-09-30-142501.txt", CallExporter.fileName(ExportFormat.TEXT, start))
+        assertEquals("ktormonitor-2026-09-30-142501.http", CallExporter.fileName(ExportFormat.TEXT, start, single = true))
+        assertEquals("ktormonitor-2026-09-30-142501.md", CallExporter.fileName(ExportFormat.MARKDOWN, start, single = true))
+    }
+
+    @Test
+    fun curlSendsABodyStartingWithAtAsIsNotAsAFile() {
+        val call = post.copy(requestContentType = "text/plain", requestBody = textBody("@/etc/hosts"))
+        assertTrue("--data-raw '@/etc/hosts'" in CallExporter.curl(call))
+    }
+
+    @Test
+    fun curlAsksForHeadWithHead() {
+        assertTrue(CallExporter.curl(post.copy(method = "HEAD", requestBody = null)).startsWith("curl --head 'https://"))
+    }
+
+    @Test
+    fun curlQuotesAMethodTheShellWouldReadOtherwise() {
+        val call = post.copy(method = "X;touch pwned", requestBody = null)
+        assertTrue(CallExporter.curl(call).startsWith("curl -X 'X;touch pwned' "))
+        assertTrue(CallExporter.wget(call).startsWith("wget --method='X;touch pwned'"))
+    }
+
+    @Test
+    fun curlSendsAnEmptyHeaderAndDecompressesInsteadOfAskingForGzip() {
+        val call = post.copy(
+            requestHeaders = mapOf("X-Empty" to listOf(""), "Accept-Encoding" to listOf("gzip")),
+            requestBody = null,
+        )
+        val curl = CallExporter.curl(call)
+        assertTrue("-H 'X-Empty;'" in curl)
+        assertFalse("Accept-Encoding" in curl)
+        assertTrue(curl.endsWith("--compressed"))
+        assertFalse("Accept-Encoding" in CallExporter.wget(call))
+    }
+
+    @Test
+    fun jsonExportKeepsBinaryBodiesAsBase64() {
+        val call = post.copy(responseContentType = "image/png", responseBody = binaryBody)
+        val response = parse(CallExporter.export(listOf(call), ExportFormat.JSON, start, "App", "1")).array("calls")
+            .first().jsonObject.obj("response")
+        assertEquals("base64", response.string("bodyEncoding"))
+        assertEquals(binaryBody.bytes.toByteArray().toList(), Base64.decode(response.string("body")).toList())
     }
 }

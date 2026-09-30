@@ -53,6 +53,14 @@ internal class KtorMonitorNotifications(private val application: Application, mo
             .setContentText(lines.first())
             .setStyle(style)
             .setOnlyAlertOnce(true)
+            // The lines carry paths and hosts: on the lock screen only the title shows.
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+            .setPublicVersion(
+                NotificationCompat.Builder(application, CHANNEL_ID)
+                    .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                    .setContentTitle(KtorMonitorNotifier.TITLE)
+                    .build(),
+            )
             .setContentIntent(openIntent())
             .addAction(0, "Clear", clearIntent())
             .build()

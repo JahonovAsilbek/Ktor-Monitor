@@ -96,10 +96,10 @@ class MarkdownParserTest {
                 MarkdownSpan("a "),
                 MarkdownSpan("b", isBold = true, isItalic = true),
                 MarkdownSpan(" c", isBold = true),
-                MarkdownSpan("link ", link = "u"),
-                MarkdownSpan("bold", isBold = true, link = "u"),
+                MarkdownSpan("link ", link = "https://u.test"),
+                MarkdownSpan("bold", isBold = true, link = "https://u.test"),
             ),
-            MarkdownParser.inline("a ***b* c**[link **bold**](u)"),
+            MarkdownParser.inline("a ***b* c**[link **bold**](https://u.test)"),
         )
     }
 
@@ -110,12 +110,20 @@ class MarkdownParserTest {
 
     @Test
     fun `an image is shown as a link with its alt text`() {
-        assertEquals(listOf(MarkdownSpan("logo", link = "l.png")), MarkdownParser.inline("![logo](l.png)"))
+        assertEquals(listOf(MarkdownSpan("logo", link = "https://x.test/l.png")), MarkdownParser.inline("![logo](https://x.test/l.png)"))
     }
 
     @Test
     fun `many unmatched markers stay fast`() {
         val line = "*a _b [c ![d ".repeat(20_000)
         assertEquals(line, MarkdownParser.inline(line).joinToString("") { it.text })
+    }
+
+    @Test
+    fun `only web and mail links stay links`() {
+        val spans = MarkdownParser.inline("[a](https://x.test) [b](myapp://pay) [c](mailto:a@x.test) [d](#top)")
+
+        assertEquals("a b c d", spans.joinToString("") { it.text })
+        assertEquals(listOf("https://x.test", "mailto:a@x.test"), spans.mapNotNull { it.link })
     }
 }
