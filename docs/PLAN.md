@@ -167,7 +167,7 @@ Each phase ends with a build and the tests, and waits for approval before the ne
    composables, clean the previews. ✅
 4. **iOS bridge.** `KtorMonitorBridge` in `iosMain`, the JSON state and event models, tests. ✅
 5. **iOS UI.** `ios/KtorMonitorUI` Swift package: list, detail, body views, notification, shake,
-   share sheet — the same screens as Android.
+   share sheet — the same screens as Android. ✅
 6. **Samples + docs.** Android and iOS sample apps on devices, `README.md`, licence.
 7. **Publishing** (separate decision): GitHub repo, Maven Central, the Swift package by git tag,
    CI on macOS.
