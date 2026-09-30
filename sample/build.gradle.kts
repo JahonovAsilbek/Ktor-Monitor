@@ -23,7 +23,7 @@ android {
 
 dependencies {
     implementation(project(":ktor-monitor-ui"))
-    implementation(libs.ktor.client.okhttp)
+    implementation(project(":sample-shared"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.foundation)

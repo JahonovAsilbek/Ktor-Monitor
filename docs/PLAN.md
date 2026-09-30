@@ -54,6 +54,7 @@ This file records the decisions, the scope and the migration. Work follows it ph
 | `:ktor-monitor` | KMP library (android, iosArm64, iosSimulatorArm64) | `capture`, `data`, `body`, `export`, `model`, `presentation` |
 | `:ktor-monitor-ui` | Android library | Compose screens, activity, notification, shake, sharing |
 | `:sample` | Android app | Ktor client + the monitor, a few buttons that make calls |
+| `:sample-shared` | KMP library | The sample calls both apps make; on iOS the `SampleShared` framework |
 | `ios/KtorMonitorUI` | Swift package (SPM) | SwiftUI screens, notification, shake, share sheet. `Package.swift` sits at the repo root (SPM resolves packages only there) and points to these sources |
 | `ios/Sample` | Xcode app | The iOS sample: a small KMP framework with the client + the monitor, and the Swift package |
 
@@ -168,7 +169,7 @@ Each phase ends with a build and the tests, and waits for approval before the ne
 4. **iOS bridge.** `KtorMonitorBridge` in `iosMain`, the JSON state and event models, tests. ✅
 5. **iOS UI.** `ios/KtorMonitorUI` Swift package: list, detail, body views, notification, shake,
    share sheet — the same screens as Android. ✅
-6. **Samples + docs.** Android and iOS sample apps on devices, `README.md`, licence.
+6. **Samples + docs.** Android and iOS sample apps on devices, `README.md`, licence. ✅
 7. **Publishing** (separate decision): GitHub repo, Maven Central, the Swift package by git tag,
    CI on macOS.
 8. **MavridKids switch** (in MavridKids, separately): depend on the library, drop its own modules.

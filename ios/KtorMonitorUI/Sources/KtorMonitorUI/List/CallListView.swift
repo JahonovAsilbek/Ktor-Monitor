@@ -23,6 +23,13 @@ struct CallListView: View {
             if let state = session.state {
                 if let selection = state.selection {
                     SelectionControls(state: state, selection: selection, send: session.send)
+                } else {
+                    Text(callCount(state.totalCount))
+                        .font(MonitorFont.caption)
+                        .foregroundColor(MonitorColor.textSecondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 4)
                 }
                 if state.isSearchVisible {
                     CallSearchField(query: state.query) { session.send(.search(query: $0)) }
@@ -37,7 +44,9 @@ struct CallListView: View {
             }
         }
         .background(MonitorColor.background.ignoresSafeArea())
-        .navigationBarTitleDisplayMode(.inline)
+        // A large title: next to four toolbar buttons an inline one would be cut short.
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.large)
         .toolbar { toolbar }
         .sheet(isPresented: $isFiltersOpen) {
             if let state = session.state {
@@ -117,16 +126,6 @@ struct CallListView: View {
             Button(action: onClose) { Image(systemName: "xmark") }
                 .accessibilityLabel("Close")
         }
-        ToolbarItem(placement: .principal) {
-            VStack(spacing: 0) {
-                Text("Network monitor")
-                    .font(MonitorFont.title)
-                    .foregroundColor(MonitorColor.text)
-                Text(callCount(state?.totalCount ?? 0))
-                    .font(MonitorFont.caption)
-                    .foregroundColor(MonitorColor.textSecondary)
-            }
-        }
         ToolbarItemGroup(placement: .navigationBarTrailing) {
             if let state {
                 Button { session.send(.toggleSearch) } label: {
@@ -156,6 +155,11 @@ struct CallListView: View {
     }
 
     private func callCount(_ count: Int) -> String { count == 1 ? "1 call" : "\(count) calls" }
+
+    private var title: String {
+        guard let state = session.state, let selection = state.selection else { return "Network monitor" }
+        return "\(selection.count) selected of \(state.calls?.count ?? 0)"
+    }
 
     private func moreMenu(_ state: ListState) -> some View {
         Menu {
@@ -189,12 +193,6 @@ struct CallListView: View {
         ToolbarItem(placement: .navigationBarLeading) {
             Button { session.send(.exitSelection) } label: { Image(systemName: "xmark") }
                 .accessibilityLabel("Stop selecting")
-        }
-        ToolbarItem(placement: .principal) {
-            Text("\(selection.count) selected of \(state.calls?.count ?? 0)")
-                .font(MonitorFont.title)
-                .foregroundColor(MonitorColor.text)
-                .lineLimit(1)
         }
         ToolbarItemGroup(placement: .navigationBarTrailing) {
             Button { session.send(.deleteSelected) } label: {

@@ -3,7 +3,7 @@ import Foundation
 /// The monitor as this package sees it: strings and closures only. The Kotlin `KtorMonitorBridge`
 /// has exactly these members, so one line in the app makes it the bridge:
 ///
-///     extension KtorMonitorBridge: KtorMonitorUIBridge {}
+///     extension KtorMonitorBridge: @retroactive KtorMonitorUIBridge {}
 ///
 /// States, effects and events are JSON. Every call happens on the main thread, callbacks too.
 public protocol KtorMonitorUIBridge: AnyObject {

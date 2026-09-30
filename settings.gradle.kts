@@ -31,3 +31,4 @@ dependencyResolutionManagement {
 include(":ktor-monitor")
 include(":ktor-monitor-ui")
 include(":sample")
+include(":sample-shared")

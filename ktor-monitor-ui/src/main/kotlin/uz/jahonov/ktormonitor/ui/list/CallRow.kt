@@ -141,15 +141,17 @@ private fun Status(call: CallSummary) {
     }
 }
 
+/** The kind's colour on a light tint of itself, readable in both themes; the same as on iOS. */
 @Composable
 private fun KindBadge(kind: ContentKind) {
+    val color = kind.color()
     BasicText(
         text = kind.label,
-        style = MonitorTheme.typography.captionMedium.copy(color = MonitorTheme.colors.text),
+        style = MonitorTheme.typography.captionMedium.copy(color = color),
         maxLines = 1,
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
-            .background(kind.color())
+            .background(color.copy(alpha = 0.16f))
             .padding(horizontal = 4.dp, vertical = 2.dp),
     )
 }

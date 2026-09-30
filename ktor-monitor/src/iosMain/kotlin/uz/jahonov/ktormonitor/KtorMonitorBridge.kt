@@ -7,7 +7,7 @@ import uz.jahonov.ktormonitor.bridge.BridgeSessions
 /**
  * The monitor as the `KtorMonitorUI` Swift package sees it: strings and closures only, so the package
  * needs no Kotlin types. States, effects and events are JSON. In Swift, one line makes this class
- * the package's bridge: `extension KtorMonitorBridge: KtorMonitorUIBridge {}`.
+ * the package's bridge: `extension KtorMonitorBridge: @retroactive KtorMonitorUIBridge {}`.
  *
  * Call it from the main thread; the callbacks run there too.
  */
