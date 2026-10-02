@@ -2,32 +2,29 @@ import ObjectiveC
 import UIKit
 
 /// Opens the monitor when the device is shaken: a shake travels up the responder chain to the
-/// window, whose `motionEnded` is swapped for one that also opens the monitor.
+/// window, whose `motionEnded` gets an implementation that also opens the monitor.
 enum ShakeToOpen {
     private static var isEnabled = false
+
+    private typealias MotionEnded = @convention(c) (UIWindow, Selector, UIEvent.EventSubtype, UIEvent?) -> Void
 
     static func enable() {
         guard !isEnabled else { return }
         isEnabled = true
-        let original = #selector(UIResponder.motionEnded(_:with:))
-        let replacement = #selector(UIWindow.ktorMonitor_motionEnded(_:with:))
-        guard
-            let originalMethod = class_getInstanceMethod(UIWindow.self, original),
-            let replacementMethod = class_getInstanceMethod(UIWindow.self, replacement)
-        else { return }
-        // UIWindow inherits motionEnded from UIResponder: add it to UIWindow first, so other responders keep theirs.
-        if class_addMethod(UIWindow.self, original, method_getImplementation(replacementMethod), method_getTypeEncoding(replacementMethod)) {
-            class_replaceMethod(UIWindow.self, replacement, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
-        } else {
-            method_exchangeImplementations(originalMethod, replacementMethod)
+        let selector = #selector(UIResponder.motionEnded(_:with:))
+        guard let method = class_getInstanceMethod(UIWindow.self, selector) else { return }
+        // UIWindow's own implementation, or the one it inherits from UIResponder. That one passes the
+        // event up the chain under the selector it was called with, so it must get the real one: a
+        // renamed selector (the usual swizzle) reaches the window scene, which does not know it.
+        let original = unsafeBitCast(method_getImplementation(method), to: MotionEnded.self)
+        let opening: @convention(block) (UIWindow, UIEvent.EventSubtype, UIEvent?) -> Void = { window, motion, event in
+            if motion == .motionShake { MainActor.assumeIsolated { KtorMonitorUI.present() } }
+            original(window, selector, motion, event)
         }
-    }
-}
-
-extension UIWindow {
-    @objc func ktorMonitor_motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if motion == .motionShake { KtorMonitorUI.present() }
-        // After the swap this name runs the original implementation.
-        ktorMonitor_motionEnded(motion, with: event)
+        let implementation = imp_implementationWithBlock(opening)
+        // Added to UIWindow itself when it only inherits the method, so other responders keep theirs.
+        if !class_addMethod(UIWindow.self, selector, implementation, method_getTypeEncoding(method)) {
+            method_setImplementation(method, implementation)
+        }
     }
 }
