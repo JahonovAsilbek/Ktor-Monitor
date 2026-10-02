@@ -15,14 +15,14 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: zulu
           java-version: 17
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Kotlin tests, API check, lint, samples
         run: >
@@ -44,10 +44,12 @@ jobs:
           -destination 'platform=iOS Simulator,name=iPhone 16'
           CODE_SIGNING_ALLOWED=NO
 
+      # A named simulator, not a generic one: that would build for Intel simulators too, which the
+      # library does not target.
       - name: iOS sample
         working-directory: ios/Sample
         run: >
           xcodebuild build
           -scheme Sample
-          -destination 'generic/platform=iOS Simulator'
+          -destination 'platform=iOS Simulator,name=iPhone 16'
           CODE_SIGNING_ALLOWED=NO
