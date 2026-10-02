@@ -24,10 +24,8 @@ The Maven group is `uz.jahonov`. Another library with a similar name exists
 
 ## Setup
 
-> Not on Maven Central yet. Until the first release, either publish it to your local Maven
-> repository with `./gradlew publishToMavenLocal` (and add `mavenLocal()` to your repositories),
-> or add this repository to your build with `includeBuild("path/to/Ktor-Monitor")` in
-> `settings.gradle.kts`. For the Swift package, use the `master` branch until a version is tagged.
+The Kotlin artifacts are on Maven Central, and the Swift package is this repository, tagged with
+the same version: use one version for both.
 
 ### Android
 
@@ -36,8 +34,8 @@ Debug builds only (see [Keeping it out of release builds](#keeping-it-out-of-rel
 ```kotlin
 // build.gradle.kts
 dependencies {
-    debugImplementation("uz.jahonov:ktor-monitor:<version>")
-    debugImplementation("uz.jahonov:ktor-monitor-ui:<version>")
+    debugImplementation("uz.jahonov:ktor-monitor:0.1.0")
+    debugImplementation("uz.jahonov:ktor-monitor-ui:0.1.0")
 }
 ```
 
@@ -76,11 +74,11 @@ kotlin {
     listOf(iosArm64(), iosSimulatorArm64()).forEach {
         it.binaries.framework {
             baseName = "Shared"
-            export("uz.jahonov:ktor-monitor:<version>")
+            export("uz.jahonov:ktor-monitor:0.1.0")
         }
     }
     sourceSets.commonMain.dependencies {
-        api("uz.jahonov:ktor-monitor:<version>")
+        api("uz.jahonov:ktor-monitor:0.1.0")
     }
 }
 ```
@@ -97,7 +95,8 @@ object Monitor {
 }
 ```
 
-In Xcode, add this repository as a Swift package (product `KtorMonitorUI`), then:
+In Xcode, add `https://github.com/JahonovAsilbek/Ktor-Monitor` as a Swift package, version `0.1.0`
+(product `KtorMonitorUI`), then:
 
 ```swift
 import Shared

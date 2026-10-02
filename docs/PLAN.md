@@ -104,8 +104,9 @@ Done:
 
 Next:
 
-1. **First release.** Verify the `uz.jahonov` namespace on Maven Central, add the signing key and
-   Central credentials as GitHub secrets, add a release workflow on tags, tag `0.1.0`.
+1. **First release.** The namespace is verified and the secrets are set; a `v*` tag runs
+   `.github/workflows/release.yml`, which checks the tag against `VERSION_NAME`, tests, publishes to
+   Maven Central and makes a GitHub release. `v0.1.0` is the first.
 2. **Adopt it in the first app** that uses it, from Maven Central.
 
 Later, when asked for: a no-op artifact, WebSocket frames, request mocking.
