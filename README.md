@@ -61,8 +61,8 @@ Android, SwiftUI on iOS.
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    debugImplementation("uz.jahonov:ktor-monitor:0.1.0")
-    debugImplementation("uz.jahonov:ktor-monitor-ui:0.1.0")
+    debugImplementation("uz.jahonov:ktor-monitor:0.1.1")
+    debugImplementation("uz.jahonov:ktor-monitor-ui:0.1.1")
 }
 ```
 
@@ -105,14 +105,18 @@ kotlin {
     listOf(iosArm64(), iosSimulatorArm64()).forEach {
         it.binaries.framework {
             baseName = "Shared"
-            export("uz.jahonov:ktor-monitor:0.1.0")
+            export("uz.jahonov:ktor-monitor:0.1.1")
         }
     }
     sourceSets.commonMain.dependencies {
-        api("uz.jahonov:ktor-monitor:0.1.0")
+        api("uz.jahonov:ktor-monitor:0.1.1")
     }
 }
 ```
+
+The history is kept with the sqlite3 your app links, never a copy of its own. The framework asks
+for the system one (`-lsqlite3`) by itself; an app that links SQLCipher keeps using SQLCipher, which
+provides the same functions. Nothing to add in Xcode.
 
 **2. Create the monitor on the iOS side of the shared code** and attach it to your client:
 
@@ -127,7 +131,7 @@ object Monitor {
 ```
 
 **3. Add the Swift package.** In Xcode: *File → Add Package Dependencies…*, enter
-`https://github.com/JahonovAsilbek/Ktor-Monitor`, pick version `0.1.0` (the same version as the
+`https://github.com/JahonovAsilbek/Ktor-Monitor`, pick version `0.1.1` (the same version as the
 Kotlin artifacts) and add the `KtorMonitorUI` product to your app.
 
 **4. Connect the two and install it:**

@@ -1,0 +1,39 @@
+# The few sqlite3 functions the iOS driver calls, declared here rather than taken from sqlite3.h:
+# a binding to the whole header references functions Apple's libsqlite3 lacks (such as
+# sqlite3_load_extension), and the app's link then fails. Nothing here is defined, only called, so
+# the calls go to whichever sqlite3 the app links: the system one or SQLCipher.
+package = uz.jahonov.ktormonitor.data.sqlite3
+linkerOpts = -lsqlite3
+---
+typedef struct sqlite3 sqlite3;
+typedef struct sqlite3_stmt sqlite3_stmt;
+typedef long long sqlite3_int64;
+
+int sqlite3_open_v2(const char *filename, sqlite3 **ppDb, int flags, const char *zVfs);
+int sqlite3_extended_result_codes(sqlite3 *db, int onoff);
+int sqlite3_close_v2(sqlite3 *db);
+int sqlite3_get_autocommit(sqlite3 *db);
+int sqlite3_errcode(sqlite3 *db);
+const void *sqlite3_errmsg16(sqlite3 *db);
+
+int sqlite3_prepare16_v2(sqlite3 *db, const void *zSql, int nByte, sqlite3_stmt **ppStmt, const void **pzTail);
+int sqlite3_step(sqlite3_stmt *pStmt);
+int sqlite3_reset(sqlite3_stmt *pStmt);
+int sqlite3_clear_bindings(sqlite3_stmt *pStmt);
+int sqlite3_finalize(sqlite3_stmt *pStmt);
+int sqlite3_stmt_busy(sqlite3_stmt *pStmt);
+
+int sqlite3_bind_blob(sqlite3_stmt *pStmt, int index, const void *value, int n, void (*destructor)(void *));
+int sqlite3_bind_double(sqlite3_stmt *pStmt, int index, double value);
+int sqlite3_bind_int64(sqlite3_stmt *pStmt, int index, sqlite3_int64 value);
+int sqlite3_bind_null(sqlite3_stmt *pStmt, int index);
+int sqlite3_bind_text16(sqlite3_stmt *pStmt, int index, const void *value, int n, void (*destructor)(void *));
+
+int sqlite3_column_count(sqlite3_stmt *pStmt);
+const void *sqlite3_column_name16(sqlite3_stmt *pStmt, int index);
+int sqlite3_column_type(sqlite3_stmt *pStmt, int index);
+const void *sqlite3_column_blob(sqlite3_stmt *pStmt, int index);
+int sqlite3_column_bytes(sqlite3_stmt *pStmt, int index);
+double sqlite3_column_double(sqlite3_stmt *pStmt, int index);
+sqlite3_int64 sqlite3_column_int64(sqlite3_stmt *pStmt, int index);
+const void *sqlite3_column_text16(sqlite3_stmt *pStmt, int index);

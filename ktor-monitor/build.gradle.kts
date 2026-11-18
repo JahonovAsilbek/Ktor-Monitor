@@ -23,8 +23,11 @@ kotlin {
         compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
         withHostTest {}
     }
-    iosArm64()
-    iosSimulatorArm64()
+    // On iOS the database goes through a driver of our own over the sqlite3 the app links (see
+    // src/nativeInterop/cinterop/sqlite3.def).
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
+        target.compilations.getByName("main").cinterops.create("sqlite3")
+    }
 
     // The public API is checked against api/ (checkKotlinAbi; updateKotlinAbi records a change).
     @OptIn(ExperimentalAbiValidation::class)
@@ -45,14 +48,20 @@ kotlin {
             api(libs.kotlinx.coroutines.core)
             api(libs.jetbrains.lifecycle.viewmodel)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.androidx.room.runtime)
+            // Room only needs a driver; its own pick of androidx's sqlite-framework stays on Android.
+            implementation(libs.androidx.room.runtime.get().toString()) {
+                exclude(group = "androidx.sqlite", module = "sqlite-framework")
+            }
         }
-        // Android has SQLite; bundling one would add a native library for every ABI to the app.
+        // The platform's SQLite on both, never a bundled copy: on Android it would add a native library
+        // for every ABI, and on iOS it would export its sqlite3_* symbols and take over the app's own
+        // SQLite (or SQLCipher). androidx's iOS driver is not usable either: it references
+        // sqlite3_load_extension, which Apple's libsqlite3 does not have.
         androidMain.dependencies {
             implementation(libs.androidx.sqlite.framework)
         }
         iosMain.dependencies {
-            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.sqlite)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

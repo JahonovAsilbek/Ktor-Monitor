@@ -1,7 +1,6 @@
 package uz.jahonov.ktormonitor.data
 
 import androidx.room.Room
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
 import kotlin.test.AfterTest
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -27,7 +26,7 @@ class KtorMonitorDatabaseUpgradeTest {
 
     @Test
     fun `a database from an older version is started afresh`() = runTest {
-        BundledSQLiteDriver().open(path).apply {
+        SystemSQLiteDriver().open(path).apply {
             execSQL("CREATE TABLE call (id TEXT NOT NULL PRIMARY KEY, url TEXT NOT NULL)")
             execSQL("INSERT INTO call VALUES ('old', 'https://api.test/old')")
             execSQL("PRAGMA user_version = 1")

@@ -51,8 +51,13 @@ per chunk.
 
 Room KMP, one database per process, in the cache directory: the history is disposable. A schema
 change starts it afresh instead of migrating; the schemas are exported to `ktor-monitor/schemas`.
-Bodies are the last columns, so list queries never read them. Android uses the platform's SQLite,
-iOS a bundled one.
+Bodies are the last columns, so list queries never read them. Both platforms use the system's SQLite,
+never a bundled copy: on iOS one would export its `sqlite3_*` symbols and take over the app's own SQLite
+or SQLCipher. Android uses androidx's driver. iOS uses a small driver of its own
+(`SystemSQLiteDriver`) over a binding to only the functions it calls (`sqlite3.def`): androidx's
+iOS driver references `sqlite3_load_extension`, which Apple's libsqlite3 lacks, so an app linking the
+system sqlite3 would not link. Room's dependency on that driver is excluded on iOS. The binding's
+`-lsqlite3` travels in the framework as an autolink, so apps add nothing.
 
 ### iOS
 
