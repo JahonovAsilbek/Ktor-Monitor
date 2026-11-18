@@ -17,8 +17,6 @@ struct MessagePage: View {
     @State private var bodyExpanded = true
     /// Nil until the user folds or unfolds a region: the document's defaults apply.
     @State private var collapsed: Set<Int>?
-    // Held, not observed: only the rows follow the pan (see HorizontalPan).
-    @State private var pan = HorizontalPan()
     @State private var cache = RowCache()
 
     var body: some View {
@@ -68,7 +66,6 @@ struct MessagePage: View {
             .padding(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
         }
         .onChange(of: message?.content) { _ in
-            pan.reset()
             collapsed = nil
         }
     }
@@ -78,15 +75,15 @@ struct MessagePage: View {
         switch content {
         case let .code(_, lines, folds):
             let current = collapsed ?? cache.defaultCollapsed(folds)
-            CodeRows(lines: lines, layout: cache.code(lines, folds: folds, collapsed: current), collapsed: current, pan: pan) { line in
+            CodeRows(lines: lines, layout: cache.code(lines, folds: folds, collapsed: current), collapsed: current) { line in
                 var next = current
                 if next.contains(line) { next.remove(line) } else { next.insert(line) }
                 collapsed = next
             }
         case let .lines(lines):
-            LineRows(lines: lines, rows: cache.rows(lines), pan: pan)
+            LineRows(lines: lines, rows: cache.rows(lines))
         case let .hex(rows):
-            HexRows(rows: rows, pan: pan)
+            HexRows(rows: rows)
         case let .image(format, data):
             ImagePreview(format: format, data: data)
         case let .markdown(blocks):
@@ -203,20 +200,18 @@ private struct ModeChip: View {
     }
 }
 
-/// The stack trace as it was recorded: not wrapped, so its frames stay one per line.
+/// The stack trace as it was recorded, wrapped so the page only scrolls vertically.
 private struct ErrorBlock: View {
     let error: String
 
     var body: some View {
-        ScrollView(.horizontal) {
-            Text(error)
-                .font(MonitorFont.mono)
-                .foregroundColor(MonitorColor.text)
-                .fixedSize()
-                .textSelection(.enabled)
-                .padding(12)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        Text(error)
+            .font(MonitorFont.mono)
+            .foregroundColor(MonitorColor.text)
+            .fixedSize(horizontal: false, vertical: true)
+            .textSelection(.enabled)
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
         .background(MonitorColor.errorContainer)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.vertical, 4)

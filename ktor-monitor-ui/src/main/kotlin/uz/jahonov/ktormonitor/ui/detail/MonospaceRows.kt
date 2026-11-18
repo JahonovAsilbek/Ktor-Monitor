@@ -10,54 +10,13 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import kotlin.math.roundToInt
 import uz.jahonov.ktormonitor.ui.ui.MonitorTheme
-
-/**
- * One sideways offset shared by every row of a body. Rows are not wrapped, and a horizontalScroll per
- * row would scroll each on its own (and a shared ScrollState would be clamped by the shortest row).
- * So each row lays its text out at full width and shifts it by [offset] at placement: panning costs a
- * re-placement of the visible rows, never a recomposition.
- */
-@Stable
-internal class HorizontalPan {
-    private var offset by mutableFloatStateOf(0f)
-
-    /** How far the widest row measured so far overflows; grows as rows scroll into view. */
-    private var maxOffset by mutableFloatStateOf(0f)
-
-    /** Only a body wider than the screen takes sideways drags; others leave them to the pager. */
-    val canPan: Boolean get() = maxOffset > 0f
-
-    val state = ScrollableState { delta ->
-        val target = (offset - delta).coerceIn(0f, maxOffset)
-        val consumed = offset - target
-        offset = target
-        consumed
-    }
-
-    fun Modifier.panned(): Modifier = clipToBounds().layout { measurable, constraints ->
-        val placeable = measurable.measure(constraints.copy(minWidth = 0, maxWidth = Constraints.Infinity))
-        val width = constraints.maxWidth
-        maxOffset = maxOf(maxOffset, (placeable.width - width).toFloat())
-        layout(width, placeable.height) { placeable.placeRelative(-offset.roundToInt(), 0) }
-    }
-}
-
-internal fun Modifier.panGesture(pan: HorizontalPan): Modifier = scrollable(pan.state, Orientation.Horizontal, enabled = pan.canPan)
 
 /**
  * One row on screen: characters [start] until [end] of line [line]. A line longer than [LONG_LINE] is
@@ -91,29 +50,27 @@ internal fun gutterOf(row: TextRow, digits: Int): String =
 internal fun digitsOf(lineCount: Int): Int = lineCount.coerceAtLeast(1).toString().length
 
 /** Numbered lines of TEXT and STREAM bodies. */
-internal fun LazyListScope.lineItems(lines: List<String>, rows: List<TextRow>, pan: HorizontalPan) {
+internal fun LazyListScope.lineItems(lines: List<String>, rows: List<TextRow>) {
     val digits = digitsOf(lines.size)
     items(rows.size, key = { "text:${rows[it].line}:${rows[it].start}" }, contentType = { "text" }) { index ->
         val row = rows[index]
         MonoRow(
             gutter = gutterOf(row, digits),
             text = remember(row, lines) { AnnotatedString(lines[row.line].substring(row.start, row.end)) },
-            pan = pan,
         )
     }
 }
 
-/** A gutter that stays put and text that pans with the rest of the body. */
+/** A gutter, then text that wraps onto as many lines as it needs: the body only ever scrolls vertically. */
 @Composable
 internal fun MonoRow(
     gutter: String?,
     text: AnnotatedString,
-    pan: HorizontalPan,
     modifier: Modifier = Modifier,
     between: @Composable () -> Unit = {},
 ) {
     val style = monoStyle()
-    Row(modifier.fillMaxWidth().panGesture(pan)) {
+    Row(modifier.fillMaxWidth()) {
         if (gutter != null) {
             BasicText(
                 gutter,
@@ -124,13 +81,7 @@ internal fun MonoRow(
             )
         }
         between()
-        BasicText(
-            text,
-            style = style,
-            softWrap = false,
-            maxLines = 1,
-            modifier = with(pan) { Modifier.weight(1f).panned() },
-        )
+        BasicText(text, style = style, modifier = Modifier.weight(1f))
     }
 }
 

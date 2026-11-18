@@ -66,7 +66,7 @@ internal class CodeFolds(private val document: CodeDocument) {
 internal fun tokenColors(): List<Color> = TokenKind.entries.map { it.color() }
 
 /** Highlighted code with line numbers; a line that opens a region folds it on a tap. */
-internal fun LazyListScope.codeItems(document: CodeDocument, folds: CodeFolds, pan: HorizontalPan, colors: List<Color>) {
+internal fun LazyListScope.codeItems(document: CodeDocument, folds: CodeFolds, colors: List<Color>) {
     val rows = folds.rows
     val digits = digitsOf(document.lines.size)
     items(rows.size, key = { "code:${rows[it].line}:${rows[it].start}" }, contentType = { "code" }) { index ->
@@ -80,7 +80,6 @@ internal fun LazyListScope.codeItems(document: CodeDocument, folds: CodeFolds, p
         MonoRow(
             gutter = gutterOf(row, digits),
             text = text,
-            pan = pan,
             modifier = if (foldable) {
                 Modifier.clickable(
                     onClickLabel = if (collapsed) "Expand" else "Collapse",

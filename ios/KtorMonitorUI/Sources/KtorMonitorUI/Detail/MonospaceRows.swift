@@ -1,60 +1,6 @@
 import SwiftUI
 
 /**
- One sideways offset shared by every row of a body. Rows are not wrapped, and a horizontal ScrollView
- per row would scroll each on its own; one around the whole body would lose the lazy rows. So each
- row draws its text at full width and shifts it by `offset`, and a drag on any row moves them all.
-
- Only the rows observe it: the page that holds it does not, so a drag moves the rows on screen
- without laying out the body again.
- */
-final class HorizontalPan: ObservableObject {
-    @Published private(set) var offset: CGFloat = 0
-    /// How far the widest row seen so far overflows; grows as rows scroll into view.
-    @Published private(set) var maxOffset: CGFloat = 0
-
-    private var viewport: CGFloat = 0
-    private var dragStart: CGFloat?
-    /// Decided on the first movement of a drag: a mostly vertical one scrolls the page instead.
-    private var isVerticalDrag: Bool?
-
-    /// Only a body wider than the screen takes sideways drags; others leave them to the pages.
-    var canPan: Bool { maxOffset > 0 }
-
-    func measured(textWidth: CGFloat, viewport: CGFloat) {
-        // A new width (a rotation, an iPad resize) starts the measuring over.
-        if viewport != self.viewport {
-            self.viewport = viewport
-            maxOffset = 0
-        }
-        let overflow = max(textWidth - viewport, 0)
-        if overflow > maxOffset { maxOffset = overflow }
-        if offset > maxOffset { offset = maxOffset }
-    }
-
-    func drag(_ translation: CGSize) {
-        if isVerticalDrag == nil { isVerticalDrag = abs(translation.height) > abs(translation.width) }
-        guard isVerticalDrag == false else { return }
-        let start = dragStart ?? offset
-        dragStart = start
-        offset = min(max(start - translation.width, 0), maxOffset)
-    }
-
-    func endDrag() {
-        dragStart = nil
-        isVerticalDrag = nil
-    }
-
-    func reset() {
-        offset = 0
-        maxOffset = 0
-        viewport = 0
-        dragStart = nil
-        isVerticalDrag = nil
-    }
-}
-
-/**
  One row on screen: characters `start` until `end` of line `line`. A line longer than `longLine` is
  cut into several rows, so a minified body on one line never becomes one giant text layout.
  */
@@ -137,18 +83,14 @@ extension String {
     }
 }
 
-/// A gutter that stays put and text that pans with the rest of the body.
+/// A gutter, then text that wraps onto as many lines as it needs: the body only ever scrolls vertically.
 struct MonoRow<Between: View>: View {
     let gutter: String?
     let text: AttributedString
-    @ObservedObject var pan: HorizontalPan
     @ViewBuilder var between: () -> Between
 
-    /// One line of the monospaced caption font, so rows grow with the reader's text size.
-    @ScaledMetric(relativeTo: .caption) private var rowHeight: CGFloat = 16
-
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
             if let gutter {
                 Text(gutter)
                     .font(MonitorFont.mono)
@@ -157,40 +99,20 @@ struct MonoRow<Between: View>: View {
                     .padding(.trailing, 8)
             }
             between()
-            GeometryReader { viewport in
-                Text(text)
-                    .font(MonitorFont.mono)
-                    .foregroundColor(MonitorColor.text)
-                    .lineLimit(1)
-                    .fixedSize()
-                    .background(
-                        GeometryReader { measured in
-                            Color.clear
-                                .onAppear { pan.measured(textWidth: measured.size.width, viewport: viewport.size.width) }
-                                .onChange(of: viewport.size.width) { width in pan.measured(textWidth: measured.size.width, viewport: width) }
-                        }
-                    )
-                    .offset(x: -pan.offset)
-            }
-            .frame(height: rowHeight)
-            .clipped()
+            Text(text)
+                .font(MonitorFont.mono)
+                .foregroundColor(MonitorColor.text)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .contentShape(Rectangle())
-        // Off while nothing overflows, so the pages still swipe from any row; a vertical drag
-        // scrolls the page, whatever the width.
-        .gesture(
-            DragGesture(minimumDistance: 8)
-                .onChanged { pan.drag($0.translation) }
-                .onEnded { _ in pan.endDrag() },
-            including: pan.canPan ? .all : .subviews
-        )
         .accessibilityElement(children: .combine)
     }
 }
 
 extension MonoRow where Between == EmptyView {
-    init(gutter: String?, text: AttributedString, pan: HorizontalPan) {
-        self.init(gutter: gutter, text: text, pan: pan) { EmptyView() }
+    init(gutter: String?, text: AttributedString) {
+        self.init(gutter: gutter, text: text) { EmptyView() }
     }
 }
 
@@ -198,32 +120,50 @@ extension MonoRow where Between == EmptyView {
 struct LineRows: View {
     let lines: [String]
     let rows: [TextRow]
-    let pan: HorizontalPan
 
     var body: some View {
         let digits = Gutter.digits(lines.count)
         ForEach(rows, id: \.self) { row in
-            MonoRow(gutter: Gutter.label(row, digits: digits), text: AttributedString(lines[row.line].characters(row.start, row.end)), pan: pan)
+            MonoRow(gutter: Gutter.label(row, digits: digits), text: AttributedString(lines[row.line].characters(row.start, row.end)))
         }
     }
 }
 
-/// "offset  hex  ascii", 16 bytes a row; the offset and the ASCII column are muted.
+/**
+ "offset  hex  ascii", the offset and the ASCII column muted. Each 16-byte row is shown as two lines
+ of 8 bytes: a full row is wider than a phone, and wrapping it would break the columns.
+ */
 struct HexRows: View {
     let rows: [HexRow]
-    let pan: HorizontalPan
 
     var body: some View {
-        ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
-            MonoRow(gutter: nil, text: text(row), pan: pan)
+        ForEach(Array(halves.enumerated()), id: \.offset) { _, half in
+            MonoRow(gutter: nil, text: text(half))
         }
     }
 
-    private func text(_ row: HexRow) -> AttributedString {
-        var offset = AttributedString(row.offset)
-        offset.foregroundColor = MonitorColor.textSecondary
-        var ascii = AttributedString(row.ascii)
-        ascii.foregroundColor = MonitorColor.textSecondary
-        return offset + AttributedString("  \(row.hex)  ") + ascii
+    private var halves: [(offset: String, hex: String, ascii: String)] {
+        var result: [(offset: String, hex: String, ascii: String)] = []
+        for row in rows {
+            result.append((row.offset, String(row.hex.prefix(Self.halfHex)), String(row.ascii.prefix(Self.half))))
+            let second = String(row.hex.dropFirst(Self.halfHex + 2))
+            guard !second.trimmingCharacters(in: .whitespaces).isEmpty else { continue }
+            let start = (Int(row.offset, radix: 16) ?? 0) + Self.half
+            let digits = String(start, radix: 16)
+            let offset = String(repeating: "0", count: max(row.offset.count - digits.count, 0)) + digits
+            result.append((offset, second, String(row.ascii.dropFirst(Self.half))))
+        }
+        return result
     }
+
+    private func text(_ half: (offset: String, hex: String, ascii: String)) -> AttributedString {
+        var offset = AttributedString(half.offset)
+        offset.foregroundColor = MonitorColor.textSecondary
+        var ascii = AttributedString(half.ascii)
+        ascii.foregroundColor = MonitorColor.textSecondary
+        return offset + AttributedString("  \(half.hex)  ") + ascii
+    }
+
+    private static let half = 8
+    private static let halfHex = half * 3 - 1
 }

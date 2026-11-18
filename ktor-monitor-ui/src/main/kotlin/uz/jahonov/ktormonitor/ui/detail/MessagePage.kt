@@ -76,7 +76,6 @@ internal fun MessagePage(
     val error = call.error.takeIf { isResponse }
 
     val content = body?.content
-    val pan = remember(content) { HorizontalPan() }
     val folds = remember(content) { (content as? BodyContent.Code)?.let { CodeFolds(it.document) } }
     val textRows = remember(content) { (content as? BodyContent.Lines)?.let { textRows(it.lines) } }
     val colors = tokenColors()
@@ -120,9 +119,9 @@ internal fun MessagePage(
                 } else {
                     item(key = "modes") { Modes(body, onSelect = { onEvent(KtorMonitorDetailUiEvent.SelectMode(side, it)) }) }
                     when (val shown = body.content) {
-                        is BodyContent.Code -> folds?.let { codeItems(shown.document, it, pan, colors) }
-                        is BodyContent.Lines -> textRows?.let { lineItems(shown.lines, it, pan) }
-                        is BodyContent.Hex -> hexItems(shown.rows, pan)
+                        is BodyContent.Code -> folds?.let { codeItems(shown.document, it, colors) }
+                        is BodyContent.Lines -> textRows?.let { lineItems(shown.lines, it) }
+                        is BodyContent.Hex -> hexItems(shown.rows)
                         is BodyContent.Preview -> previewItems(shown.preview)
                     }
                 }
@@ -229,7 +228,7 @@ private fun Modes(body: BodyState, onSelect: (BodyMode) -> Unit) {
     }
 }
 
-/** The stack trace as it was recorded: not wrapped, so its frames stay one per line. */
+/** The stack trace as it was recorded, wrapped so the page only scrolls vertically. */
 @Composable
 private fun ErrorBlock(error: String) {
     val colors = MonitorTheme.colors
@@ -243,10 +242,7 @@ private fun ErrorBlock(error: String) {
         BasicText(
             error,
             style = monoStyle(),
-            softWrap = false,
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .padding(12.dp),
+            modifier = Modifier.padding(12.dp),
         )
     }
 }

@@ -33,7 +33,6 @@ struct CodeRows: View {
     let lines: [[CodeSpan]]
     let layout: CodeLayout
     let collapsed: Set<Int>
-    let pan: HorizontalPan
     let onToggle: (Int) -> Void
 
     var body: some View {
@@ -42,8 +41,7 @@ struct CodeRows: View {
             let isCollapsed = collapsed.contains(row.line)
             MonoRow(
                 gutter: Gutter.label(row, digits: layout.digits),
-                text: text(of: row, ellipsis: isCollapsed && row.isLastOfLine),
-                pan: pan
+                text: text(of: row, ellipsis: isCollapsed && row.isLastOfLine)
             ) {
                 FoldMark(visible: foldable, collapsed: isCollapsed)
             }

@@ -1,7 +1,6 @@
 package uz.jahonov.ktormonitor.ui.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -73,10 +71,9 @@ private fun MarkdownBlockView(block: MarkdownBlock, modifier: Modifier = Modifie
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .background(colors.surface)
-                .horizontalScroll(rememberScrollState())
                 .padding(12.dp),
         ) {
-            BasicText(block.text, style = monoStyle(), softWrap = false)
+            BasicText(block.text, style = monoStyle())
         }
         MarkdownBlock.Rule -> Box(modifier.fillMaxWidth().height(1.dp).background(colors.border))
     }

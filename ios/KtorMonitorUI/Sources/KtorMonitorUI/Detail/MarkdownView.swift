@@ -41,14 +41,12 @@ private struct MarkdownBlockView: View {
             }
             .fixedSize(horizontal: false, vertical: true)
         case let .codeBlock(_, text):
-            ScrollView(.horizontal) {
-                Text(text)
-                    .font(MonitorFont.mono)
-                    .foregroundColor(MonitorColor.text)
-                    .fixedSize()
-                    .padding(12)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            Text(text)
+                .font(MonitorFont.mono)
+                .foregroundColor(MonitorColor.text)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
             .background(MonitorColor.surface)
             .clipShape(RoundedRectangle(cornerRadius: 8))
         case .rule:
