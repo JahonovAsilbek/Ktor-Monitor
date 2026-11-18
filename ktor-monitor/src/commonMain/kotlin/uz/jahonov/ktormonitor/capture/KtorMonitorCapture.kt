@@ -264,7 +264,7 @@ internal class KtorMonitorCapture(
     private fun redactedJson(body: CapturedBody): CapturedBody? {
         if (body.isTruncated) return null
         val json = runCatching { Json.parseToJsonElement(body.bytes.decodeToString()) }.getOrNull() ?: return null
-        return body.copy(bytes = ByteString(json.redacted().toString().encodeToByteArray()))
+        return body.replacedBy(json.redacted().toString())
     }
 
     private fun redactedForm(body: CapturedBody): CapturedBody {
@@ -273,7 +273,16 @@ internal class KtorMonitorCapture(
             val decoded = runCatching { name.decodeURLQueryComponent(plusIsSpace = true) }.getOrDefault(name)
             if (decoded.lowercase() in config.redactedFields) "$name=${KtorMonitorConfig.PLACEHOLDER}" else field
         }
-        return body.copy(bytes = ByteString(fields.encodeToByteArray()))
+        return body.replacedBy(fields)
+    }
+
+    /**
+     * [text] in place of the kept bytes. The size moves with them: a placeholder is shorter than most
+     * secrets, and a body that was whole must not read as cut short.
+     */
+    private fun CapturedBody.replacedBy(text: String): CapturedBody {
+        val bytes = ByteString(text.encodeToByteArray())
+        return CapturedBody(bytes, size - this.bytes.size + bytes.size)
     }
 
     private fun JsonElement.redacted(): JsonElement = when (this) {

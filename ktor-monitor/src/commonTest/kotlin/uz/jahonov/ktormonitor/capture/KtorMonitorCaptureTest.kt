@@ -216,10 +216,11 @@ class KtorMonitorCaptureTest {
 
         client.get("https://api.test/")
 
-        assertEquals(
-            """{"data":{"AccessToken":"***","user":"Ali"},"list":[{"accessToken":"***"}]}""",
-            store.await(1).single().responseBody?.bytes?.decodeToString(),
-        )
+        val body = store.await(1).single().responseBody
+        assertEquals("""{"data":{"AccessToken":"***","user":"Ali"},"list":[{"accessToken":"***"}]}""", body?.bytes?.decodeToString())
+        // Shorter than the body that came in, but all of it: not shown as cut short.
+        assertEquals(body?.bytes?.size?.toLong(), body?.size)
+        assertFalse(body?.isTruncated ?: true)
     }
 
     @Test

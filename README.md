@@ -61,8 +61,8 @@ Android, SwiftUI on iOS.
 ```kotlin
 // app/build.gradle.kts
 dependencies {
-    debugImplementation("uz.jahonov:ktor-monitor:0.1.2")
-    debugImplementation("uz.jahonov:ktor-monitor-ui:0.1.2")
+    debugImplementation("uz.jahonov:ktor-monitor:0.1.3")
+    debugImplementation("uz.jahonov:ktor-monitor-ui:0.1.3")
 }
 ```
 
@@ -105,11 +105,11 @@ kotlin {
     listOf(iosArm64(), iosSimulatorArm64()).forEach {
         it.binaries.framework {
             baseName = "Shared"
-            export("uz.jahonov:ktor-monitor:0.1.2")
+            export("uz.jahonov:ktor-monitor:0.1.3")
         }
     }
     sourceSets.commonMain.dependencies {
-        api("uz.jahonov:ktor-monitor:0.1.2")
+        api("uz.jahonov:ktor-monitor:0.1.3")
     }
 }
 ```
@@ -131,7 +131,7 @@ object Monitor {
 ```
 
 **3. Add the Swift package.** In Xcode: *File → Add Package Dependencies…*, enter
-`https://github.com/JahonovAsilbek/Ktor-Monitor`, pick version `0.1.2` (the same version as the
+`https://github.com/JahonovAsilbek/Ktor-Monitor`, pick version `0.1.3` (the same version as the
 Kotlin artifacts) and add the `KtorMonitorUI` product to your app.
 
 **4. Connect the two and install it:**
