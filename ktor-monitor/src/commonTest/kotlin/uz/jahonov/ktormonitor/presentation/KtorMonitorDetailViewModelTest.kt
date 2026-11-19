@@ -120,6 +120,26 @@ class KtorMonitorDetailViewModelTest {
     }
 
     @Test
+    fun `sharing as text gives a txt file or an http one when asked`() = runTest {
+        val repository = fakeRepository().apply { insert(testCall("cards")) }
+        val vm = viewModel(repository)
+        vm.ready()
+
+        vm.effects.test {
+            vm.onEvent(KtorMonitorDetailUiEvent.Share(ExportFormat.TEXT))
+            val txt = (awaitItem() as KtorMonitorDetailUiEffect.Share).file
+            assertTrue(txt.name.endsWith(".txt"))
+            assertEquals("text/plain", txt.mimeType)
+            assertTrue("cards" in txt.content)
+
+            vm.onEvent(KtorMonitorDetailUiEvent.Share(ExportFormat.TEXT, asHttpFile = true))
+            val http = (awaitItem() as KtorMonitorDetailUiEffect.Share).file
+            assertTrue(http.name.endsWith(".http"))
+            assertTrue("cards" in http.content)
+        }
+    }
+
+    @Test
     fun `a deleted call closes the screen`() = runTest {
         val repository = fakeRepository().apply { insert(testCall("cards")) }
         val vm = viewModel(repository)

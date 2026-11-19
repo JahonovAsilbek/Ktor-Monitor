@@ -169,6 +169,45 @@ class CallExporterTest {
     }
 
     @Test
+    fun httpFileRunsTheRequestAndCommentsOutTheResponse() {
+        val expected = """
+            POST https://api.example.com/v1/cards?page=2&q=a%20b HTTP/1.1
+            Authorization: Bearer abc
+            Content-Type: application/json
+
+            {"name":"it's","count":1}
+
+            ###
+            # HTTP/1.1 201 Created
+            # Content-Type: application/json
+            # Set-Cookie: a=1
+            # Set-Cookie: b=2
+            #
+            # {
+            #     "id": 7
+            # }
+        """.trimIndent()
+        assertEquals(expected, CallExporter.http(post))
+    }
+
+    @Test
+    fun httpFileCommentsOutErrorAndInProgress() {
+        assertTrue(CallExporter.http(failed).endsWith("Accept: application/json\n\n###\n# Error:\n# java.net.SocketTimeoutException: timeout"))
+        assertTrue(CallExporter.http(inProgress).endsWith("\n\n###\n# (in progress)"))
+    }
+
+    @Test
+    fun httpFileLeavesOutBinaryRequestBody() {
+        val http = CallExporter.http(post.copy(requestContentType = "image/png", requestBody = binaryBody))
+        assertTrue(
+            http.startsWith(
+                "# binary body of 1234 bytes not included\nPOST https://api.example.com/v1/cards?page=2&q=a%20b HTTP/1.1\n" +
+                    "Authorization: Bearer abc\nContent-Type: application/json\n\n###\n",
+            ),
+        )
+    }
+
+    @Test
     fun markdownHasSummaryAndFencedBlocks() {
         val markdown = CallExporter.markdown(post.copy(responseContentType = "text/html", responseBody = textBody("<p>hi</p>")))
         assertTrue(markdown.startsWith("## POST /v1/cards?page=2&q=a%20b\n"))
@@ -323,8 +362,8 @@ class CallExporterTest {
     fun fileNameUsesUtcTimestampAndExtension() {
         assertEquals("ktormonitor-2026-09-30-142501.har", CallExporter.fileName(ExportFormat.HAR, start + 250))
         assertEquals("ktormonitor-2026-09-30-142501.txt", CallExporter.fileName(ExportFormat.TEXT, start))
-        assertEquals("ktormonitor-2026-09-30-142501.http", CallExporter.fileName(ExportFormat.TEXT, start, single = true))
-        assertEquals("ktormonitor-2026-09-30-142501.md", CallExporter.fileName(ExportFormat.MARKDOWN, start, single = true))
+        assertEquals("ktormonitor-2026-09-30-142501.http", CallExporter.fileName(ExportFormat.TEXT, start, asHttpFile = true))
+        assertEquals("ktormonitor-2026-09-30-142501.md", CallExporter.fileName(ExportFormat.MARKDOWN, start, asHttpFile = true))
     }
 
     @Test

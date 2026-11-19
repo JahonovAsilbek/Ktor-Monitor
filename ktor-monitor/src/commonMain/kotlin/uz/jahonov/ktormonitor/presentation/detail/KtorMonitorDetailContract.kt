@@ -51,8 +51,8 @@ public sealed interface KtorMonitorDetailUiEvent {
     /** Copies the body as the current view shows it. */
     public data class CopyBody(val side: BodySide) : KtorMonitorDetailUiEvent
 
-    /** TEXT (as a `.http` file), MARKDOWN or HAR. */
-    public data class Share(val format: ExportFormat) : KtorMonitorDetailUiEvent
+    /** TEXT (as a `.txt` file, or a `.http` one when [asHttpFile]), MARKDOWN or HAR. */
+    public data class Share(val format: ExportFormat, val asHttpFile: Boolean = false) : KtorMonitorDetailUiEvent
 }
 
 @InternalKtorMonitorApi

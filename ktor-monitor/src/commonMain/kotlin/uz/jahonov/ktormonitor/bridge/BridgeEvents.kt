@@ -43,7 +43,7 @@ internal sealed interface DetailEventWire {
     @Serializable @SerialName("copy") data class Copy(val format: CopyFormat) : DetailEventWire
     @Serializable @SerialName("copyHeaders") data class CopyHeaders(val side: BodySide) : DetailEventWire
     @Serializable @SerialName("copyBody") data class CopyBody(val side: BodySide) : DetailEventWire
-    @Serializable @SerialName("share") data class Share(val format: ExportFormat) : DetailEventWire
+    @Serializable @SerialName("share") data class Share(val format: ExportFormat, val asHttpFile: Boolean = false) : DetailEventWire
 }
 
 internal fun ListEventWire.toEvent(): KtorMonitorListUiEvent = when (this) {
@@ -73,5 +73,5 @@ internal fun DetailEventWire.toEvent(): KtorMonitorDetailUiEvent = when (this) {
     is DetailEventWire.Copy -> KtorMonitorDetailUiEvent.Copy(format)
     is DetailEventWire.CopyHeaders -> KtorMonitorDetailUiEvent.CopyHeaders(side)
     is DetailEventWire.CopyBody -> KtorMonitorDetailUiEvent.CopyBody(side)
-    is DetailEventWire.Share -> KtorMonitorDetailUiEvent.Share(format)
+    is DetailEventWire.Share -> KtorMonitorDetailUiEvent.Share(format, asHttpFile)
 }

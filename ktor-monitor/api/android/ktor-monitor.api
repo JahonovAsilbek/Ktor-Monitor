@@ -680,11 +680,14 @@ public final class uz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailU
 }
 
 public final class uz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent$Share : uz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent {
-	public fun <init> (Luz/jahonov/ktormonitor/export/ExportFormat;)V
+	public fun <init> (Luz/jahonov/ktormonitor/export/ExportFormat;Z)V
+	public synthetic fun <init> (Luz/jahonov/ktormonitor/export/ExportFormat;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Luz/jahonov/ktormonitor/export/ExportFormat;
-	public final fun copy (Luz/jahonov/ktormonitor/export/ExportFormat;)Luz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent$Share;
-	public static synthetic fun copy$default (Luz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent$Share;Luz/jahonov/ktormonitor/export/ExportFormat;ILjava/lang/Object;)Luz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent$Share;
+	public final fun component2 ()Z
+	public final fun copy (Luz/jahonov/ktormonitor/export/ExportFormat;Z)Luz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent$Share;
+	public static synthetic fun copy$default (Luz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent$Share;Luz/jahonov/ktormonitor/export/ExportFormat;ZILjava/lang/Object;)Luz/jahonov/ktormonitor/presentation/detail/KtorMonitorDetailUiEvent$Share;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAsHttpFile ()Z
 	public final fun getFormat ()Luz/jahonov/ktormonitor/export/ExportFormat;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

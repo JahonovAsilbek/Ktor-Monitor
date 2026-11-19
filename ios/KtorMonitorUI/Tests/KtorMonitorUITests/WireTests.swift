@@ -128,6 +128,7 @@ final class WireTests: XCTestCase {
             .copyHeaders(side: .request),
             .copyBody(side: .response),
             .share(format: "MARKDOWN"),
+            .share(format: "TEXT", asHttpFile: true),
         ])
     }
 

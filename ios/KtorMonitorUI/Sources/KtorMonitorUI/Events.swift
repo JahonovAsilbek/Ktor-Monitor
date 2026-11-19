@@ -86,10 +86,10 @@ enum DetailEvent: Encodable, Equatable {
     case copyHeaders(side: BodySide)
     /// Copies the body as the current view shows it.
     case copyBody(side: BodySide)
-    /// TEXT (as a .http file), MARKDOWN or HAR.
-    case share(format: String)
+    /// TEXT (as a .txt file, or a .http one when asHttpFile), MARKDOWN or HAR.
+    case share(format: String, asHttpFile: Bool = false)
 
-    private enum CodingKeys: String, CodingKey { case type, side, mode, format }
+    private enum CodingKeys: String, CodingKey { case type, side, mode, format, asHttpFile }
 
     func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
@@ -107,9 +107,10 @@ enum DetailEvent: Encodable, Equatable {
         case let .copyBody(side):
             try c.encode("copyBody", forKey: .type)
             try c.encode(side, forKey: .side)
-        case let .share(format):
+        case let .share(format, asHttpFile):
             try c.encode("share", forKey: .type)
             try c.encode(format, forKey: .format)
+            if asHttpFile { try c.encode(true, forKey: .asHttpFile) }
         }
     }
 }

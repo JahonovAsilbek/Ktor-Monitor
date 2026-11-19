@@ -243,6 +243,7 @@ class BridgeFixturesTest {
             KtorMonitorDetailUiEvent.CopyHeaders(BodySide.REQUEST),
             KtorMonitorDetailUiEvent.CopyBody(BodySide.RESPONSE),
             KtorMonitorDetailUiEvent.Share(ExportFormat.MARKDOWN),
+            KtorMonitorDetailUiEvent.Share(ExportFormat.TEXT, asHttpFile = true),
         ),
     )
 

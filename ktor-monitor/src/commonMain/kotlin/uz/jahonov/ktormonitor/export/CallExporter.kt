@@ -42,13 +42,24 @@ internal object CallExporter {
         val protocol = call.protocol ?: DEFAULT_PROTOCOL
         append("${call.method} ${call.url} $protocol\n")
         appendMessage(call.requestHeaders, call.requestBody, call.requestContentType)
-        call.responseCode?.let { code ->
-            append("\n$protocol $code ${reasonPhrase(code)}\n")
-            appendMessage(call.responseHeaders, call.responseBody, call.responseContentType)
-        }
-        call.error?.let { append("\nError:\n$it\n") }
-        if (call.isInProgress) append("\n(in progress)\n")
+        appendOutcome(call)
     }.trimEnd()
+
+    /**
+     * A request file for the IntelliJ or VS Code HTTP client: the request runs as it was sent, and the
+     * response, error or "(in progress)" follow after `###` as `#` comments, so they are never sent.
+     */
+    fun http(call: NetworkCall): String {
+        val request = buildString {
+            call.bodyNotes().forEach { append("$it\n") }
+            append("${call.method} ${call.url} ${call.protocol ?: DEFAULT_PROTOCOL}\n")
+            call.sentHeaders().forEach { append("$it\n") }
+            call.sentBody()?.let { append("\n$it\n") }
+        }.trimEnd()
+        val outcome = buildString { appendOutcome(call) }.trim()
+        if (outcome.isEmpty()) return request
+        return request + "\n\n###\n" + outcome.lines().joinToString("\n") { "# $it".trimEnd() }
+    }
 
     fun markdown(call: NetworkCall): String = buildString {
         append("## ${call.method} ${call.summary.path}\n\n")
@@ -80,12 +91,12 @@ internal object CallExporter {
         ExportFormat.HAR -> harLog(calls, appName, appVersion)
     }
 
-    /** e.g. "ktormonitor-2026-09-30-142501.har"; a single call shared as TEXT uses the ".http" extension instead. */
-    fun fileName(format: ExportFormat, exportedAt: Long, single: Boolean = false): String {
+    /** e.g. "ktormonitor-2026-09-30-142501.har"; TEXT [asHttpFile] uses the ".http" extension instead. */
+    fun fileName(format: ExportFormat, exportedAt: Long, asHttpFile: Boolean = false): String {
         // "2026-09-30T14:25:01.123Z"
         val iso = isoTime(exportedAt)
         val stamp = iso.substring(0, 10) + "-" + iso.substring(11, 19).replace(":", "")
-        val extension = if (single && format == ExportFormat.TEXT) "http" else format.extension
+        val extension = if (asHttpFile && format == ExportFormat.TEXT) "http" else format.extension
         return "ktormonitor-$stamp.$extension"
     }
 
@@ -114,6 +125,17 @@ internal object CallExporter {
             body.isTruncated -> listOf("# body truncated: ${body.bytes.size} of ${body.size} bytes kept")
             else -> emptyList()
         }
+    }
+
+    /** The response, the error and "(in progress)" after the request. */
+    private fun StringBuilder.appendOutcome(call: NetworkCall) {
+        val protocol = call.protocol ?: DEFAULT_PROTOCOL
+        call.responseCode?.let { code ->
+            append("\n$protocol $code ${reasonPhrase(code)}\n")
+            appendMessage(call.responseHeaders, call.responseBody, call.responseContentType)
+        }
+        call.error?.let { append("\nError:\n$it\n") }
+        if (call.isInProgress) append("\n(in progress)\n")
     }
 
     private fun StringBuilder.appendMessage(headers: Map<String, List<String>>, body: CapturedBody?, contentType: String?) {

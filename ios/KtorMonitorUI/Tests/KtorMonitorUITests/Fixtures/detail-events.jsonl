@@ -3,3 +3,4 @@
 {"type":"copyHeaders","side":"REQUEST"}
 {"type":"copyBody","side":"RESPONSE"}
 {"type":"share","format":"MARKDOWN"}
+{"type":"share","format":"TEXT","asHttpFile":true}

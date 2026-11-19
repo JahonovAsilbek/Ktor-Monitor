@@ -142,7 +142,8 @@ private struct ShareMenu: View {
                 entry("Copy as text", "doc.on.doc", .copy(format: "TEXT"))
             }
             Section {
-                entry("Share as .http file", "square.and.arrow.up", .share(format: "TEXT"))
+                entry("Share as .txt file", "square.and.arrow.up", .share(format: "TEXT"))
+                entry("Share as .http file", "square.and.arrow.up", .share(format: "TEXT", asHttpFile: true))
                 entry("Share as Markdown", "square.and.arrow.up", .share(format: "MARKDOWN"))
                 entry("Share as HAR", "square.and.arrow.up", .share(format: "HAR"))
             }

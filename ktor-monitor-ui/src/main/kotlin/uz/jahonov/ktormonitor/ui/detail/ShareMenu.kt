@@ -30,7 +30,8 @@ private val CopyEntries = listOf(
 )
 
 private val ShareEntries = listOf(
-    MenuEntry("Share as .http file", MonitorIcons.Share, KtorMonitorDetailUiEvent.Share(ExportFormat.TEXT)),
+    MenuEntry("Share as .txt file", MonitorIcons.Share, KtorMonitorDetailUiEvent.Share(ExportFormat.TEXT)),
+    MenuEntry("Share as .http file", MonitorIcons.Share, KtorMonitorDetailUiEvent.Share(ExportFormat.TEXT, asHttpFile = true)),
     MenuEntry("Share as Markdown", MonitorIcons.Share, KtorMonitorDetailUiEvent.Share(ExportFormat.MARKDOWN)),
     MenuEntry("Share as HAR", MonitorIcons.Share, KtorMonitorDetailUiEvent.Share(ExportFormat.HAR)),
 )

@@ -93,9 +93,13 @@ public class KtorMonitorDetailViewModel internal constructor(
             is KtorMonitorDetailUiEvent.Share -> launch {
                 val exportedAt = now()
                 val content = withContext(analysisDispatcher) {
-                    CallExporter.export(listOf(call), event.format, exportedAt, appName, appVersion)
+                    if (event.asHttpFile && event.format == ExportFormat.TEXT) {
+                        CallExporter.http(call)
+                    } else {
+                        CallExporter.export(listOf(call), event.format, exportedAt, appName, appVersion)
+                    }
                 }
-                val name = CallExporter.fileName(event.format, exportedAt, single = true)
+                val name = CallExporter.fileName(event.format, exportedAt, asHttpFile = event.asHttpFile)
                 emit(KtorMonitorDetailUiEffect.Share(SharedFile(name, event.format.mimeType, content)))
             }
         }

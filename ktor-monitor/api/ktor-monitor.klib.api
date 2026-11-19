@@ -504,13 +504,16 @@ sealed interface uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiE
     }
 
     final class Share : uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent { // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share|null[0]
-        constructor <init>(uz.jahonov.ktormonitor.export/ExportFormat) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.<init>|<init>(uz.jahonov.ktormonitor.export.ExportFormat){}[0]
+        constructor <init>(uz.jahonov.ktormonitor.export/ExportFormat, kotlin/Boolean = ...) // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.<init>|<init>(uz.jahonov.ktormonitor.export.ExportFormat;kotlin.Boolean){}[0]
 
+        final val asHttpFile // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.asHttpFile|{}asHttpFile[0]
+            final fun <get-asHttpFile>(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.asHttpFile.<get-asHttpFile>|<get-asHttpFile>(){}[0]
         final val format // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.format|{}format[0]
             final fun <get-format>(): uz.jahonov.ktormonitor.export/ExportFormat // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.format.<get-format>|<get-format>(){}[0]
 
         final fun component1(): uz.jahonov.ktormonitor.export/ExportFormat // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.component1|component1(){}[0]
-        final fun copy(uz.jahonov.ktormonitor.export/ExportFormat = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.copy|copy(uz.jahonov.ktormonitor.export.ExportFormat){}[0]
+        final fun component2(): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.component2|component2(){}[0]
+        final fun copy(uz.jahonov.ktormonitor.export/ExportFormat = ..., kotlin/Boolean = ...): uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.copy|copy(uz.jahonov.ktormonitor.export.ExportFormat;kotlin.Boolean){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // uz.jahonov.ktormonitor.presentation.detail/KtorMonitorDetailUiEvent.Share.toString|toString(){}[0]
