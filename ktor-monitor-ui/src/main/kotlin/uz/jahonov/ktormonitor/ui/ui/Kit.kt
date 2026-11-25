@@ -1,6 +1,7 @@
 package uz.jahonov.ktormonitor.ui.ui
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
@@ -41,7 +43,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.StrokeCap
@@ -214,26 +217,65 @@ internal fun MonitorTabs(tabs: List<String>, selected: Int, onSelect: (Int) -> U
     }
 }
 
-/** An indeterminate spinner. */
+/**
+ * An indeterminate spinner: an arc on a faint track whose head runs ahead and tail catches up while
+ * the whole thing turns. Always a circle of [size]; size it with that, not with a width modifier.
+ */
 @Composable
 internal fun Spinner(modifier: Modifier = Modifier, color: Color = MonitorTheme.colors.accent, size: Dp = 24.dp) {
-    val rotation by rememberInfiniteTransition(label = "spinner").animateFloat(
+    val transition = rememberInfiniteTransition(label = "spinner")
+    val rotation by transition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(durationMillis = 900, easing = LinearEasing), RepeatMode.Restart),
+        animationSpec = infiniteRepeatable(tween(SpinnerTurnMillis, easing = LinearEasing), RepeatMode.Restart),
         label = "rotation",
     )
-    Canvas(modifier.size(size).rotate(rotation)) {
-        val stroke = size.toPx() / 8
+    // Runs through SpinnerCycles grow-and-shrink cycles; each one leaves the arc SpinnerMaxSweep further on,
+    // and SpinnerCycles of those make whole turns, so the restart does not jump.
+    val cycles by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = SpinnerCycles.toFloat(),
+        animationSpec = infiniteRepeatable(
+            tween(SpinnerCycleMillis * SpinnerCycles, easing = LinearEasing),
+            RepeatMode.Restart,
+        ),
+        label = "cycles",
+    )
+    Canvas(modifier.requiredSize(size)) {
+        val stroke = size.toPx() / 10
+        val inset = stroke / 2
+        val arcSize = Size(this.size.width - stroke, this.size.height - stroke)
+        val topLeft = Offset(inset, inset)
+        drawArc(
+            color = color.copy(alpha = color.alpha * 0.15f),
+            startAngle = 0f,
+            sweepAngle = 360f,
+            useCenter = false,
+            topLeft = topLeft,
+            size = arcSize,
+            style = Stroke(width = stroke),
+        )
+        val cycle = cycles.toInt()
+        val fraction = cycles - cycle
+        val head = FastOutSlowInEasing.transform((fraction * 2).coerceIn(0f, 1f))
+        val tail = FastOutSlowInEasing.transform((fraction * 2 - 1).coerceIn(0f, 1f))
         drawArc(
             color = color,
-            startAngle = 0f,
-            sweepAngle = 270f,
+            startAngle = rotation + cycle * SpinnerMaxSweep + tail * SpinnerMaxSweep - 90f,
+            sweepAngle = (head - tail) * SpinnerMaxSweep + SpinnerMinSweep,
             useCenter = false,
+            topLeft = topLeft,
+            size = arcSize,
             style = Stroke(width = stroke, cap = StrokeCap.Round),
         )
     }
 }
+
+private const val SpinnerTurnMillis = 1_600
+private const val SpinnerCycleMillis = 1_300
+private const val SpinnerCycles = 4
+private const val SpinnerMaxSweep = 270f
+private const val SpinnerMinSweep = 12f
 
 /** A row of a sheet: optional icon, title with a description, a value on the right. */
 @Composable
