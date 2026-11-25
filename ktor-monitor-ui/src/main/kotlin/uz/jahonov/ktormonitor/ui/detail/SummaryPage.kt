@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -105,7 +104,7 @@ private fun Status(call: NetworkCall) {
             }
         }
         else -> Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Spinner(Modifier.width(32.dp))
+            Spinner(size = 16.dp)
             BasicText("In progress", style = MonitorTheme.typography.bodyMedium.copy(color = statusColor(summary)))
         }
     }

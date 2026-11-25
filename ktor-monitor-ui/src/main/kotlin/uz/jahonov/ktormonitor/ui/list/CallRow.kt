@@ -129,7 +129,7 @@ private fun Status(call: CallSummary) {
     val colors = MonitorTheme.colors
     when {
         call.isInProgress -> Box(Modifier.height(StatusHeight), contentAlignment = Alignment.Center) {
-            Spinner(Modifier.width(StatusColumnWidth - 12.dp), color = colors.textSecondary)
+            Spinner(color = colors.textSecondary, size = 16.dp)
         }
         call.responseCode == null -> TintedIcon(MonitorIcons.Warning, colors.error, "Failed", Modifier.size(StatusHeight))
         else -> Row(Modifier.height(StatusHeight), verticalAlignment = Alignment.CenterVertically) {
