@@ -222,6 +222,7 @@ private struct Waiting: View {
     var body: some View {
         VStack(spacing: 12) {
             ProgressView()
+                .tint(MonitorColor.accent)
             Text("Waiting for the response…")
                 .font(MonitorFont.body)
                 .foregroundColor(MonitorColor.textSecondary)

@@ -76,6 +76,8 @@ private struct Status: View {
         } else {
             HStack(spacing: 8) {
                 ProgressView()
+                    .controlSize(.small)
+                    .tint(MonitorColor.accent)
                 Text("In progress")
                     .font(MonitorFont.bodyMedium)
                     .foregroundColor(statusColor(call))

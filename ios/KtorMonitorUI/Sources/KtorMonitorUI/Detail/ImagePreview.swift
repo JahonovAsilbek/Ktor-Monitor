@@ -20,7 +20,7 @@ struct ImagePreview: View {
             Group {
                 switch decoded {
                 case .loading:
-                    ProgressView().padding(.vertical, 16)
+                    ProgressView().tint(MonitorColor.accent).padding(.vertical, 16)
                 case .failed:
                     DetailNotice(text: "The image could not be decoded")
                 case let .ready(image, width, height):

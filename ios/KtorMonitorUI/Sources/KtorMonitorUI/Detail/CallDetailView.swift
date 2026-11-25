@@ -29,7 +29,7 @@ struct CallDetailView: View {
                     .tabViewStyle(.page(indexDisplayMode: .never))
                 }
             } else {
-                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+                ProgressView().tint(MonitorColor.accent).frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .background(MonitorColor.background.ignoresSafeArea())
